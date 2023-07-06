@@ -1,0 +1,20 @@
+admin
+- sign up
+- sign in
+- sign out
+- add database (หน้าที่โหลดไฟล์ปัจจุบัน มาใส่ข้อมูลเพิ่ม)
+- form (แสดง form ที่มี)
+
+staff
+- sign up (มี dropdown แสดงชื่อโรงเรียนให้เลือก และต้องใส่โค้ดโรงเรียน)
+- sign in
+- sign out
+- initial page (ต้องโหลดและกรอก form room)
+     ถ้าเกิดเคยกรอกแล้วจะมีปุ่มให้โหลดเอกสารปัจจุบัน
+- form student (หน้าโหลด form + tips)
+- form teacher (หน้าโหลด form + tips)
+- room (เป็น dropdown แสดงแต่ละห้อง)
+     ช่องใส่และโหลด form student และกดส่ง (มีแสดงด้วยว่า กรอก form ไปรึยัง)
+     ช่องใส่และโหลด form teacher และกดส่ง (มีแสดงด้วยว่า กรอก form ไปรึยัง)
+- post
+- new post
