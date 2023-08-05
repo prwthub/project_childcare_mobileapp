@@ -11,9 +11,10 @@ staff
 - sign out
 - initial page (ต้องโหลดและกรอก form room)
      ถ้าเกิดเคยกรอกแล้วจะมีปุ่มให้โหลดเอกสารปัจจุบัน
-- form student (หน้าโหลด form + tips)
 - form teacher (หน้าโหลด form + tips)
+
 - room (เป็น dropdown แสดงแต่ละห้อง)
+  form student
      ช่องใส่และโหลด form student และกดส่ง (มีแสดงด้วยว่า กรอก form ไปรึยัง)
      ช่องใส่และโหลด form teacher และกดส่ง (มีแสดงด้วยว่า กรอก form ไปรึยัง)
 - post
