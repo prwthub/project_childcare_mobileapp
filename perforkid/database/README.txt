@@ -17,3 +17,52 @@ form_car.xlsx
 school_database.xlsx
 - ด้านในเก็บโค้ด ที่จำเป็นต้องกรอกตอนลงทะเบียน
 
+
+ ____________
+|            |
+|   school   | 
+|____________|
+  |
+  |- teacher.xlsx
+  |
+  |- driver.xlsx
+  |
+  |- student.xlsx
+  |   |- student (all)
+  |   |- student 1/1 , schedule 1/1
+  |   |- student 1/2 , schedule 1/2
+  |   |- student 1/3 , schedule 1/3
+  |   |- ...
+  |
+  |- car.xlsx
+  |   |- car (all)
+  |   |- car 1
+  |   |- car 2
+  |   |- car 3
+  |   |- ...
+  |
+  |- car location
+  |   |- car location 1
+  |   |- car location 2
+  |   |- car location 3
+  |   |- ...
+  |
+  |- substitute parent card
+  |   |- substitute parent card (all)
+  |   |- ???
+  |
+  |- annoucement
+  |   |- annoucement (all)
+  |   |- ???
+  |
+  |- ???
+  |
+  |
+  o
+   
+
+
+
+
+
+
