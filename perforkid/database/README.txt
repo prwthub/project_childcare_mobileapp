@@ -35,16 +35,16 @@ school_database.xlsx
   |   |- ...
   |
   |- car.xlsx
-  |   |- car (all)
-  |   |- car 1
-  |   |- car 2
-  |   |- car 3
+  |   |- car (all) , student status (all)
+  |   |- car 1 , student status
+  |   |- car 2 , student status
+  |   |- car 3 , student status
   |   |- ...
   |
   |- car location
   |   |- car location 1
-  |   |- car location 2
-  |   |- car location 3
+  |   |- car location 2 
+  |   |- car location 3 
   |   |- ...
   |
   |- substitute parent card
