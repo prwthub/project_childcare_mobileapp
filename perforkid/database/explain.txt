@@ -1,0 +1,160 @@
+() in form
+[] not in form
+
+ _______________________
+|            		|
+|   school   		| 
+|   (code, name) 	|
+|   [pic]		|
+|_______________________|
+  |
+  |- teacher.xlsx (รายชื่อคุณครู โดยระบุห้องประจำชั้นและห้องที่สอน)
+  |  (index, ID, name-surname, class-room, teaching-room, phone, email, address)
+  |  [pic, ???]
+  |
+  |- driver.xlsx (รายชื่อคนขับรถตู้ โดยระบุเบอร์รถที่ตัวเองรับผิดชอบ)
+  |  (index, ID, name-surname, car-number, phone, email, address)
+  |  [pic, ???]
+  |
+  |- student.xlsx (รายชื่อนักเรียน โดยระบุห้องเรียนและอีเมลของพ่อแม่)
+  |  (index, ID, name-surname, class-room, father-name, father-phone, father-email, 
+  |   mother-name, mother-phone, mother-email, address)
+  |  [pic]
+  |   |- student (all)
+  |   |- student 1/1 , schedule 1/1
+  |   |- student 1/2 , schedule 1/2
+  |   |- student 1/3 , schedule 1/3
+  |   |- ...
+  |
+  |- car.xlsx (รายชื่อนักเรียนที่นั่งบนรถคันนั้นๆ)
+  |  (index, ID, name-surname, class-room, car-number, 
+  |   father-phone, mother-phone, address)
+  |   |- car (all) , student status (all)
+  |   |- car 1 , student status
+  |   |- car 2 , student status
+  |   |- car 3 , student status
+  |   |- ...
+  |
+  |- car location
+  |   |- car location 1
+  |   |- car location 2 
+  |   |- car location 3 
+  |   |- ...
+  |
+  |- substitute parent card
+  |   |- substitute parent card (all)
+  |   |- ???
+  |
+  |- annoucement
+  |   |- annoucement (all)
+  |   |- ???
+  |
+  |- ???
+  |
+  |
+  o
+
+======================================================================================
+
+C  (collection)
+SC (sub collection)
+D  (document)
+F  (field)
+
+C school
+	D (id โรงเรียนแต่ละโรงเรียน)
+		...
+	D (id โรงเรียนแต่ละโรงเรียน)
+		...
+	D (id โรงเรียนแต่ละโรงเรียน)
+		F school_name
+		F school_code
+		F [school_picture]
+		|
+		SC teacher
+		 	D (id คุณครูแต่ละคน)
+				F index
+				F ID
+				F name-surname
+				F class-room
+				F teaching-room
+				F phone
+				F email
+				F address
+				F [picture]
+		SC driver
+			D (id คนขับรถตู้แต่ละคน)
+				F index
+				F ID
+				F name-surname
+				F car-number
+				F phone
+				F email
+				F address
+				F [picture]
+		SC student
+			D All-student
+				SC student
+					D (นักเรียนทุกคนในโรงเรียน)
+						F ...
+			D (id ห้องเรียนแต่ละห้อง)
+				F room
+				F [schedule]
+				F ...
+				|
+				SC student
+					D (นักเรียนในห้องแต่ละคน)
+						F index
+						F ID
+						F name-surname
+						F class-room
+						F father-name
+						F father-phone
+						F father-email
+						F mother-name
+						F mother-phone
+						F mother-email
+						F address
+						F [picture]
+		SC car
+			D All-student-car
+				SC student-car
+					D (นักเรียนทุกคนที่นั่งรถตู้)
+						F ...
+			D (id รถแต่ละคัน)
+				F car-number
+				F [location]
+				F ???
+				|
+				SC student-car
+					D (นักเรียนที่นั่งรถตู้คันนั้นๆ)
+						F index
+						F ID
+						F name-surname
+						F class-room
+						F car-number
+						F father-phone
+						F mother-phone
+						F address
+						F [go-status]-default
+						F [back-status]-default
+
+		SC card
+			D (id ของบัตรผู้ปกครองและบัตรผู้มาติดต่อแต่ละใบ)
+				F [name]
+				F [description]
+				F [expire]
+				F ???
+		SC annoucement
+			D (id ของโพสต์แต่ละโพสต์)
+				F [head]
+				F [content]
+				F [date]
+				F ???
+
+
+
+
+
+
+
