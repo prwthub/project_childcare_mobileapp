@@ -67,9 +67,10 @@ C school
 	D (id โรงเรียนแต่ละโรงเรียน)
 		...
 	D (id โรงเรียนแต่ละโรงเรียน)
-		F school_name
-		F school_code
-		F [school_picture]
+		F school-name
+		F school-admin-code
+		F school-code
+		F [picture]
 		|
 		SC teacher
 		 	D (id คุณครูแต่ละคน)
