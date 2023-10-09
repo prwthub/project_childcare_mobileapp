@@ -1,0 +1,132 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel : Perforkid</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+        
+    <script>
+        function password_show_hide() {
+            let x = document.getElementById("pwd");
+            let y = document.getElementById("repwd");
+            
+            let showEyeRePwd = document.getElementById("show_eye2"); //Icon
+            let hideEyeRePwd = document.getElementById("hide_eye2"); //Icon
+
+            hideEyeRePwd.classList.remove("d-none");
+            // check data check type better than ==
+            // password -> text
+            //Start-ToggleToSeePassword
+            if (x.type === "password" || y.type === "password") {
+                x.type = "text";
+                y.type = "text";
+                showEyeRePwd.style.display = "none";
+                hideEyeRePwd.style.display = "block";
+            }
+            // text -> password
+            else {
+                x.type = "password";
+                y.type = "password";
+                showEyeRePwd.style.display = "block";
+                hideEyeRePwd.style.display = "none";
+            }
+            //Stop-ToggleToSeePassword
+        }
+
+    </script>
+
+</head>
+
+<style>
+    .responsiveImage {
+        width: 100%;
+        height: 60vw;
+        object-fit: cover;
+
+    }
+
+    .responsiveImagelogo {
+        width: 140pt;
+        height: 80%;
+        object-fit: cover;
+    }
+</style>
+
+<body>
+
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+    <script type="module">
+        // Initialize Firebase
+        import { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, addDoc, uploadBytes } 
+        from "./FirebaseAPI/FirebaseAPI.js";
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <div class=container>
+        <div class="d-flex justify-content-center align-items-center mb-1 pb-1">
+            <i class="fas fa-cubes fa-2x me-1" style="color: #ff6219;"></i>
+            <img src="ImageAsset/logo_1.png" alt="login form" class="img-fluid responsiveImagelogo"
+                style="border-radius: 1rem 0 0 1rem;" />
+        </div>
+
+        <div class="form-outline mb-3">
+            <h4 class="fw-normal mb-2 pb-1" style="letter-spacing: 1px; color: #393f81;">Register</h4>
+
+    <form id = "registerSubbed">
+            <input type="text" name="username_or_email" class="form-control" id="username_or_email" class="form-control form-control-lg"
+                required placeholder='username or email'>
+        </div>
+
+        <div class="input-group form-outline mb-3">
+            <input type="password" name="firstPwd" class="form-control" id="pwd" class="form-control form-control-lg"
+                required placeholder='Password'>
+
+        </div>
+
+        <div class="input-group form-outline mb-3">
+            <input type="password" name="confirmPwd" class="form-control" id="repwd" class="form-control form-control-lg"
+                required placeholder='Re-enter Password'>
+            <span class="input-group-text" onclick="password_show_hide();">
+                <i class="bi bi-eye-fill" id="show_eye2"></i>
+                <i class="bi bi-eye-slash-fill d-none" id="hide_eye2"></i>
+            </span>
+        </div>
+
+        <div class="input-group form-outline mb-3">
+            <select class="form-control" id="school_dropdown_field" name="school_name">
+                <option value="" disabled selected>Select school</option>
+                <script src = "./Authentication/Register/DataQueryForReg.js" type="module"></script>
+        </div>
+
+        <div class="form-outline mb-3">
+            <input type="text" name="school_admin_code" class="form-control" id="school_admin_code" class="form-control form-control-lg" required
+                placeholder='School code'>
+        </div>
+
+        <div class="pt-1 mb-4">
+            <script type="module" src="./Authentication/Register/RegisterProcedure.js" ></script>
+            <button id = "registerBtn" class="btn btn-dark btn-lg btn-block" type="submit">Register</button>
+
+        </div>
+
+    </form>
+        <div class="pt-1 mb-4">
+            <a href="AdminLanding.html" class="btn btn-success">Go back to Login</a>
+        </div>
+
+    </div>
+
+
+
+</body>
+
+</html>
