@@ -4,45 +4,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Van/Bus Student List</title>
-  <link rel="stylesheet" href="Styling.css">
+  <title>Van/Bus Selection Page</title>
+  <link rel="stylesheet" href="./style/Styling.css">
 </head>
-
-<!-- <div class="container m-3">
-      <form action="" id="uploadForm"> -->
-<!-- normal upload -->
-<!-- <h3 class="text-danger">upload file</h3>
-        <input type="file" class="form-control" id="fileUpload" accept=".csv" title="Choose file"/>
-        <button id="uploadButton" class="btn btn-primary">Upload</button>
-        <br/>
-    </div>
-    <hr>
-    <div id="resultContainer"> -->
 
 <body>
   <div class="container-fluid">
     <div class="row">
       <div class="col-3">
         <div id="sidebar-container"></div>
-        <script src="LoadSideBar.js" type="module"></script>
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
       </div>
       <div class="col-9 p-5 bg-light">
-
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
         <script type="module">
           // Initialize Firebase
-          import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
+          import * as FirebaseAPI from "./firebaseConfig/FirebaseAPI.js";
           firebase.initializeApp(FirebaseAPI.firebaseConfig);
         </script>
-
+        <h1>User Information</h1>
         <p>Email: <span id="email"></span></p>
         <p>School Name: <span id="schoolName"></span></p>
-        <script src="userDataKeeper.js" type="module"></script>
+        <p>logged in: <span id="loggedin"></span></p>
+
+        <script type="module">
+            // Import currentUser
+            import currentUser from './module/user/currentUser.js';
+
+            // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+            const storedUser = sessionStorage.getItem('currentUser');
+
+            if (storedUser) {
+                // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+                const storedCurrentUser = JSON.parse(storedUser);
+                // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+                currentUser.email = storedCurrentUser.email;
+                currentUser.school_name = storedCurrentUser.school_name;
+                currentUser.loggedin = storedCurrentUser.loggedin;
+            }
+
+            if(currentUser.loggedin == 'no'){
+                window.location.href = "./AdminLanding.html";
+            }
+
+            // ตั้งค่าข้อความใน element ตามค่าใน currentUser
+            document.getElementById('email').textContent = currentUser.email;
+            document.getElementById('schoolName').textContent = currentUser.school_name;
+            document.getElementById('loggedin').textContent = currentUser.loggedin;
+        </script>
 
         <div class="divider"></div>
         <form>
-          <script src="./VanShowQuery.js" type="module"></script>
+          <script src="./module/show/ShowVanQuery.js" type="module"></script>
           <div id="vanContainer">
           </div>
         </form>
@@ -52,42 +66,3 @@
 </body>
 
 </html>
-
-
-<!--
-    // const csvFileInput = document.getElementById('csvFileInput');
-    // const uploadButton = document.getElementById('uploadButton');
-    // const resultContainer = document.getElementById('resultContainer');
-
-    // uploadButton.addEventListener('click', handleFileUpload);
-
-    // function handleFileUpload() {
-    // const file = csvFileInput.files[0];
-    // if (file) {
-    // const reader = new FileReader();
-    // reader.onload = (e) => {
-    // const csvData = e.target.result;
-    // const jsonObj = csvToJSON(csvData);
-    // uploadToFirestore(jsonObj);
-    // };
-    // reader.readAsText(file);
-    // }
-    // }
-
-    // function csvToJSON(csvData) {
-    // const csv = require('csvtojson');
-    // return csv().fromString(csvData);
-    // }
-
-    // function uploadToFirestore(jsonData) {
-    // const collectionRef = db.collection('testUser');
-    // collectionRef
-    // .add(jsonData)
-    // .then(() => {
-    // resultContainer.textContent = 'Upload successful!';
-    // })
-    // .catch((error) => {
-    // resultContainer.textContent = `Error uploading to Firestore: ${error}`;
-    // });
-    // }
--->

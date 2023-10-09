@@ -1,9 +1,10 @@
-import currentUser from "./currentUser.js";
-import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
+import currentUser from "../user/currentUser.js";
+import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
+// Import Styling.
 const link = document.createElement('link');
 link.rel = 'stylesheet';
-link.href = './Styling.css';
+link.href = '../../style/Styling.css';
 document.head.appendChild(link);
 
 const db = FirebaseAPI.getFirestore();

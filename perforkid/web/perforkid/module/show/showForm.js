@@ -11,19 +11,14 @@ const firebaseConfig = {
   measurementId: "G-TE2LC6M05D",
 };
 
-const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-// const folderPath = "KMUTNB/form_teacher/";
-// const storageRef = ref(storage, folderPath);
-// const storageRef = ref(storage);
-const fileList = document.getElementById("fileList");
+const fileList = document.getElementById("formList");
 const foldername = fileList.getAttribute("folder");
-const folderPath = `${currentUser.school_name}/${foldername}/`; 
+const folderPath = `${foldername}/`; 
+const filename = fileList.getAttribute("filename");
 const storageRef = ref(storage, folderPath);
-
 
 function listFilesInFolder(folderRef, parentList) {
   listAll(folderRef)
@@ -32,22 +27,25 @@ function listFilesInFolder(folderRef, parentList) {
         getMetadata(itemRef)
           .then((metadata) => {
             if (metadata && metadata.name) {
-              const listItem = document.createElement("li");
-              const button = document.createElement("button");
-              button.textContent = metadata.name;
-              listItem.appendChild(button);
+              // ตรวจสอบชื่อไฟล์ที่ต้องการแสดง
+              if (metadata.name == filename || filename == "") {
+                const listItem = document.createElement("li");
+                const button = document.createElement("button");
+                button.textContent = metadata.name;
+                listItem.appendChild(button);
 
-              button.addEventListener("click", () => {
-                getDownloadURL(itemRef)
-                  .then((url) => {
-                    window.open(url);
-                  })
-                  .catch((error) => {
-                    console.log("Error getting download URL:", error);
-                  });
-              });
+                button.addEventListener("click", () => {
+                  getDownloadURL(itemRef)
+                    .then((url) => {
+                      window.open(url);
+                    })
+                    .catch((error) => {
+                      console.log("Error getting download URL:", error);
+                    });
+                });
 
-              parentList.appendChild(listItem);
+                parentList.appendChild(listItem);
+              }
             }
           })
           .catch((error) => {
@@ -69,5 +67,6 @@ function listFilesInFolder(folderRef, parentList) {
       console.log("Error listing files:", error);
     });
 }
+
 
 listFilesInFolder(storageRef, fileList);

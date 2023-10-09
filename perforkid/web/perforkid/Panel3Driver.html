@@ -4,100 +4,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Driver Page</title>
-  <link rel="stylesheet" href="Styling.css">
+  <title>Manage Driver Page</title>
+  <link rel="stylesheet" href="./style/Styling.css">
 </head>
 
-  <!-- <div class="container m-3">
-      <form action="" id="uploadForm"> -->
-  <!-- normal upload -->
-  <!-- <h3 class="text-danger">upload file</h3>
-        <input type="file" class="form-control" id="fileUpload" accept=".csv" title="Choose file"/>
-        <button id="uploadButton" class="btn btn-primary">Upload</button>
-        <br/>
-    </div>
-    <hr>
-    <div id="resultContainer"> -->
-
-
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-3">
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
         <div id="sidebar-container"></div>
-        <script src = "LoadSideBar.js" type = "module"></script>
-        </div>
-        <div class="col-9 p-5 bg-light">
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
+      </div>
 
-          <!-- <b>Insert File to Firebase Firestore</b>&nbsp;
-          <input type="file" id="jsonFileInput" accept=".json"> -->
-          <!-- HTML button to select .json file, Add data to Firestore function-->
+      <div class="col-9 p-5 bg-light">
+        <h1>User Information</h1>
+        <p>Email: <span id="email"></span></p>
+        <p>School Name: <span id="schoolName"></span></p>
+        <p>logged in: <span id="loggedin"></span></p>
+        
+        <script type="module">
+            // Import currentUser
+            import currentUser from './module/user/currentUser.js';
+        
+            // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+            const storedUser = sessionStorage.getItem('currentUser');
 
-          <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
-          <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
-          <script type="module">
-            // Initialize Firebase
-            import { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, addDoc, uploadBytes } from "./FirebaseAPI.js";
-            firebase.initializeApp(firebaseConfig);
-          </script>
+            if (storedUser) {
+                // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+                const storedCurrentUser = JSON.parse(storedUser);
+                // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+                currentUser.email = storedCurrentUser.email;
+                currentUser.school_name = storedCurrentUser.school_name;
+                currentUser.loggedin = storedCurrentUser.loggedin;
+            }
 
-          <!--<script src="FormInputConverter.js" type="module"></script> <!--Import xlsx to json script-->
-          <div class="divider"></div>
+            if(currentUser.loggedin == 'no'){
+                window.location.href = "./AdminLanding.html";
+            }
 
+            // ตั้งค่าข้อความใน element ตามค่าใน currentUser
+            document.getElementById('email').textContent = currentUser.email;
+            document.getElementById('schoolName').textContent = currentUser.school_name;
+            document.getElementById('loggedin').textContent = currentUser.loggedin;
+        </script>
+
+        <div class="divider"></div>
+
+        <div class="container m-3">
+          <h4>ดาวน์โหลดไฟล์แบบฟอร์มเพื่อกรอกข้อมูล</h4>
+          <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มในการกรอกข้อมูล</h6>
+          <ul id="formList" folder="formExcel" filename="form_driver.xlsx"></ul>
+          <script src="./module/show/showForm.js" type="module"></script><br>
+          
           <form action="" id="uploadForm">
+            <h4>อัพโหลดไฟล์</h4>
+            <h6>เมื่อกรอกข้อมูลไฟล์ form_driver.xlsx เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
+            <input type="file" class="form-control" id="uploadDriverForm" title="Choose file"/>
+            <script src="./module/manage/ManagerDriverForm.js" type="module"></script><br><br>
+          </form>
 
-            <h3 class="text-danger">upload driver form</h3>
-            <input type="file" class="form-control" id="uploadDriverForm" title="Choose file" />
-            <br />
-            <script src="ManagerDriverForm.js" type="module"></script>
-
-            <div class="divider"></div>
-            <b>Files in Firebase Storage:</b>
-            <ul id="fileList"></ul>
-
-            <script src="ShowDriverForm.js" type="module"></script>
-            <div class="divider"></div>
+          <h4>ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
+          <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
+          <ul id="fileList" folder="form_driver"></ul>
+          <script src="./module/show/show.js" type="module"></script><br>
         </div>
 
-  </body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
+        <!-- <div class="divider"></div>
+        <h4>ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
+        <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
+        <ul id="allList"></ul>
+        <script src="./module/show/showAll.js" type="module"></script><br> -->
+      </div>
+    </div>
+  </div>
+</body>
 
 </html>
-
-
-<!--
-    // const csvFileInput = document.getElementById('csvFileInput');
-    // const uploadButton = document.getElementById('uploadButton');
-    // const resultContainer = document.getElementById('resultContainer');
-
-    // uploadButton.addEventListener('click', handleFileUpload);
-
-    // function handleFileUpload() {
-    // const file = csvFileInput.files[0];
-    // if (file) {
-    // const reader = new FileReader();
-    // reader.onload = (e) => {
-    // const csvData = e.target.result;
-    // const jsonObj = csvToJSON(csvData);
-    // uploadToFirestore(jsonObj);
-    // };
-    // reader.readAsText(file);
-    // }
-    // }
-
-    // function csvToJSON(csvData) {
-    // const csv = require('csvtojson');
-    // return csv().fromString(csvData);
-    // }
-
-    // function uploadToFirestore(jsonData) {
-    // const collectionRef = db.collection('testUser');
-    // collectionRef
-    // .add(jsonData)
-    // .then(() => {
-    // resultContainer.textContent = 'Upload successful!';
-    // })
-    // .catch((error) => {
-    // resultContainer.textContent = `Error uploading to Firestore: ${error}`;
-    // });
-    // }
--->

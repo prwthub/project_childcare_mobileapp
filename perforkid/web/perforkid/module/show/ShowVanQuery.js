@@ -1,10 +1,10 @@
-import currentUser from "./currentUser.js";
-import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
+import currentUser from "../user/currentUser.js";
+import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
 // Import Styling.
 const link = document.createElement('link');
 link.rel = 'stylesheet';
-link.href = './Styling.css';
+link.href = '../../style/Styling.css';
 document.head.appendChild(link);
 
 // Check school
@@ -82,7 +82,7 @@ if (!schoolQuerySnapshot.empty) {
                 // Redirect to Panel5StudentVanSelection.html with the selected van
                 console.log(vanData);
                 const vanNum = vanData['car-number'];
-                window.location.href = `Panel5StudentVanSelection.html?vanNum=${vanNum}`;
+                window.location.href = `../../Panel5StudentVanSelection.html?vanNum=${vanNum}`;
             });
 
             // Append elements to the card body
@@ -93,6 +93,10 @@ if (!schoolQuerySnapshot.empty) {
 
             // Append the card to the container
             vanContainer.appendChild(card);
+
+            // Add a line break after each card
+            const lineBreak = document.createElement('br');
+            vanContainer.appendChild(lineBreak);
 
             const separator = document.createElement('div');
             separator.classList.add("divider")

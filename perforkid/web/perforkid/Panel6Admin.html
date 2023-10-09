@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Admin Page</title>
+  <link rel="stylesheet" href="./style/Styling.css">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <div id="sidebar-container"></div>
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
+      </div>
+
+      <div class="col-9 p-5 bg-light">
+        <h1>User Information</h1>
+        <p>Email: <span id="email"></span></p>
+        <p>School Name: <span id="schoolName"></span></p>
+        <p>logged in: <span id="loggedin"></span></p>
+        
+        <script type="module">
+            // Import currentUser
+            import currentUser from './module/user/currentUser.js';
+        
+            // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+            const storedUser = sessionStorage.getItem('currentUser');
+
+            if (storedUser) {
+                // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+                const storedCurrentUser = JSON.parse(storedUser);
+                // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+                currentUser.email = storedCurrentUser.email;
+                currentUser.school_name = storedCurrentUser.school_name;
+                currentUser.loggedin = storedCurrentUser.loggedin;
+            }
+
+            if(currentUser.loggedin == 'no'){
+                window.location.href = "./AdminLanding.html";
+            }
+
+            // ตั้งค่าข้อความใน element ตามค่าใน currentUser
+            document.getElementById('email').textContent = currentUser.email;
+            document.getElementById('schoolName').textContent = currentUser.school_name;
+            document.getElementById('loggedin').textContent = currentUser.loggedin;
+        </script>
+
+        <div class="divider"></div>
+
+        <div class="container m-3">
+            <h1>Manage Admin</h1>
+            <label for="email">Email:</label>
+            <input type="text" id="inputemail" name="email" required>
+            <button id="addAdminButton">Add Admin</button>
+            <script src="./module/manage/ManagerAdmin.js" type="module"></script>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

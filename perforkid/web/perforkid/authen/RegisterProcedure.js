@@ -1,4 +1,4 @@
-import * as FirebaseAPI from "../../FirebaseAPI/FirebaseAPI.js";
+import * as FirebaseAPI from "../firebaseConfig/FirebaseAPI.js";
 
 // Register Procudure. Import Firebase tools as usual
 const db = FirebaseAPI.getFirestore();
@@ -49,7 +49,7 @@ registerForm.addEventListener('submit', async (e) => { // Wait for form Submit, 
 
         console.log("Account Added");
         alert('Registration Successful!');
-        window.location.href = 'AdminLanding.html'; // Redirects
+        window.location.href = '../AdminLanding.html'; // Redirects
 
     } catch (error) { // Error Handling
         console.error(error.message);

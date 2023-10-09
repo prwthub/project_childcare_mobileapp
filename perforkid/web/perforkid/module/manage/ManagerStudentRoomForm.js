@@ -1,10 +1,10 @@
-import currentUser from "./currentUser.js";
+import currentUser from "../user/currentUser.js";
 //import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
 import {
     firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection,
     addDoc, uploadBytes, getDocs, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
     createUserWithEmailAndPassword, doc
-} from "./FirebaseAPI/FirebaseAPI.js";
+} from "../../firebaseConfig/FirebaseAPI.js";
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
 const storedUser = sessionStorage.getItem('currentUser');
@@ -31,16 +31,21 @@ const room = params.get('room');
 console.log(`Selected room: ` + room);
 document.title = "Student room " + room;
 
+// แยกข้อมูลห้องเป็นส่วนหน้าและหลัง
+let [front, back] = room.split('/');
+
+
 const uploadButton = document.getElementById('studentRoomForm');
 uploadButton.addEventListener('submit', function (e) {
     e.preventDefault();
     console.log("Student Form Submit Button clicked");
     const fileInput = document.getElementById('SubmitStudentFormBtn');
     const xlsxfile = fileInput.files[0];
-    if (xlsxfile) {
+    if ((xlsxfile && xlsxfile.name.endsWith(".xlsx")) && 
+    (xlsxfile.name.startsWith("form_student") || xlsxfile.name.startsWith(`form_student_${front}-${back}`))) {
         upload(xlsxfile, room);
     } else {
-        alert("Please select a file.");
+        alert(`Please select form_student_${front}-${back}.xlsx file.`);
     }
 });
 
@@ -49,10 +54,10 @@ uploadButton.addEventListener('submit', function (e) {
 function upload(file) {
     console.log("Upload function entered.")
     var school = currentUser.school_name;
-    const newfileName =
-        file.name.replace(/\.[^/.]+$/, "") + room + file.name.match(/\..+$/);
-
-    const storageRef = ref(storage, school + "/test/" + newfileName);
+    // สร้างชื่อไฟล์ใหม่โดยใช้ template literals
+    let newFileNameFormatted = `form_student_${front}-${back}.xlsx`;
+    // สร้าง storage reference
+    const storageRef = ref(storage, `${school}/form_student/year${front}/${newFileNameFormatted}`);
     const firestore = firebase.firestore();
     const reader = new FileReader();
 
@@ -74,14 +79,14 @@ function upload(file) {
             
             // Query Firestore to find the school document with name "KMUTNB"
             collectionRef
-              .where("school-name", "==", school) // ใช้ "school-name" แทน "name"
+              .where("school-name", "==", school)
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((schoolDoc) => {
                   // เข้าไปยัง sub collection 'student' ในเอกสารของโรงเรียน
                   const studentRef = schoolDoc.ref.collection("student");
     
-                  // Query เอกสารที่มี field 'room' เป็น '1/1'
+                  // Query เอกสารที่มี field 'room' เป็น ...
                   studentRef
                     .where("room", "==", room)
                     .get()

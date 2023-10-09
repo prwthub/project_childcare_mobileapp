@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>...</title>
-    <link rel="stylesheet" href="Styling.css">
+    <title>Manage Student Room Page</title>
+    <link rel="stylesheet" href="./style/Styling.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 
@@ -14,16 +14,15 @@
         <div class="row">
             <div class="col-3">
                 <div id="sidebar-container"></div>
-                <script src="LoadSideBar.js" type="module"></script>
+                <script src="./module/manage/LoadSideBar.js" type="module"></script>
             </div>
 
             <div class="col-9 p-5 bg-light">
-
                 <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
                 <script type="module">
                   // Initialize Firebase
-                  import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
+                  import * as FirebaseAPI from "./firebaseConfig/FirebaseAPI.js";
                   firebase.initializeApp(FirebaseAPI.firebaseConfig);
                 </script>
 
@@ -34,7 +33,7 @@
                   <h3 class="text-danger">Upload Student Form</h3>
                   <input type="file" class="form-control" id="SubmitStudentFormBtn" title="Choose file" accept=".xlsx"/>
                   <button id = "UploadFormBtn" class="btn btn-dark btn-lg btn-block" type="submit">Submit</button> <!-- Adding a submit button -->
-                  <script src="StudentFormUploadButton.js" type="module"></script>
+                  <script src="./module/manage/ManagerStudentRoomForm.js" type="module"></script>
 
                 </form>
 

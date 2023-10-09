@@ -1,4 +1,4 @@
-import * as FirebaseAPI from "../../FirebaseAPI/FirebaseAPI.js";
+import * as FirebaseAPI from "../firebaseConfig/FirebaseAPI.js";
 
 document.getElementById('signOutBtn').addEventListener('click', async function() {
   try {
@@ -11,7 +11,7 @@ document.getElementById('signOutBtn').addEventListener('click', async function()
 
     console.log('Sign out successful!');
 
-    window.location.href = 'AdminLanding.html'; // Redirects
+    window.location.href = '../AdminLanding.html'; // Redirects
 
   } catch (error) {
     console.error('Error signing out:', error);

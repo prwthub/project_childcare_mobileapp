@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Files Page</title>
+  <link rel="stylesheet" href="./style/Styling.css">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <div id="sidebar-container"></div>
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
+      </div>
+
+      <div class="col-9 p-5 bg-light">
+        <h4>User Information</h4>
+        <p style="font-size: 14px; margin-bottom: 3px;">Email: <span id="email"></span></p>
+        <p style="font-size: 14px; margin-bottom: 3px;">School Name: <span id="schoolName"></span></p>
+        <p style="font-size: 14px; margin-bottom: 3px;">logged in: <span id="loggedin"></span></p>
+        
+        <script type="module">
+            // Import currentUser
+            import currentUser from './module/user/currentUser.js';
+        
+            // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+            const storedUser = sessionStorage.getItem('currentUser');
+
+            if (storedUser) {
+                // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+                const storedCurrentUser = JSON.parse(storedUser);
+                // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+                currentUser.email = storedCurrentUser.email;
+                currentUser.school_name = storedCurrentUser.school_name;
+                currentUser.loggedin = storedCurrentUser.loggedin;
+            }
+
+            if(currentUser.loggedin == 'no'){
+                window.location.href = "./AdminLanding.html";
+            }
+
+            // ตั้งค่าข้อความใน element ตามค่าใน currentUser
+            document.getElementById('email').textContent = currentUser.email;
+            document.getElementById('schoolName').textContent = currentUser.school_name;
+            document.getElementById('loggedin').textContent = currentUser.loggedin;
+        </script>
+
+        <div class="container m-3">
+          <h4>ดาวน์โหลดแบบฟอร์มเปล่า</h4>
+          <ul id="formList" folder="formExcel" filename=""></ul>
+          <!-- filename="" เป็นการโชว์ทุกไฟล์ในโฟลเดอร์ -->
+          <script src="./module/show/showForm.js" type="module"></script><br>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="container m-3">
+            <h4>ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
+            <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
+            <ul id="allList" except="announcementPost"></ul>
+            <!-- except="..." เป็นการไม่แสดงโฟลเดอร์ ... -->
+            <script src="./module/show/showAll.js" type="module"></script><br>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

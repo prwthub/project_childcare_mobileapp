@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher List</title>
-  <link rel="stylesheet" href="Styling.css">
+  <title>Manage Teacher Page</title>
+  <link rel="stylesheet" href="./style/Styling.css">
 </head>
 
 <body>
@@ -13,8 +13,7 @@
     <div class="row">
       <div class="col-3">
         <div id="sidebar-container"></div>
-
-        <script src="LoadSideBar.js" type="module"></script>
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
       </div>
 
       <div class="col-9 p-5 bg-light">
@@ -25,7 +24,7 @@
         
         <script type="module">
             // Import currentUser
-            import currentUser from './currentUser.js';
+            import currentUser from './module/user/currentUser.js';
         
             // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
             const storedUser = sessionStorage.getItem('currentUser');
@@ -40,7 +39,7 @@
             }
 
             if(currentUser.loggedin == 'no'){
-                window.location.href = "../AdminLanding.html";
+                window.location.href = "./AdminLanding.html";
             }
 
             // ตั้งค่าข้อความใน element ตามค่าใน currentUser
@@ -55,47 +54,30 @@
           <h4>ดาวน์โหลดไฟล์แบบฟอร์มเพื่อกรอกข้อมูล</h4>
           <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มในการกรอกข้อมูล</h6>
           <ul id="formList" folder="formExcel" filename="form_teacher.xlsx"></ul>
-          <script src="./teacher/show4form.js" type="module"></script><br>
+          <script src="./module/show/showForm.js" type="module"></script><br>
           
           <form action="" id="uploadForm">
             <h4>อัพโหลดไฟล์</h4>
             <h6>เมื่อกรอกข้อมูลไฟล์ form_teacher.xlsx เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
             <input type="file" class="form-control" id="uploadTeacherForm" title="Choose file"/>
-            <script src="./ManagerTeacherForm.js" type="module"></script><br><br>
+            <script src="./module/manage/ManagerTeacherForm.js" type="module"></script><br><br>
           </form>
 
           <h4>ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
           <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
           <ul id="fileList" folder="form_teacher"></ul>
-          <script src="./teacher/show4.js" type="module"></script><br>
+          <script src="./module/show/show.js" type="module"></script><br>
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
 
-
-
-        <div class="divider"></div>
+        <!-- <div class="divider"></div>
         <h4>ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
         <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
         <ul id="allList"></ul>
-        <script src="./teacher/show4all.js" type="module"></script><br>
-
-        
-
-
-        <!-- <form action="" id="uploadForm">
-          <h3 class="text-danger">upload teacher form</h3>
-          <input type="file" class="form-control" id="uploadTeacherForm" title="Choose file" />
-          <script src="ManagerTeacherForm.js" type="module"></script>
-
-          <ul id="fileList"></ul>
-
-          <script src="ShowTeacherForm.js" type="module"></script>
-          <div class="divider"></div>
-        </form> -->
-
+        <script src="./module/show/showAll.js" type="module"></script><br> -->
       </div>
     </div>
   </div>

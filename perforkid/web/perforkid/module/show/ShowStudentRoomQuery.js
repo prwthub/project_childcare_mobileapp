@@ -1,11 +1,10 @@
-import currentUser from "./currentUser.js";
-import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
-
+import currentUser from "../user/currentUser.js";
+import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
 // Import Styling.
 const link = document.createElement('link');
 link.rel = 'stylesheet';
-link.href = './Styling.css';
+link.href = '../../style/Styling.css';
 document.head.appendChild(link);
 
 // Check school
@@ -85,7 +84,7 @@ if (!schoolQuerySnapshot.empty) {
       card.addEventListener('click', function () {
         // Redirect to Panel4SubRoomSelection.html with the selected room
         const room = studentRoomData.room;
-        window.location.href = `Panel4SubRoomSelection.html?room=${room}`;
+        window.location.href = `../../Panel4SubRoomSelection.html?room=${room}`;
 
       });
 
@@ -99,6 +98,10 @@ if (!schoolQuerySnapshot.empty) {
 
       // Append the card to the container
       studentRoomContainer.appendChild(card);
+
+      // Add a line break after each card
+      const lineBreak = document.createElement('br');
+      studentRoomContainer.appendChild(lineBreak);
 
       const separator = document.createElement('div');
       separator.classList.add("divider")

@@ -1,11 +1,12 @@
-import currentUser from "./currentUser.js";
+import currentUser from "../user/currentUser.js";
 //import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
 import {
     firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection,
     addDoc, uploadBytes, getDocs, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
     createUserWithEmailAndPassword, doc
-} from "./FirebaseAPI/FirebaseAPI.js";
+} from "../../firebaseConfig/FirebaseAPI.js";
 
+// ในส่วนนี้คือการดึง currentUser จาก sessionStorage
 const storedUser = sessionStorage.getItem('currentUser');
 
 if (storedUser) {
@@ -39,7 +40,7 @@ uploadButton.addEventListener('submit', function (e) {
     if (xlsxfile) {
         upload(xlsxfile, vanNum);
     } else {
-        alert("Please select a file.");
+        alert(`Please select form_car_${vanNum}.xlsx file.`);
     }
 });
 
@@ -48,10 +49,10 @@ uploadButton.addEventListener('submit', function (e) {
 function upload(file) {
     console.log("Upload function entered.")
     var school = currentUser.school_name;
-    // var room = "1-1";
-    // const newfileName = file.name.replace(/\.[^/.]+$/, "") + room + file.name.match(/\..+$/);
-    // const storageRef = ref(storage, school + "/form_teacher/" + newfileName);
-    const storageRef = ref(storage, school + "/form_car/" + file.name + " " + vanNum);
+    // สร้างชื่อไฟล์ใหม่
+    let newfilename = `form_car_${vanNum}.xlsx`;
+    // สร้าง storage reference
+    const storageRef = ref(storage, `${school}/form_car/${newfilename}`);
     const firestore = firebase.firestore();
     const reader = new FileReader();
 
@@ -73,31 +74,31 @@ function upload(file) {
             
             // Query Firestore to find the school document with name "KMUTNB"
             collectionRef
-              .where("school-name", "==", school) // ใช้ "school-name" แทน "name"
+              .where("school-name", "==", school) 
               .get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((schoolDoc) => {
-                  // เข้าไปยัง sub collection 'student' ในเอกสารของโรงเรียน
-                  const studentRef = schoolDoc.ref.collection("car");
+                  // เข้าไปยัง sub collection 'car' ในเอกสารของโรงเรียน
+                  const carRef = schoolDoc.ref.collection("car");
     
-                  // Query เอกสารที่มี field 'room' เป็น '1/1'
-                  studentRef
+                  // Query เอกสารที่มี field 'car-number' เป็น ...
+                  carRef
                     .where("car-number", "==", vanNum)
                     .get()
                     .then((studentSnapshot) => {
                       studentSnapshot.forEach((studentDoc) => {
-                        // สร้าง sub collection 'student-list' และลบข้อมูลที่อยู่ใน 'student-list'
+                        // สร้าง sub collection 'student-car' และลบข้อมูลที่อยู่ใน 'student-list'
                         const studentListRef = studentDoc.ref.collection("student-car");
     
                         studentListRef
                           .get()
                           .then((studentListSnapshot) => {
                             studentListSnapshot.forEach((listDoc) => {
-                              // ลบข้อมูลที่อยู่ใน sub collection 'student-list'
+                              // ลบข้อมูลที่อยู่ใน sub collection 'student-car'
                               listDoc.ref.delete();
                             });
     
-                            // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-list'
+                            // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-car'
                             jsonData.forEach((item) => {
                               studentListRef.add(item);
                             });

@@ -1,56 +1,114 @@
-import { ref, storage, uploadBytes, getDownloadURL } from './FirebaseAPI.js'
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+import {getStorage,ref,uploadBytes,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+import {getFirestore,collection,addDoc,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-const driverUpload = document.getElementById("uploadDriverForm");
-driverUpload.addEventListener("change", (e) => {
+const firebaseConfig = {
+  apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
+  authDomain: "perforkid-application.firebaseapp.com",
+  projectId: "perforkid-application",
+  storageBucket: "perforkid-application.appspot.com",
+  messagingSenderId: "741346506533",
+  appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
+  measurementId: "G-TE2LC6M05D",
+};
 
-  const file = e.target.files[0];
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore(app);
 
-  if (file) {
-    // Check if the uploaded file is an .json file
-    if (file.name.endsWith(".json")) {
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
-      // Upload .json file to firebase storage
-      const driverRef = ref(storage, "KMUTNB/form_driver/" + file.name);
-      uploadBytes(driverRef, file)
-        .then((result) => {
-          alert("upload to storage successful");
-        })
-        .catch((err) => {
-          alert("upload to storage failed");
-        });
-    } else {
-      alert("Please upload a valid .json file.");
-    }
-  }
-});
+// Import currentUser
+import currentUser from '../user/currentUser.js';
 
-// upload to firestore
+// ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+const storedUser = sessionStorage.getItem('currentUser');
 
-// json to Firebase Firestore
+if (storedUser) {
+    // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+    const storedCurrentUser = JSON.parse(storedUser);
 
-document
-  .getElementById("uploadDriverForm")
-  .addEventListener("change", handleFileSelect, false);
+    // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+    currentUser.email = storedCurrentUser.email;
+    currentUser.school_name = storedCurrentUser.school_name;
+    currentUser.loggedin = storedCurrentUser.loggedin;
+}
 
-function handleFileSelect(event) {
-  const file = event.target.files[0];
+// ================================================================================================================
+// upload Driver form 
+// Function to upload an .xlsx file to Firebase Storage and then Firestore
+function upload(file) {
+  var school = currentUser.school_name;
+  const storageRef = ref(storage, school + "/form_driver/" + file.name);
+  const firestore = firebase.firestore();
   const reader = new FileReader();
 
   reader.onload = function (e) {
-    const jsonContent = e.target.result;
-    const jsonData = JSON.parse(jsonContent);
-    
-    // Upload the data to Firestore
-    const firestore = firebase.firestore();
-    const collectionRef = firestore.collection("testing");
+    // Upload .xlsx file to Firebase Storage
+    uploadBytes(storageRef, file)
+      .then((result) => {
+        alert("Upload to storage successful! (2)");
 
-    // Upload each object from the JSON data to Firestore
-    jsonData.forEach((item) => {
-      collectionRef.add(item);
-    });
+        // Step 2: After successful upload, convert to .json
+        const xlsxData = e.target.result;
+        const workbook = XLSX.read(xlsxData, { type: "array" });
+        const jsonData = XLSX.utils.sheet_to_json(
+          workbook.Sheets[workbook.SheetNames[0]]
+        );
 
-    console.log("Data uploaded to Firestore successfully!");
-    alert("successful");
+        // Step 3: Upload JSON data to Firestore
+        const collectionRef = firestore.collection("school");
+
+        // Query Firestore to find the school document with name "KMUTNB"
+        collectionRef
+          .where("school-name", "==", school)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((schoolDoc) => {
+              // เข้าไปยัง sub collection 'driver' ในเอกสารของโรงเรียน
+              const driverRef = schoolDoc.ref.collection("driver");
+
+              // ลบข้อมูลที่อยู่ใน sub collection 'teacher'
+              driverRef.get().then((driverSnapshot) => {
+                driverSnapshot.forEach((driverDoc) => {
+                  // ใช้ doc(id).delete() เพื่อลบเอกสาร
+                  driverRef.doc(driverDoc.id).delete(); 
+                });
+
+                // อัปโหลดข้อมูลจาก JSON ไปยัง sub collection 'driver'
+                jsonData.forEach((item) => {
+                  driverRef.add(item);
+                });
+
+                console.log("Data uploaded to Firestore successfully!");
+                alert("Upload to Firestore successful! (4)");
+              });
+            });
+          })
+          .catch((error) => {
+            console.error("Error getting school documents:", error);
+            alert("Error getting school documents");
+          });
+      })
+      .catch((err) => {
+        console.error("Upload to storage failed:", err);
+        alert("Upload to storage failed (5)");
+      });
   };
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
 }
+  
+
+// Event listener for the file input
+const uploadForm = document.getElementById("uploadDriverForm");
+uploadForm.addEventListener("change", (e) => {
+  const xlsxfile = e.target.files[0];
+  // Check if the uploaded file is an .xlsx file and has the correct name
+  if (xlsxfile && xlsxfile.name.endsWith(".xlsx") 
+  && xlsxfile.name.startsWith("form_driver")) {
+    upload(xlsxfile);
+  } else {
+    alert("Please upload a valid file named 'form_driver.xlsx'.");
+  }
+});

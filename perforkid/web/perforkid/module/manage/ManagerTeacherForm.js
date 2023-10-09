@@ -20,7 +20,7 @@ const db = getFirestore(app);
 firebase.initializeApp(firebaseConfig);
 
 // Import currentUser
-import currentUser from './currentUser.js';
+import currentUser from '../user/currentUser.js';
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
 const storedUser = sessionStorage.getItem('currentUser');
@@ -96,7 +96,6 @@ function upload(file) {
         alert("Upload to storage failed (5)");
       });
   };
-  //window.location.href = './Panel2Teacher.html';
   reader.readAsArrayBuffer(file);
 }
   
@@ -113,64 +112,3 @@ uploadForm.addEventListener("change", (e) => {
     alert("Please upload a valid file named 'form_teacher.xlsx'.");
   }
 });
-
-
-// =============================================================================
-
-// import { ref, storage, uploadBytes, getDownloadURL } from './FirebaseAPI.js'
-
-// const teacherUpload = document.getElementById("uploadTeacherForm");
-// teacherUpload.addEventListener("change", (e) => {
-
-//   const file = e.target.files[0];
-
-//   if (file) {
-//     // Check if the uploaded file is an .json file
-//     if (file.name.endsWith(".json")) {
-
-//       // Upload .json file to firebase storage
-//       const teacherRef = ref(storage, "KMUTNB/form_teacher/" + file.name);
-//       uploadBytes(teacherRef, file)
-//         .then((result) => {
-//           alert("upload to storage successful");
-//         })
-//         .catch((err) => {
-//           alert("upload to storage failed");
-//         });
-//     } else {
-//       alert("Please upload a valid .json file.");
-//     }
-//   }
-// });
-
-
-// // upload to firestore
-
-// // json to Firebase Firestore
-// document
-//   .getElementById("uploadTeacherForm")
-//   .addEventListener("change", handleFileSelect, false);
-
-// function handleFileSelect(event) {
-//   const file = event.target.files[0];
-//   const reader = new FileReader();
-
-//   reader.onload = function (e) {
-//     const jsonContent = e.target.result;
-//     const jsonData = JSON.parse(jsonContent);
-    
-//     // Upload the data to Firestore
-//     const firestore = firebase.firestore();
-//     const collectionRef = firestore.collection("testing");
-
-//     // Upload each object from the JSON data to Firestore
-//     jsonData.forEach((item) => {
-//       collectionRef.add(item);
-//     });
-
-//     console.log("Data uploaded to Firestore successfully!");
-//     alert("successful");
-    
-//   };
-//   reader.readAsText(file);
-// }

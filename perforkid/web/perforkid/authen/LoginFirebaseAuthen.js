@@ -1,5 +1,5 @@
-import * as FirebaseAPI from "../../FirebaseAPI/FirebaseAPI.js";
-import currentUser from '../../currentUser.js';
+import * as FirebaseAPI from "../firebaseConfig/FirebaseAPI.js";
+import currentUser from '../module/user/currentUser.js';
 
 
 // Function to get school-name from Firestore
@@ -50,10 +50,7 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     console.log('logged in : ', currentUser.loggedin);
     
     alert('Login successful!');
-    window.location.href = '../../../public/teacher/index4.html'; // Redirects
-    //window.location.href = './Authentication/Login/show.html'; // Redirects
-
-
+    window.location.href = '../Panel1Annoucement.html'; // Redirects
   } catch (error) { // Handle login error
     console.error('Error logging in:', error);
     alert('Invalid credentials. Please try again.');

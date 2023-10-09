@@ -20,7 +20,7 @@ const db = getFirestore(app);
 firebase.initializeApp(firebaseConfig);
 
 // Import currentUser
-import currentUser from '../currentUser.js';
+import currentUser from '../user/currentUser.js';
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
 const storedUser = sessionStorage.getItem('currentUser');
@@ -62,7 +62,7 @@ function addAdmin() {
 }
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('change', (e) => {
     const addButton = document.getElementById('addAdminButton');
     addButton.addEventListener('click', addAdmin);
 });

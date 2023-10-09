@@ -1,4 +1,4 @@
-import * as FirebaseAPI from "../../FirebaseAPI/FirebaseAPI.js";
+import * as FirebaseAPI from "../firebaseConfig/FirebaseAPI.js";
 
 const dropdownField = document.getElementById('school_dropdown_field'); // Query "school-name" field to Dropdown
 const db = FirebaseAPI.getFirestore();
