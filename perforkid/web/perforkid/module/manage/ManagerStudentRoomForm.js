@@ -1,10 +1,26 @@
-import currentUser from "../user/currentUser.js";
-//import * as FirebaseAPI from "./FirebaseAPI/FirebaseAPI.js";
-import {
-    firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection,
-    addDoc, uploadBytes, getDocs, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
-    createUserWithEmailAndPassword, doc
-} from "../../firebaseConfig/FirebaseAPI.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+import {getStorage,ref,uploadBytes,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+import {getFirestore,collection,addDoc,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
+  authDomain: "perforkid-application.firebaseapp.com",
+  projectId: "perforkid-application",
+  storageBucket: "perforkid-application.appspot.com",
+  messagingSenderId: "741346506533",
+  appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
+  measurementId: "G-TE2LC6M05D",
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore(app);
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Import currentUser
+import currentUser from '../user/currentUser.js';
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
 const storedUser = sessionStorage.getItem('currentUser');
@@ -42,7 +58,7 @@ uploadButton.addEventListener('submit', function (e) {
     const fileInput = document.getElementById('SubmitStudentFormBtn');
     const xlsxfile = fileInput.files[0];
     if ((xlsxfile && xlsxfile.name.endsWith(".xlsx")) && 
-    (xlsxfile.name.startsWith("form_student") || xlsxfile.name.startsWith(`form_student_${front}-${back}`))) {
+    xlsxfile.name.startsWith(`form_student_${front}-${back}`)) {
         upload(xlsxfile, room);
     } else {
         alert(`Please select form_student_${front}-${back}.xlsx file.`);

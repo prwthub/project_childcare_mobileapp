@@ -25,7 +25,9 @@ const exceptfoldername = allList.getAttribute("except");
 function listFilesInFolder(folderRef, parentList) {
     listAll(folderRef)
     .then((res) => {
-        res.items.forEach((itemRef) => {
+        const sortedItems = res.items.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })); // เรียงลำดับตามชื่อไฟล์
+
+        sortedItems.forEach((itemRef) => {
             getMetadata(itemRef)
             .then((metadata) => {
                 if (metadata.name !== exceptfoldername) {
@@ -69,5 +71,7 @@ function listFilesInFolder(folderRef, parentList) {
         console.log("Error listing files:", error);
     });
 }
+
+
 
 listFilesInFolder(storageRef, fileList);

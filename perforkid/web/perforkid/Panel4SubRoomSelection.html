@@ -18,24 +18,71 @@
             </div>
 
             <div class="col-9 p-5 bg-light">
-                <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
-                <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+                <h1>User Information</h1>
+                <p>Email: <span id="email"></span></p>
+                <p>School Name: <span id="schoolName"></span></p>
+                <p>logged in: <span id="loggedin"></span></p>
+                
                 <script type="module">
-                  // Initialize Firebase
-                  import * as FirebaseAPI from "./firebaseConfig/FirebaseAPI.js";
-                  firebase.initializeApp(FirebaseAPI.firebaseConfig);
+                    // Import currentUser
+                    import currentUser from './module/user/currentUser.js';
+                
+                    // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+                    const storedUser = sessionStorage.getItem('currentUser');
+
+                    if (storedUser) {
+                        // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+                        const storedCurrentUser = JSON.parse(storedUser);
+                        // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+                        currentUser.email = storedCurrentUser.email;
+                        currentUser.school_name = storedCurrentUser.school_name;
+                        currentUser.loggedin = storedCurrentUser.loggedin;
+                    }
+
+                    if(currentUser.loggedin == 'no'){
+                        window.location.href = "./AdminLanding.html";
+                    }
+
+                    // ตั้งค่าข้อความใน element ตามค่าใน currentUser
+                    document.getElementById('email').textContent = currentUser.email;
+                    document.getElementById('schoolName').textContent = currentUser.school_name;
+                    document.getElementById('loggedin').textContent = currentUser.loggedin;
                 </script>
 
                 <div class="divider"></div>
 
-                <form id="studentRoomForm">
+                <div class="container m-3">
+                    <h4>ดาวน์โหลดไฟล์แบบฟอร์มเพื่อกรอกข้อมูล</h4>
+                    <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มในการกรอกข้อมูล</h6>
+                    <ul id="formList" folder="formExcel" filename="form_student.xlsx"></ul>
+                    <script src="./module/show/showForm.js" type="module"></script><br>
+                    
+                    <script>
+                        const paramsRoom = new URLSearchParams(window.location.search);
+                        const roomNum = paramsRoom.get('room');
+                    </script>
+                    <form id="studentRoomForm">
+                        <h4>อัพโหลดไฟล์</h4>
+                        <h6>เมื่อกรอกข้อมูลไฟล์ <span id="roomDisplay"></span> เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
+                        <input type="file" class="form-control" id="SubmitStudentFormBtn" title="Choose file" accept=".xlsx"/>
+                        <button id = "UploadFormBtn" class="btn btn-dark btn-lg btn-block m-3" type="submit">Submit</button> <!-- Adding a submit button -->
+                        <script src="./module/manage/ManagerStudentRoomForm.js" type="module"></script>
+                    </form>
+                    <script>
+                        let [front, back] = roomNum.split('/');
+                        document.getElementById('roomDisplay').textContent = `form_student_${front}-${back}.xlsx`;
+                    </script>
 
-                  <h3 class="text-danger">Upload Student Form</h3>
-                  <input type="file" class="form-control" id="SubmitStudentFormBtn" title="Choose file" accept=".xlsx"/>
-                  <button id = "UploadFormBtn" class="btn btn-dark btn-lg btn-block" type="submit">Submit</button> <!-- Adding a submit button -->
-                  <script src="./module/manage/ManagerStudentRoomForm.js" type="module"></script>
+                    <h4>ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
+                    <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
+                    <ul id="fileList" folder="form_student"></ul>
+                    <script src="./module/show/show.js" type="module"></script><br>
+                
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
 
-                </form>
+                </div>
 
             </div>
         </div>
