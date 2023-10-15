@@ -56,10 +56,18 @@
           <ul id="formList" folder="formExcel" filename="form_teacher.xlsx"></ul>
           <script src="./module/show/showForm.js" type="module"></script><br>
           
-          <form action="" id="uploadForm">
+          <!-- <form action="" id="uploadForm">
             <h4>อัพโหลดไฟล์</h4>
             <h6>เมื่อกรอกข้อมูลไฟล์ form_teacher.xlsx เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
             <input type="file" class="form-control" id="uploadTeacherForm" title="Choose file"/>
+            <script src="./module/manage/ManagerTeacherForm.js" type="module"></script><br><br>
+          </form> -->
+
+          <form id="uploadForm">
+            <h4>อัพโหลดไฟล์</h4>
+            <h6>เมื่อกรอกข้อมูลไฟล์ form_teacher.xlsx เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
+            <input type="file" class="form-control" id="uploadTeacherForm" title="Choose file" accept=".xlsx"/>
+            <button id = "UploadFormBtn" class="btn btn-dark btn-lg btn-block m-3" type="submit">Submit</button> <!-- Adding a submit button -->
             <script src="./module/manage/ManagerTeacherForm.js" type="module"></script><br><br>
           </form>
 

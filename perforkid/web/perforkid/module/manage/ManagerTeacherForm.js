@@ -100,10 +100,26 @@ function upload(file) {
 }
   
 
+// // Event listener for the file input
+// const uploadForm = document.getElementById("uploadTeacherForm");
+// uploadForm.addEventListener("change", (e) => {
+//   const xlsxfile = e.target.files[0];
+//   // Check if the uploaded file is an .xlsx file and has the correct name
+//   if (xlsxfile && xlsxfile.name.endsWith(".xlsx") 
+//   && xlsxfile.name.startsWith("form_teacher")) {
+//     upload(xlsxfile);
+//   } else {
+//     alert("Please upload a valid file named 'form_teacher.xlsx'.");
+//   }
+// });
+
+
 // Event listener for the file input
-const uploadForm = document.getElementById("uploadTeacherForm");
-uploadForm.addEventListener("change", (e) => {
-  const xlsxfile = e.target.files[0];
+const uploadForm = document.getElementById("uploadForm");
+uploadForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const fileInput = document.getElementById('uploadTeacherForm');
+  const xlsxfile = fileInput.files[0];
   // Check if the uploaded file is an .xlsx file and has the correct name
   if (xlsxfile && xlsxfile.name.endsWith(".xlsx") 
   && xlsxfile.name.startsWith("form_teacher")) {

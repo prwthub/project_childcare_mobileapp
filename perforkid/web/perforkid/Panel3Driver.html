@@ -56,10 +56,18 @@
           <ul id="formList" folder="formExcel" filename="form_driver.xlsx"></ul>
           <script src="./module/show/showForm.js" type="module"></script><br>
           
-          <form action="" id="uploadForm">
+          <!-- <form action="" id="uploadForm">
             <h4>อัพโหลดไฟล์</h4>
             <h6>เมื่อกรอกข้อมูลไฟล์ form_driver.xlsx เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
             <input type="file" class="form-control" id="uploadDriverForm" title="Choose file"/>
+            <script src="./module/manage/ManagerDriverForm.js" type="module"></script><br><br>
+          </form> -->
+
+          <form id="uploadForm">
+            <h4>อัพโหลดไฟล์</h4>
+            <h6>เมื่อกรอกข้อมูลไฟล์ form_driver.xlsx เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
+            <input type="file" class="form-control" id="uploadDriverForm" title="Choose file" accept=".xlsx"/>
+            <button id = "UploadFormBtn" class="btn btn-dark btn-lg btn-block m-3" type="submit">Submit</button> <!-- Adding a submit button -->
             <script src="./module/manage/ManagerDriverForm.js" type="module"></script><br><br>
           </form>
 
