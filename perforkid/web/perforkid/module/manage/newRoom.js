@@ -40,13 +40,13 @@ function createNewRoom() {
     console.log("back = ",back);
     // 1. ถ้าไม่มี /
     if (back === undefined) {
-        alert("ไม่มี /");
+        alert("ชื่อห้องต้องอยู่ในรูปของ ชั้นปี/ห้อง");
         return;
     }
 
     // 2. ถ้ามี / แต่ตัวหน้าไม่ใช่ตัวเลข
     if (back !== undefined && isNaN(front)) {
-        alert("มี / แต่ตัวหน้าไม่ใช่ตัวเลข");
+        alert("ชื่อห้องต้องอยู่ในรูปของ ชั้นปี/ห้อง");
         return;
     }
     var parsedfront = parseInt(front, 10); // แปลงค่าให้เป็นตัวเลข
@@ -93,10 +93,10 @@ function createNewRoom() {
                     //     console.log('Student found in the room:', studentDoc.data());
                     // });
                     if(newr == "NO"){
-                        alert('มีชื่อห้องนี้แล้ว')
+                        alert('มีชื่อห้องนี้แล้ว กรุณาใช้ชื่ออื่น')
                         console.log('Student found in the room:', roomName);
                     }else{
-                        alert('กำลังสร้างห้องใหม่')
+                        alert('กรุณารอสักครู่ กำลังสร้างห้องใหม่')
                         console.log('Student found in the room:', roomName);
                     }
                     

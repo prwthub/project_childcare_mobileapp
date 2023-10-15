@@ -51,7 +51,7 @@ function addAdmin() {
         addDoc(schoolRef, adminData)
             .then(() => {
                 console.log('Admin added successfully!');
-                alert('Admin added successfully!');
+                alert('เพิ่ม admin สำเร็จ!');
             })
             .catch((error) => {
                 console.error('Error adding admin: ', error);

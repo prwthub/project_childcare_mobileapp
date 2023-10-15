@@ -101,7 +101,3 @@ if (!schoolQuerySnapshot.empty) {
 } else {
   console.log("School document not found.");
 }
-
-
-
-

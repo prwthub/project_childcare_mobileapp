@@ -53,6 +53,6 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     window.location.href = '../Panel1Annoucement.html'; // Redirects
   } catch (error) { // Handle login error
     console.error('Error logging in:', error);
-    alert('Invalid credentials. Please try again.');
+    alert('Invalid email or password. Please try again.');
   }
 });

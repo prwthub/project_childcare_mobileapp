@@ -48,15 +48,29 @@
             document.getElementById('loggedin').textContent = currentUser.loggedin;
         </script>
 
-        <div class="divider"></div>
+        <!-- <div class="divider"></div> -->
 
-        <div class="container m-3">
+        <!-- <div class="container m-3">
             <h1>Manage Admin</h1>
             <label for="email">Email:</label>
             <input type="text" id="inputemail" name="email" required>
             <button id="addAdminButton">Add Admin</button>
             <script src="./module/manage/ManagerAdmin.js" type="module"></script>
+        </div> -->
+
+        <div>
+          <label for="room">Email :</label>
+          <input type="text" id="inputemail" name="email" required>
+          <button id="addAdminButton">เพิ่มรายชื่อ</button>
+          <script src="./module/manage/ManagerAdmin.js" type="module"></script>
         </div>
+
+        <div class="divider"></div>
+        <form>
+          <script src="./module/show/ShowAdminQuery.js" type="module"></script>
+          <div id="studentRoomContainer">
+          </div>
+        </form>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>

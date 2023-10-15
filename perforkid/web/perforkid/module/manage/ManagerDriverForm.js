@@ -40,7 +40,7 @@ if (storedUser) {
 // Function to upload an .xlsx file to Firebase Storage and then Firestore
 function upload(file) {
   var school = currentUser.school_name;
-  const storageRef = ref(storage, school + "/form_driver/" + file.name);
+  const storageRef = ref(storage, "school/" + school + "/form_driver/" + file.name);
   const firestore = firebase.firestore();
   const reader = new FileReader();
 
@@ -48,7 +48,8 @@ function upload(file) {
     // Upload .xlsx file to Firebase Storage
     uploadBytes(storageRef, file)
       .then((result) => {
-        alert("Upload to storage successful! (2)");
+        //alert("Upload to storage successful! (2)");
+        alert("กรุณารอสักครู่ กำลังเพิ่มข้อมูลเข้าสู่ระบบ . . .");
 
         // Step 2: After successful upload, convert to .json
         const xlsxData = e.target.result;
@@ -82,18 +83,21 @@ function upload(file) {
                 });
 
                 console.log("Data uploaded to Firestore successfully!");
-                alert("Upload to Firestore successful! (4)");
+                //alert("Upload to Firestore successful! (4)");
+                alert("เพิ่มข้อมูลสำเร็จแล้ว!");
               });
             });
           })
           .catch((error) => {
             console.error("Error getting school documents:", error);
-            alert("Error getting school documents");
+            //alert("Error getting school documents");
+            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
           });
       })
       .catch((err) => {
         console.error("Upload to storage failed:", err);
-        alert("Upload to storage failed (5)");
+        //alert("Upload to storage failed (5)");
+        alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
       });
   };
   reader.readAsArrayBuffer(file);
@@ -125,6 +129,7 @@ uploadForm.addEventListener('submit', function (e) {
   && xlsxfile.name.startsWith("form_driver")) {
     upload(xlsxfile);
   } else {
-    alert("Please upload a valid file named 'form_driver.xlsx'.");
+    //alert("Please upload a valid file named 'form_driver.xlsx'.");
+    alert("กรุณาอัปโหลด ไฟล์ชื่อ form_driver.xlsx เท่านั้น");
   }
 });

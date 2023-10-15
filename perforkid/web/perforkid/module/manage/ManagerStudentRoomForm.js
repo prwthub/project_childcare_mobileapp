@@ -61,7 +61,8 @@ uploadButton.addEventListener('submit', function (e) {
     xlsxfile.name.startsWith(`form_student_${front}-${back}`)) {
         upload(xlsxfile, room);
     } else {
-        alert(`Please select form_student_${front}-${back}.xlsx file.`);
+        //alert(`Please select form_student_${front}-${back}.xlsx file.`);
+        alert(`กรุณาอัปโหลด ไฟล์ชื่อ form_student_${front}-${back}.xlsx เท่านั้น`);
     }
 });
 
@@ -73,7 +74,7 @@ function upload(file) {
     // สร้างชื่อไฟล์ใหม่โดยใช้ template literals
     let newFileNameFormatted = `form_student_${front}-${back}.xlsx`;
     // สร้าง storage reference
-    const storageRef = ref(storage, `${school}/form_student/year${front}/${newFileNameFormatted}`);
+    const storageRef = ref(storage, `school/${school}/form_student/year${front}/${newFileNameFormatted}`);
     const firestore = firebase.firestore();
     const reader = new FileReader();
 
@@ -81,8 +82,9 @@ function upload(file) {
         // Upload .xlsx file to Firebase Storage
         uploadBytes(storageRef, file)
           .then((result) => {
-            alert("Upload to storage successful! (2)");
-    
+            //alert("Upload to storage successful! (2)");
+            alert("กรุณารอสักครู่ กำลังเพิ่มข้อมูลเข้าสู่ระบบ . . .");
+
             // Step 2: After successful upload, convert to .json
             const xlsxData = e.target.result;
             const workbook = XLSX.read(xlsxData, { type: "array" });
@@ -125,28 +127,33 @@ function upload(file) {
                             });
     
                             console.log("Data uploaded to Firestore successfully!");
-                            alert("Upload to Firestore successful! (4)");
+                            // alert("Upload to Firestore successful! (4)");
+                            alert("เพิ่มข้อมูลสำเร็จแล้ว!");
                           })
                           .catch((error) => {
                             console.error("Error deleting documents in subcollection:", error);
-                            alert("Error deleting documents in subcollection");
+                            // alert("Error deleting documents in subcollection");
+                            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
                           });
                       });
                     })
                     .catch((error) => {
                       console.error("Error getting student documents:", error);
-                      alert("Error getting student documents");
+                      // alert("Error getting student documents");
+                      alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
                     });
                 });
               })
               .catch((error) => {
                 console.error("Error getting school documents:", error);
-                alert("Error getting school documents");
+                // alert("Error getting school documents");
+                alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
               });
           })
           .catch((err) => {
             console.error("Upload to storage failed:", err);
-            alert("Upload to storage failed (5)");
+            // alert("Upload to storage failed (5)");
+            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
           });
       };
       reader.readAsArrayBuffer(file);

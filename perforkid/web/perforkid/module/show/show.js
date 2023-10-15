@@ -19,7 +19,7 @@ const storage = getStorage(app);
 // ================================================================================================================
 const fileList = document.getElementById("fileList");
 const foldername = fileList.getAttribute("folder");
-var folderPath = `${currentUser.school_name}/${foldername}/`; 
+var folderPath = `school/${currentUser.school_name}/${foldername}/`; 
 
 
 var filename = "";
@@ -40,7 +40,7 @@ if (vanNum) {
 } else if (roomNum) {
     // ถ้า roomNum มีค่า
     let [front, back] = roomNum.split('/');
-    folderPath = `${currentUser.school_name}/${foldername}/year${front}/`;
+    folderPath = `school/${currentUser.school_name}/${foldername}/year${front}/`;
     filename = `form_student_${front}-${back}.xlsx`;
     console.log("room : ",roomNum);
     console.log(filename);

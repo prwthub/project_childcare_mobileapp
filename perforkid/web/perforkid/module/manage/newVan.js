@@ -37,7 +37,7 @@ function createNewVan() {
     console.log("vanNum = ", vanNum);
     var parsedVanNum = parseInt(vanNum, 10); // แปลงค่าให้เป็นตัวเลข
     if (isNaN(parsedVanNum)) {
-        alert("โปรดระบุหมายเลขรถ");
+        alert("กรุณาระบุหมายเลขรถ");
         return;
     }
 
@@ -78,10 +78,10 @@ function createNewVan() {
                     });
                 } else {
                     if(newr == "NO"){
-                        alert('มีรถหมายเลขนี้แล้ว')
+                        alert('มีรถหมายเลขนี้แล้ว กรุณาใช้หมายเลขอื่น')
                         console.log('car found in the car number:', vanNum);
                     }else{
-                        alert('กำลังเพิ่มรถคันใหม่')
+                        alert('กรุณารอสักครู่ กำลังเพิ่มรถคันใหม่')
                         console.log('car found in the car number:', vanNum);
                     }
                     
