@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import {getStorage,ref,uploadBytes,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import {getFirestore,collection,addDoc,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -35,34 +35,47 @@ if (storedUser) {
     currentUser.loggedin = storedCurrentUser.loggedin;
 }
 
+const adminExists = async (email) => {
+    const db = getFirestore();
+    const adminRef = collection(db, 'admin');
+    const querySnapshot = await getDocs(query(adminRef, where('email', '==', email)));
+    return !querySnapshot.empty;
+};
+
 function addAdmin() {
     const emailInput = document.getElementById('inputemail');
     const email = emailInput.value;
     
     if (email) {
-        const db = getFirestore();
-        const schoolRef = collection(db, 'admin');
-
-        const adminData = {
-            email: email,
-            school_name: currentUser.school_name
-        };
-
-        addDoc(schoolRef, adminData)
-            .then(() => {
-                console.log('Admin added successfully!');
-                alert('เพิ่ม admin สำเร็จ!');
-            })
-            .catch((error) => {
-                console.error('Error adding admin: ', error);
-            });
+        adminExists(email).then((exists) => {
+            if (!exists) {
+                const db = getFirestore();
+                const schoolRef = collection(db, 'admin');
+    
+                const adminData = {
+                    email: email,
+                    school_name: currentUser.school_name,
+                    role: "admin"
+                };
+    
+                addDoc(schoolRef, adminData)
+                    .then(() => {
+                        console.log('Admin added successfully!');
+                        alert('เพิ่ม admin สำเร็จ!');
+                    })
+                    .catch((error) => {
+                        console.error('Error adding admin: ', error);
+                    });
+            } else {
+                alert('อีเมลนี้ในระบบแล้ว');
+            }
+        });
     } else {
         console.error('Email field is required.');
     }
 }
 
-
-document.addEventListener('change', (e) => {
+document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('addAdminButton');
     addButton.addEventListener('click', addAdmin);
 });

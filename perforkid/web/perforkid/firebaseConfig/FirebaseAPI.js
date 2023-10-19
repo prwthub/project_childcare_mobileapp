@@ -11,6 +11,7 @@ import {
   getFirestore,
   collection,
   addDoc,
+  deleteDoc,
   getDocs,
   setDoc,
   query,
@@ -40,5 +41,5 @@ const storage = getStorage(app);
 
 
 export { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, 
-  addDoc, uploadBytes, getDocs, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
+  addDoc, uploadBytes, getDocs, deleteDoc, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
   createUserWithEmailAndPassword, doc };

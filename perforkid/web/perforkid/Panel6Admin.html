@@ -21,6 +21,7 @@
         <p>Email: <span id="email"></span></p>
         <p>School Name: <span id="schoolName"></span></p>
         <p>logged in: <span id="loggedin"></span></p>
+        <p>role: <span id="role"></span></p>
         
         <script type="module">
             // Import currentUser
@@ -36,6 +37,7 @@
                 currentUser.email = storedCurrentUser.email;
                 currentUser.school_name = storedCurrentUser.school_name;
                 currentUser.loggedin = storedCurrentUser.loggedin;
+                currentUser.role = storedCurrentUser.role;
             }
 
             if(currentUser.loggedin == 'no'){
@@ -46,6 +48,7 @@
             document.getElementById('email').textContent = currentUser.email;
             document.getElementById('schoolName').textContent = currentUser.school_name;
             document.getElementById('loggedin').textContent = currentUser.loggedin;
+            document.getElementById('role').textContent = currentUser.role;
         </script>
 
         <!-- <div class="divider"></div> -->

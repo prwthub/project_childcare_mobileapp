@@ -16,6 +16,20 @@ async function getSchoolName(email) {
   return null; // If no data found
 }
 
+// Function to get school-name from Firestore
+async function getRole(email) {
+  const db = FirebaseAPI.getFirestore();
+  const adminRef = FirebaseAPI.collection(db, 'admin');
+  const querySnapshot = await FirebaseAPI.getDocs(FirebaseAPI.query(adminRef, FirebaseAPI.where("email", "==", email)));
+
+  if (!querySnapshot.empty) {
+    const documentData = querySnapshot.docs[0].data();
+    const role = documentData['role'];
+    return role;
+  }
+  return null; // If no data found
+}
+
 
 document.getElementById('loginBtn').addEventListener('click', async function() {
   const usernameInput = document.getElementById('username_or_email').value; // Input field from AdminLanding.html
@@ -35,6 +49,10 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
 
     // set currentUser.loggedin
     currentUser.loggedin = "yes";
+
+    // set currentUser.role
+    const role = await getRole(currentUser.email);
+    currentUser.role = role;
 
     // Store currentUser in localStorage // localstorage not work
     // localStorage.setItem('currentUser', JSON.stringify(currentUser));

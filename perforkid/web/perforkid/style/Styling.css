@@ -7,3 +7,7 @@
   border-top: 1px solid black;
   margin: 5px 0;
 }
+
+.delete-button-container {
+  float: right; /* ให้ปุ่มอยู่ด้านขวาของการ์ด */
+}

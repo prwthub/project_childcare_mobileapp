@@ -16,6 +16,11 @@ async function fetchAdminData() {
   if (!adminQuerySnapshot.empty) {
     adminQuerySnapshot.forEach(doc => {
       const adminData = doc.data();
+      console.log("email : " + adminData.email);
+      console.log("school : " + adminData.school_name);
+      console.log("role : " + adminData.role);
+      console.log("doc.id : " + doc.id);
+      console.log("");
 
       // Create card element
       const card = document.createElement('div');
@@ -28,17 +33,44 @@ async function fetchAdminData() {
       // Create card title element
       const cardTitle = document.createElement('h5');
       cardTitle.className = 'card-title';
-      cardTitle.textContent = adminData.field_name; // เปลี่ยน 'field_name' เป็นชื่อ field ที่ต้องการแสดง
+      if (adminData.email == currentUser.email) {
+        cardTitle.textContent = adminData.email + " (คุณ)";
 
-      // Add click event listener to card
-      card.addEventListener('click', function () {
-        const room = adminData.field_name; // เปลี่ยน 'field_name' เป็นชื่อ field ที่ต้องการใช้ใน URL
-        window.location.href = `../../Panel4SubRoomSelection.html?room=${room}`;
-      });
+        // Append elements to card
+        cardBody.appendChild(cardTitle);
+        // const separator = document.createElement('div');
+        // separator.classList.add("divider");
+        // cardBody.appendChild(separator);
+        card.appendChild(cardBody);
+      } else {
+        cardTitle.textContent = adminData.email;
 
-      // Append elements to card
-      cardBody.appendChild(cardTitle);
-      card.appendChild(cardBody);
+        // Create delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-danger';
+        deleteButton.textContent = 'ลบผู้ใช้';
+        deleteButton.style.float = 'right'; // Add float: right style
+        // Add click event listener to delete button
+        deleteButton.addEventListener('click', async function (event) {
+          event.preventDefault();
+          if (currentUser.role == 'super admin') {
+            await FirebaseAPI.deleteDoc(adminRef, doc.id);
+            // Remove card from UI after deletion
+            card.remove();
+          } else {
+            console.log("You do not have permission to delete.");
+          }
+        }); 
+
+
+        // Append elements to card
+        cardBody.appendChild(cardTitle);
+        const separator = document.createElement('div');
+        separator.classList.add("divider");
+        cardBody.appendChild(separator);
+        cardBody.appendChild(deleteButton);
+        card.appendChild(cardBody);
+      }
 
       // Append card to container
       const studentRoomContainer = document.getElementById('studentRoomContainer');
@@ -47,10 +79,6 @@ async function fetchAdminData() {
       // Add line break and separator if needed
       const lineBreak = document.createElement('br');
       studentRoomContainer.appendChild(lineBreak);
-
-      const separator = document.createElement('div');
-      separator.classList.add("divider");
-      cardBody.appendChild(separator);
     });
   } else {
     console.log("No announcements found.");
