@@ -53,10 +53,20 @@ async function fetchAdminData() {
         // Add click event listener to delete button
         deleteButton.addEventListener('click', async function (event) {
           event.preventDefault();
+          console.log(currentUser.role);
           if (currentUser.role == 'super admin') {
-            await FirebaseAPI.deleteDoc(adminRef, doc.id);
+            const confirmAdminRemove = confirm('Are you sure you want to remove admin "' + adminData.email + '" ?');
+            if (confirmAdminRemove){
+            console.log("If super admin condition passed, entered the condition.");
+            console.log('Admin Reference:', adminRef.path);
+            console.log('Deleting document with ID:', doc.id);
+            console.log(doc.ref);
+            await FirebaseAPI.deleteDoc(doc.ref);
             // Remove card from UI after deletion
             card.remove();
+            alert('Admin deleted successfully!');
+          }
+
           } else {
             console.log("You do not have permission to delete.");
           }
