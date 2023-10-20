@@ -14,8 +14,9 @@ if (storedUser) {
 }
 
 // ตั้งค่าข้อความใน element ตามค่าใน currentUser
-document.getElementById('email').textContent = currentUser.email;
-document.getElementById('schoolName').textContent = currentUser.school_name;
+// document.getElementById('email').textContent = currentUser.email;
+// document.getElementById('schoolName').textContent = currentUser.school_name;
+// document.getElementById('userNameDropdown').textContent = currentUser.email;
 
 
 

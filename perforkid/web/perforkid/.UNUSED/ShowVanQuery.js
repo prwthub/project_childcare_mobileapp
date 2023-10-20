@@ -62,18 +62,11 @@ if (!schoolQuerySnapshot.empty) {
             return vanNumberA - vanNumberB;
         });
 
-        const cardRow = document.createElement('div');
-        cardRow.className = 'row';
-        vanContainer.appendChild(cardRow);
-
         vanData.forEach(vanData => {
-
-            const cardSpace = document.createElement('div');
-            cardSpace.className = 'col-3';
 
             // Create a Bootstrap card element
             const card = document.createElement('div');
-            card.className = 'card m-1 p-2 btn';
+            card.className = 'card';
 
             // Create the card body
             const cardBody = document.createElement('div');
@@ -97,24 +90,20 @@ if (!schoolQuerySnapshot.empty) {
 
             // Append the card body to the card
             card.appendChild(cardBody);
-            cardSpace.appendChild(card);
 
             // Append the card to the container
-            cardRow.appendChild(cardSpace);
-            // Append the card to the container
-            vanContainer.appendChild(cardRow);
-            
-// Add a line break after each card
-            // const lineBreak = document.createElement('br');
-            // vanContainer.appendChild(lineBreak);
+            vanContainer.appendChild(card);
+
+            // Add a line break after each card
+            const lineBreak = document.createElement('br');
+            vanContainer.appendChild(lineBreak);
 
             const separator = document.createElement('div');
             separator.classList.add("divider")
             cardBody.appendChild(separator);
-
         });
     } else {
-        console.log("No Van/Bus found.");
+        console.log("No announcements found.");
     }
 } else {
     console.log("School document not found.");

@@ -5,20 +5,18 @@ import {
   listAll,
   getMetadata,
   getDownloadURL,
-  uploadBytes,
-  deleteObject
+  uploadBytes
 } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
 import {
   getFirestore,
   collection,
   addDoc,
+  deleteDoc,
   getDocs,
   setDoc,
   query,
   where,
-  doc,
-  deleteDoc,
-  updateDoc
+  doc
 } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js";
 
 import {
@@ -43,5 +41,5 @@ const storage = getStorage(app);
 
 
 export { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, 
-  addDoc, uploadBytes, getDocs, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
-  createUserWithEmailAndPassword, doc, deleteDoc, deleteObject, updateDoc };
+  addDoc, uploadBytes, getDocs, deleteDoc, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
+  createUserWithEmailAndPassword, doc };

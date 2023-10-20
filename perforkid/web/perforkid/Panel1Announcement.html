@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annoucement Page</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="./style/Styling.css">
+
+</head>
+<!-- <script>
+
+  $(function () {
+    $("#sidebar-container").load("Sidebar.html");
+  });
+
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('.nav-link').click(function () {
+      $('.nav-link').removeClass('active');
+      $(this).addClass('active');
+    });
+  });
+</script> -->
+
+
+
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div id="editOverlay" style="display: none;">
+
+
+        <!-- Submit Button -->
+
+        <form id="announcementFormEdit">
+          <div class="container-fluid row p-5">
+            <div class="col-sm-8 px-5">
+
+              <h1 id="announcementEdith1">--Edit Announcement--</h1>
+              <div class="form-group">
+                <label for="postTimestamp">Announcement Posted Time</label>
+                <input type="text" class="form-control-lg d-flex" id="postTimestampEdit" disabled>
+              </div>
+
+              <div class="form-group row">
+                <label for="postHeaderEdit">Header</label>
+                <input type="text" class="form-control-lg d-flex" id="postHeaderEdit" required>
+              </div>
+
+              <div class="form-group row">
+                <label for="postContentEdit">Announcement Content</label>
+                <textarea class="form-control-lg d-flex" id="postContentEdit" rows="15"></textarea>
+                <br>
+              </div>
+
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="imageInputEdit">Upload Image</label>
+                <input type="file" class="form-control d-flex" id="imageInputEdit">
+                <div id="imagePreviewEdit" class="pt-4"></div>
+              </div>
+              <div class="divider"></div>
+
+
+              <div class="form-group form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="keepOldImage">
+                <label class="form-check-label" for="keepOldImage">Keep Old Image</label>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row" style="float: none; margin: 0 auto;">
+              <script src="./module/manage/AnnouncementEdit.js" type="module"></script>
+              <button type="button" class="btn btn-success col-sm-6 d-flex" id="submitEditBtn">Submit</button>
+              <button type="button" class="btn btn-secondary col-sm-6 d-flex" id="cancelEditBtn">Cancel</button>
+            </div>
+
+        </form>
+
+        <script>
+          document.getElementById('imageInputEdit').addEventListener('change', function () {
+            const file = this.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+              const preview = document.getElementById('imagePreviewEdit');
+              const img = new Image();
+              img.src = e.target.result;
+              img.className = 'img-fluid';
+              preview.innerHTML = '';
+              preview.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+          });
+
+          document.getElementById('announcementFormEdit').addEventListener('reset', function () {
+            const preview = document.getElementById('imagePreviewEdit');
+            preview.innerHTML = '';
+          });
+        </script>
+
+        <script src="./module/manage/AnnouncementEdit.js" type="module"></script>
+      </div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-3">
+        <div id="sidebar-container"></div>
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
+      </div>
+
+      <div class="col-9 p-5 bg-light">
+        <h1>Announcement Page</h1>
+
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+        <script type="module">
+          // Initialize Firebase
+          import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
+          firebase.initializeApp(FirebaseAPI.firebaseConfig);
+          import currentUser from './module/user/currentUser.js';
+          import { submitAnnouncement } from './module/manage/AnnouncementSubmit.js';
+
+          const storedUser = sessionStorage.getItem('currentUser');
+
+          if (storedUser) {
+            // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+            const storedCurrentUser = JSON.parse(storedUser);
+
+            // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+            currentUser.email = storedCurrentUser.email;
+            currentUser.school_name = storedCurrentUser.school_name;
+          }
+
+          // if(currentUser.loggedin == 'no'){
+          //       window.location.href = "./AdminLanding.html";
+          //   }
+
+
+          const schoolTextElement = document.getElementById('schoolText');
+          schoolTextElement.innerHTML = `All Announcement Post Of <b>${currentUser.school_name}</b>`;
+
+        </script>
+
+        <div class="divider"></div>
+        <script src="./module/user/userDataKeeper.js" type="module"></script>
+
+        <!-- <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Dropdown button
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </div> -->
+
+
+
+        <!-- Add this in your HTML file -->
+        <form id="announcementForm">
+          <div class="container-fluid row">
+            <div class="col-sm-8 px-5">
+              <div class="form-group row">
+                <label for="postHeader">Header</label>
+                <input type="text" class="form-control-lg d-flex" id="postHeaderAdd" required>
+              </div>
+
+              <div class="form-group row">
+                <label for="postContentAdd">Announcement Content</label>
+                <textarea class="form-control-lg d-flex" id="postContentAdd" rows="15"></textarea>
+                <br>
+              </div>
+
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group row">
+                <label for="imageInputAdd">Upload Image</label>
+                <input type="file" class="form-control d-flex" id="imageInputAdd">
+                <div class="divider"></div>
+                <div id="imagePreviewAdd"></div>
+              </div>
+
+            </div>
+
+            <div class="divider"></div>
+            <div>
+              <button type="button" id="submitAddBtn" 
+              class="btn btn-success row d-flex col-sm-12 justify-content-center">Submit</button>
+              <script src="./module/manage/AnnouncementSubmit.js" type="module"></script>
+          </div>
+          </form>
+
+        <script>
+          document.getElementById('imageInputAdd').addEventListener('change', function () {
+            const file = this.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+              const preview = document.getElementById('imagePreviewAdd');
+              const img = new Image();
+              img.src = e.target.result;
+              img.className = 'img-fluid';
+              preview.innerHTML = '';
+              preview.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+          });
+          document.getElementById('announcementForm').addEventListener('reset', function () {
+            const preview = document.getElementById('imagePreviewAdd');
+            preview.innerHTML = '';
+          });
+        </script>
+
+        <br>
+
+        <div class="divider"></div>
+        <div class="pt-1 mb-4">
+          <script type="module" src="./authen/LogoutFirebaseAuthen.js"></script>
+          <button id="signOutBtn" class="btn btn-dark btn-lg btn-block" type="button">Logoutt</button>
+        </div>
+
+        <b id="schoolText"></b>
+
+        <!-- <button type = "button" class ="btn btn-info" id="sortByDateButton">Sort</button>
+        <script src = "PostSort.js" type = "module"></script> -->
+
+        <ul id="fileList"></ul>
+
+        <div id="announcementContainer"></div>
+        <script src="./module/show/ShowAnnouncementPost.js" type="module"></script>
+        <div class="divider"></div>
+
+        <!--  <script src="FormInputShowAll.js" type="module"></script> 
+          Import show every file in storage script, uncomment this to use this module -->
+
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

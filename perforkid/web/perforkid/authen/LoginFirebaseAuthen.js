@@ -68,7 +68,7 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     console.log('logged in : ', currentUser.loggedin);
     
     alert('Login successful!');
-    window.location.href = '../Panel1Annoucement.html'; // Redirects
+    window.location.href = '../Panel1Announcement.html'; // Redirects
   } catch (error) { // Handle login error
     console.error('Error logging in:', error);
     alert('Invalid email or password. Please try again.');

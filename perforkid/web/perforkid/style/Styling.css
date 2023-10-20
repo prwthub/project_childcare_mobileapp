@@ -11,3 +11,8 @@
 .delete-button-container {
   float: right; /* ให้ปุ่มอยู่ด้านขวาของการ์ด */
 }
+
+.announcement-content {
+  white-space: pre-line;
+}
+
