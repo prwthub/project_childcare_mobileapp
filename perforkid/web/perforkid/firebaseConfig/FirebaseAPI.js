@@ -15,6 +15,7 @@ import {
   getDocs,
   setDoc,
   query,
+  orderBy,
   where,
   doc
 } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore.js";
@@ -41,5 +42,5 @@ const storage = getStorage(app);
 
 
 export { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, 
-  addDoc, uploadBytes, getDocs, deleteDoc, setDoc, query, where, getAuth, signInWithEmailAndPassword, signOut,
+  addDoc, uploadBytes, getDocs, deleteDoc, setDoc, orderBy, query, where, getAuth, signInWithEmailAndPassword, signOut,
   createUserWithEmailAndPassword, doc };

@@ -142,6 +142,60 @@ function upload(file) {
                       // alert("Error getting student documents");
                       alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
                     });
+
+
+                    // Query เอกสารที่มี field 'room' เป็น all
+                    studentRef
+                    .where("room", "==", "all")
+                    .get()
+                    .then((studentSnapshot) => {
+                        if (studentSnapshot.empty) {
+                            // ถ้าไม่มีเอกสารที่มี field 'room' เป็น 'all', ให้สร้างเอกสารใหม่
+                            studentRef.add({ room: "all"})
+                                .then((newStudentDoc) => {
+                                    const studentListRef = newStudentDoc.collection("student-list");
+                                    // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-list'
+                                    jsonData.forEach((item) => {
+                                        item.name = "student";
+                                        studentListRef.add(item);
+                                    });
+                                    console.log("New document created and data uploaded to Firestore successfully!");
+                                    alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                                })
+                                .catch((error) => {
+                                    console.error("Error creating new document:", error);
+                                    alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                                });
+                        } else {
+                            // ถ้ามีเอกสารที่มี field 'room' เป็น 'all'
+                            studentSnapshot.forEach((studentDoc) => {
+                                const studentListRef = studentDoc.ref.collection("student-list");
+                                studentListRef.get()
+                                    .then((studentListSnapshot) => {
+                                        studentListSnapshot.forEach((listDoc) => {
+                                            // ลบข้อมูลที่อยู่ใน sub collection 'student-list'
+                                            listDoc.ref.delete();
+                                        });
+
+                                        // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-list'
+                                        jsonData.forEach((item) => {
+                                            studentListRef.add(item);
+                                        });
+
+                                        console.log("Data uploaded to Firestore successfully!");
+                                        alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                                    })
+                                    .catch((error) => {
+                                        console.error("Error deleting documents in subcollection:", error);
+                                        alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                                    });
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error getting student documents:", error);
+                        alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                    });
                 });
               })
               .catch((error) => {
