@@ -1,15 +1,46 @@
 import currentUser from "../user/currentUser.js";
 import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
-const submitFormFirst = document.getElementById('submitAddBtn');
-submitFormFirst.addEventListener('click', function (e) {
-    const submitConfirm = confirm("Please check the integrity of the content, proceed?");
-    if (!submitConfirm) {
-        e.preventDefault(); // Prevents the form from submitting if user cancels
-    } else {
-      submitAnnouncement();
-    }
+const cancelAddBtn = document.getElementById('cancelAddBtn');
+const addPostStartBtn = document.getElementById('addPostStartBtn');
+const addOverlay = document.getElementById('addOverlay');
+const announcementForm = document.getElementById('announcementFormAdd');
+
+cancelAddBtn.addEventListener('click', function () {
+    addOverlay.style.display = 'none';
+    addPostStartBtn.style.display = 'block';
+    announcementForm.reset();
 });
+
+addPostStartBtn.addEventListener('click', function () {
+    addOverlay.style.display = 'block';
+    addPostStartBtn.style.display = 'none';
+    announcementForm.reset();
+});
+
+const submitFormFirst = document.getElementById('submitAddBtn');
+// submitFormFirst.addEventListener('click', function (e) {
+//     const submitConfirm = confirm("Please check the integrity of the content, proceed?");
+//     if (!submitConfirm) {
+//         e.preventDefault(); // Prevents the form from submitting if user cancels
+//     } else {
+//       submitAnnouncement();
+//     }
+// });
+
+submitFormFirst.addEventListener('click', function (e) {
+    const postHeader = document.getElementById('postHeaderAdd').value;
+    const postContent = document.getElementById('postContentAdd').value;
+    const confirmSubmit = confirm("Please check the integrity of the content, proceed?");
+    if (confirmSubmit) {
+        if (!postHeader || !postContent) {
+            e.preventDefault(); // Prevent form submission
+            alert('Please fill in both the header and content fields.'); // Provide a message to the user
+        } else {
+            submitAnnouncement();
+        }}
+    });
+
 
 export async function submitAnnouncement() {
 

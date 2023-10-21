@@ -30,15 +30,11 @@ if (!schoolQuerySnapshot.empty) {
     cardRow.className = 'row';
     announcementContainer.appendChild(cardRow);
 
-    // let cardCount = 0;
+    // This is for each post's edit button
+
 
     announcementQuerySnapshot.forEach((doc) => {
       const announcementData = doc.data();
-
-      // if (cardCount >= 1) {
-      //   announcementContainer.appendChild(cardRow);
-      //   cardCount = 0;
-      // }
 
       const cardSpace = document.createElement('div');
       cardSpace.className = 'col-6';
@@ -86,40 +82,63 @@ if (!schoolQuerySnapshot.empty) {
         }
       });
 
-      // Create the Edit Button
+      // Create the edit button
       const cardEditButton = document.createElement('div');
       cardEditButton.className = 'btn btn-primary col-sm-6 justify-content-center';
       cardEditButton.textContent = 'Edit';
       cardEditButton.style.marginCenter = 'auto';
-      const submitEditBtn = document.getElementById('submitEditBtn');
+      cardEditButton.id = `cardEditButton_${doc.id}`
+      console.log("Card's id: " + cardEditButton.id);
+      cardEditButton.addEventListener('click', handleCardEditButtonClick);
 
-      cardEditButton.addEventListener('click', function () {
+
+      function handleCardEditButtonClick(e) {
+        const announcementId = e.target.id;
+        console.log("AnnouncementId " + announcementId);
+        const cardEditClickedBtn = document.getElementById(announcementId);
+
+
+        console.log("cardEditClickedBtn ", cardEditClickedBtn);
 
         document.getElementById("announcementFormEdit").reset();
 
         const editOverlay = document.getElementById('editOverlay');
         editOverlay.style.display = 'block';
-
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
 
         const announcementh1TextElement = document.getElementById('announcementEdith1');
-        announcementh1TextElement.innerHTML = `--Announcement Edit-- <br> ${announcementData.header}`
-
+        announcementh1TextElement.innerHTML = `--Announcement Edit-- <br> ${announcementData.header}`;
         const timestampBoxElement = document.getElementById('postTimestampEdit');
         timestampBoxElement.value = formattedDate;
 
-        console.log(rawTimestamp);
+        console.log("rawTimestamp " + rawTimestamp);
 
+        const submitEditBtn = document.getElementById('submitEditBtn');
         submitEditBtn.addEventListener('click', function () {
-          const confirmEdit = confirm("Are you sure to submit this edit to the announcement?");
-          if (confirmEdit) {
-            editAnnouncement(rawTimestamp);
-          }
+          submitEditClickHandler(rawTimestamp);
+          submitEditBtn.removeEventListener('click', submitEditClickHandler);
         });
 
-        // window.location.href = `Panel1SubEditAnnouncement.html?timestamp=${rawTimestamp}`;
-      });
+        function submitEditClickHandler(rawTimestamp) {
+          const announcementId = e.target.id;
+          const cardEditClickedBtn = document.getElementById(announcementId);
+          console.log("submitEditClickHandler Entered\n"+announcementId);
+          // console.log(getEventListeners(cardEditClickedBtn));
+          const postHeader = document.getElementById('postHeaderEdit').value;
+          const postContent = document.getElementById('postContentEdit').value;
+          const confirmEdit = "Are you sure to submit this edit to the announcement?";
+          if (confirm(confirmEdit)) {
+            if (!postHeader || !postContent) {
+              e.preventDefault();
+              console.log('Please fill in both the header and content fields.');
+            } else {
+              editAnnouncement(rawTimestamp);
+            }
+          }
+        }
+
+      }
 
       const cardImage = document.createElement('div');
       cardImage.className = 'card-text d-flex justify-content-center';
@@ -162,6 +181,63 @@ if (!schoolQuerySnapshot.empty) {
 } else {
   console.log("School document not found.");
 }
+
+function getEventListeners(element) {
+  const listeners = getEventListenersOfNode(element);
+  const result = {};
+
+  for (const key in listeners) {
+    if (listeners.hasOwnProperty(key)) {
+      result[key] = [];
+
+      listeners[key].forEach(listener => {
+        result[key].push({
+          listener: listener.listener,
+          useCapture: listener.useCapture
+        });
+      });
+    }
+  }
+
+  return result;
+}
+
+function getEventListenersOfNode(node) {
+  const result = {};
+
+  const registry = window.__eventRegistry;
+
+  if (!registry) {
+    return result;
+  }
+
+  const handlers = registry.handlers;
+
+  if (!handlers) {
+    return result;
+  }
+
+  Object.keys(handlers).forEach(key => {
+    const handler = handlers[key];
+
+    handler.forEach(event => {
+      if (event.node === node || node.closest(event.node)) {
+        if (!result[key]) {
+          result[key] = [];
+        }
+
+        result[key].push({
+          listener: event.listener,
+          useCapture: event.useCapture
+        });
+      }
+    });
+  });
+
+  return result;
+}
+
+
 
 
 

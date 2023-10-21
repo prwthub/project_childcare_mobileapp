@@ -1,10 +1,7 @@
 import currentUser from "../user/currentUser.js";
 import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
-// Assuming there's a button with id 'editButton'
-
 const cancelEditBtn = document.getElementById('cancelEditBtn');
-
 
 cancelEditBtn.addEventListener('click', function () {
     const editOverlay = document.getElementById('editOverlay');

@@ -16,3 +16,51 @@
   white-space: pre-line;
 }
 
+.navbar-brand {
+  font-size:25px;
+  font-weight: bold;
+  margin-left: 0;
+}
+
+.nav-item {
+  margin-bottom: 20px; /* Adjust the value to increase or decrease spacing */
+}
+
+#sidebar-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 22vw;
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: space-between; /* This will push the brand to the right */
+  align-items: flex-end; /* This will vertically center the items */
+  width: 100%; /* Make sure it takes full width */
+}
+
+.navbar {
+  min-height: 100px; /* Adjust the value as needed */
+  flex-grow: 1;
+  max-height: calc(100% - 0px); /* Adjust this value to leave space for navbar */
+}
+
+.navOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
+
+
+
+
+
