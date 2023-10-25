@@ -6,8 +6,8 @@ document.getElementById('signOutBtn').addEventListener('click', async function()
 
     await FirebaseAPI.signOut(auth);
 
-      // ลบค่าใน sessionStorage
-      sessionStorage.removeItem('currentUser');
+    // ลบค่าใน sessionStorage
+    sessionStorage.removeItem('currentUser');
 
     console.log('Sign out successful!');
 

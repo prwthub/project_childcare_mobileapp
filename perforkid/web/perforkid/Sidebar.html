@@ -4,118 +4,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .active {
+            background-color:cornflowerblue;
+            color: #fff;
+            padding: 10px 20px; /* ปรับขนาดของพื้นที่ active item ตามที่ต้องการ */
+            border-radius: 5px; /* เพิ่มขอบมนมุมเมนู */
+            text-align: left;
+            font-size: 20px;
+        }
+    </style>        
 </head>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const allLinks = document.querySelectorAll('.nav-link');
 
-        allLinks.forEach(link => {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                allLinks.forEach(navLink => navLink.classList.remove('active'));
-                link.classList.add('active');
-
-                const targetUrl = link.getAttribute('href');
-                window.history.pushState(null, '', targetUrl);
-            });
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dropdown = document.querySelector('.navbar .dropdown');
-        console.log(dropdown);
-    });
-</script>
-
-<script type="module">
-    // Initialize Firebase
-    import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
+<!-- <script type="module">
+    import * as FirebaseAPI from "./firebaseConfig/FirebaseAPI.js";
     firebase.initializeApp(FirebaseAPI.firebaseConfig);
     import currentUser from './module/user/currentUser.js';
 
     const storedUser = sessionStorage.getItem('currentUser');
 
     if (storedUser) {
-      // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
-      const storedCurrentUser = JSON.parse(storedUser);
+        // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+        const storedCurrentUser = JSON.parse(storedUser);
 
-      // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
-      currentUser.email = storedCurrentUser.email;
-      currentUser.school_name = storedCurrentUser.school_name;
+        // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+        currentUser.email = storedCurrentUser.email;
+        currentUser.school_name = storedCurrentUser.school_name;
     }
 
     const schoolTextElement = document.getElementById('userNameDropdown');
     schoolTextElement.innerHTML = `<b>${currentUser.school_name}</b>`;
-
-  </script>
+</script> -->
 
 <body>
     <div class="navOverlay" id="navOverlay"></div>
-    <nav class="navbar navbar-expand-xl navbar-light bg-light px-3 py-5 ">
-        <button id="toggleOverlay" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    
+    <nav class="navbar navbar-expand-xl navbar-light bg-light ">
+        <button id="toggleOverlay" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav flex-column m-5">
+            <ul class="navbar-nav flex-column mx-3 my-5">
                 <li class="navbar-brand">
-                    <a class="nav-link" href="#">Admin Panel</a>
+                    <a style="text-align: right;" class="nav-link" href="#">Admin Panel</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel1Announcement.html">Announcement</a>
+                <li class="nav-item w-100 ">
+                    <a class="nav-link nav-left" href="./Panel1Announcement.html">Announcement</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel2Teacher.html">Teachers</a>
+                <li class="nav-item w-100">
+                    <a class="nav-link nav-left" href="./Panel2Teacher.html">Teachers</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel3Driver.html">Drivers</a>
+                <li class="nav-item w-100">
+                    <a class="nav-link nav-left" href="./Panel3Driver.html">Drivers</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel4Student.html">Student</a>
+                <li class="nav-item w-100">
+                    <a class="nav-link nav-left" href="./Panel4Student.html">Student</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel5StudentVan.html">Van</a>
+                <li class="nav-item w-100">
+                    <a class="nav-link nav-left" href="./Panel5StudentVan.html">Van</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel6Admin.html">New Admin</a>
+                <li class="nav-item w-100">
+                    <a class="nav-link nav-left" href="./Panel6Admin.html">New Admin</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./Panel7ListFile.html">All File</a>
+                <li class="nav-item w-100">
+                    <a class="nav-link nav-left" href="./Panel7ListFile.html">All File</a>
                 </li>
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="./picture/admin_icon.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                            <strong id="userNameDropdown">...</strong>
+                <li class="navbar-brand">
+                    <div class="dropdown m-3">
+                        <a  href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                            id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="./picture/admin_icon.png" alt="" width="32" height="32"
+                                class="rounded-circle me-2">
+                            <b id="userNameDropdown" style="font-size: 16px;"><strong>Admin</strong></b>
                         </a>
                         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                            <li><a class="dropdown-item" href="#">1</a></li>
-                            <li><a class="dropdown-item" href="#">2</a></li>
-                            <li><a class="dropdown-item" href="#">3</a></li>
+                            <!-- <li>
+                                <div>
+                                    <script type="module" src="./authen/LogoutFirebaseAuthen.js"></script>
+                                    <button id="signOutBtn" class="btn btn-primary m-1"
+                                        style="width: 90%; font-size: 10px;" type="button">Log out</button>
+                                </div>
+                            </li> -->
                             <li>
-                                <hr class="dropdown-divider">
+                                <div>
+                                    <script type="module" src="./authen/LogoutFirebaseAuthen.js"></script>
+                                    <button id="signOutBtn" class="btn btn-danger m-1"
+                                        style="width: 90%; font-size: 10px;" type="button">Log out</button>
+                                </div>
                             </li>
-                            <li><a id="logoutBtn" class="dropdown-item" href="#">Sign out</a></li>
                         </ul>
-                
+
                     </div>
                 </li>
             </ul>
         </div>
-
         <hr>
-
-
     </nav>
 
+    <!-- ไม่ได้ ไม่รู้ทำไม
+    <script type="module" src="./firebaseConfig/FirebaseAPI.js"></script>
+    <script type="module" src="./module/user/currentUser.js"></script>
+    <script type="module">
+        console.log("Hello World");
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const storedUser = sessionStorage.getItem('currentUser');
+            const schoolTextElement = document.getElementById('userNameDropdown');
 
-        <!-- Existing Navbar code... -->
+            if (storedUser) {
+                const storedCurrentUser = JSON.parse(storedUser);
+                currentUser.email = storedCurrentUser.email;
+                currentUser.school_name = storedCurrentUser.school_name;
+                schoolTextElement.innerHTML = `<b>${currentUser.school_name}</b>`;
+            }
+        });
+    </script> -->
+
 
 </body>
 

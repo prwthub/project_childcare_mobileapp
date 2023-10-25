@@ -14,23 +14,16 @@ async function fetchAdminData() {
   );
 
   if (!adminQuerySnapshot.empty) {
-    const admins = adminQuerySnapshot.docs
-      .map(doc => {
-        const adminData = doc.data();
-        return {
-          id: doc.id,
-          email: adminData.email,
-          school_name: adminData.school_name,
-          role: adminData.role,
-        };
-      })
-      .sort((a, b) => a.email.localeCompare(b.email, undefined, { sensitivity: 'base' }));
+    // adminQuerySnapshot.docs.sort((a, b) => a.data().email.localeCompare(b.data().email, undefined, { sensitivity: 'base' }));
+    // const admins = adminQuerySnapshot.docs.map(doc => doc.data());
+    // admins.sort((a, b) => a.email.localeCompare(b.email, undefined, { sensitivity: 'base' }));
 
-    admins.forEach(admin => {
-      console.log("email: " + admin.email);
-      console.log("school: " + admin.school_name);
-      console.log("role: " + admin.role);
-      console.log("doc.id: " + admin.id);
+    adminQuerySnapshot.forEach(doc => {
+      const adminData = doc.data();
+      console.log("email : " + adminData.email);
+      console.log("school : " + adminData.school_name);
+      console.log("role : " + adminData.role);
+      console.log("doc.id : " + doc.id);
       console.log("");
 
       // Create card element
@@ -48,24 +41,24 @@ async function fetchAdminData() {
       // Create card text element (for body content)
       const cardText = document.createElement('p');
       cardText.className = 'card-text';
-      cardText.textContent = "( " + admin.role + " )";
+      cardText.textContent = "( "+adminData.role + " )";
 
       if (currentUser.role != 'super admin') {
-        if (admin.email != currentUser.email) {
-          cardTitle.textContent = admin.email;
-        } else {
-          cardTitle.textContent = admin.email + " (คุณ)";
+        if (adminData.email != currentUser.email) {
+          cardTitle.textContent = adminData.email;
+        }else{
+          cardTitle.textContent = adminData.email + " (คุณ)";
         }
         // Append elements to card
         cardBody.appendChild(cardTitle);
-        cardBody.appendChild(cardText);
+        cardBody.appendChild(cardText); 
         // const separator = document.createElement('div');
         // separator.classList.add("divider");
         // cardBody.appendChild(separator);
-        card.appendChild(cardBody);
+        card.appendChild(cardBody);        
       } else {
-        if (admin.email != currentUser.email) {
-          cardTitle.textContent = admin.email;
+        if (adminData.email != currentUser.email) {
+          cardTitle.textContent = adminData.email;
 
           // Create delete button
           const deleteButton = document.createElement('button');
@@ -77,34 +70,34 @@ async function fetchAdminData() {
           deleteButton.addEventListener('click', async function (event) {
             event.preventDefault();
             console.log(currentUser.role);
-            const confirmAdminRemove = confirm('Are you sure you want to remove admin "' + admin.email + '" ?');
-            if (confirmAdminRemove) {
+            const confirmAdminRemove = confirm('Are you sure you want to remove admin "' + adminData.email + '" ?');
+            if (confirmAdminRemove){
               console.log("If super admin condition passed, entered the condition.");
               console.log('Admin Reference:', adminRef.path);
-              console.log('Deleting document with ID:', admin.id); // Use admin.id instead of doc.id
-              const docRef = FirebaseAPI.doc(FirebaseAPI.collection(db, 'admin'), admin.id); // Create a reference to the document
-              await FirebaseAPI.deleteDoc(docRef);  // Use admin.id instead of doc.id
+              console.log('Deleting document with ID:', doc.id);
+              console.log(doc.ref);
+              await FirebaseAPI.deleteDoc(doc.ref);
               // Remove card from UI after deletion
               card.remove();
               alert('Admin deleted successfully!');
             }
-          });
+          }); 
           // Append elements to card
           cardBody.appendChild(cardTitle);
-          cardBody.appendChild(cardText);
+          cardBody.appendChild(cardText); 
 
           const separator = document.createElement('div');
           separator.classList.add("divider");
           cardBody.appendChild(separator);
           cardBody.appendChild(deleteButton);
           card.appendChild(cardBody);
-        } else {
-          cardTitle.textContent = admin.email + " (คุณ)";
+        }else{
+          cardTitle.textContent = adminData.email + " (คุณ)";
           // Append elements to card
           cardBody.appendChild(cardTitle);
-          cardBody.appendChild(cardText);
-          card.appendChild(cardBody);
-        }
+          cardBody.appendChild(cardText); 
+          card.appendChild(cardBody);  
+        }       
       }
 
       // Append card to container

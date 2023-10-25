@@ -1,7 +1,0 @@
-annoucement show
-annoucement new
-annoucement edit
-annoucement delete
-
-
-sidebar

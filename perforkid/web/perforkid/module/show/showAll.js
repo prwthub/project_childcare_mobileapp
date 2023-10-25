@@ -19,8 +19,11 @@ const storage = getStorage(app);
 const fileList = document.getElementById("allList");
 const folderPath = `school/${currentUser.school_name}/`; 
 const storageRef = ref(storage, folderPath);
-const exceptfoldername = allList.getAttribute("except");
+const exceptfoldername = fileList.getAttribute("except").split(",");
+//const exceptfoldername = allList.getAttribute("except");
 //const exceptfoldername = "announcementPost";
+
+console.log(exceptfoldername);
 
 function listFilesInFolder(folderRef, parentList) {
     listAll(folderRef)
@@ -30,7 +33,7 @@ function listFilesInFolder(folderRef, parentList) {
         sortedItems.forEach((itemRef) => {
             getMetadata(itemRef)
             .then((metadata) => {
-                if (metadata.name !== exceptfoldername) {
+                if (!exceptfoldername.includes(metadata.name)) {
                     const listItem = document.createElement("li");
                     const button = document.createElement("button");
                     button.textContent = metadata.name;
@@ -57,7 +60,7 @@ function listFilesInFolder(folderRef, parentList) {
 
         res.prefixes.forEach((prefixRef) => {
             const folderName = prefixRef.name.replace(/\/$/, "");
-            if (folderName !== exceptfoldername) {
+            if (!exceptfoldername.includes(folderName)) {
                 const folderItem = document.createElement("li");
                 folderItem.textContent = folderName;
                 const nestedList = document.createElement("ul");

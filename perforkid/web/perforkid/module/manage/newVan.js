@@ -70,6 +70,7 @@ function createNewVan() {
                     addDoc(carRef, carData)
                     .then((docRef) => {
                         alert('เพิ่มรถคันใหม่สำเร็จ')
+                        location.reload();
                         console.log("New document created with car number: ", vanNum);
                         // Perform your logic for handling new document creation here
                     })

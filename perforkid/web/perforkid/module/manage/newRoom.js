@@ -81,6 +81,7 @@ function createNewRoom() {
                     })
                     .then((docRef) => {
                         alert('เพิ่มห้องใหม่สำเร็จ')
+                        location.reload();
                         console.log("New document created with room name: ", roomName);
                         // Perform your logic for handling new document creation here
                     })

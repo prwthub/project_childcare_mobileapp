@@ -30,12 +30,32 @@ if (!schoolQuerySnapshot.empty) {
     cardRow.className = 'row';
     announcementContainer.appendChild(cardRow);
 
+    const posts = announcementQuerySnapshot.docs
+      .map(doc => {
+        const postsData = doc.data();
+        return {
+          id: doc.id,
+          date: postsData.date,
+          content: postsData.content,
+          header: postsData.header,
+          image: postsData.image,
+        };
+      })
+      .sort((a, b) => b.date - a.date);
+    
+    //===
+    posts.forEach((doc) => {
+      console.log(doc.id);
+      console.log(doc.date);
+      console.log(doc.content);
+      console.log(doc.header);
+    })
+    
     // This is for each post's edit button
-
-
-    announcementQuerySnapshot.forEach((doc) => {
-      const announcementData = doc.data();
-
+    // announcementQuerySnapshot.forEach((doc) => {
+      posts.forEach((announcementData) => {  
+      //const announcementData = doc.data();
+      
       const cardSpace = document.createElement('div');
       cardSpace.className = 'col-6';
 
@@ -48,8 +68,9 @@ if (!schoolQuerySnapshot.empty) {
       cardBody.className = 'card-body';
 
       // Create the card title (header)
-      const cardTitle = document.createElement('h5');
+      const cardTitle = document.createElement('b');
       cardTitle.className = 'card-title';
+      cardTitle.style = 'font-size: 22px';
       cardTitle.textContent = announcementData.header;
 
       // Create the card content
@@ -59,8 +80,8 @@ if (!schoolQuerySnapshot.empty) {
 
       // Create Delete button
       const cardDeleteButton = document.createElement('div');
-      cardDeleteButton.className = 'btn btn-danger col-sm-6 justify-content-center';
-      cardDeleteButton.textContent = 'Delete';
+      cardDeleteButton.className = 'btn btn-danger col-sm-5 justify-content-center m-2';
+      cardDeleteButton.textContent = 'ลบโพสต์';
       cardDeleteButton.style.marginCenter = 'auto';
 
       // Create the card date
@@ -68,7 +89,7 @@ if (!schoolQuerySnapshot.empty) {
       const date = announcementData.date.seconds * 1000; // Convert seconds to milliseconds
       const formattedDate = new Date(date).toLocaleString(); // Format to a human-readable string
       cardDate.className = 'card-text text-muted';
-      cardDate.textContent = formattedDate;
+      cardDate.textContent = 'โพสต์เมื่อ : ' + formattedDate;
 
       const rawTimestamp = announcementData.date.toDate(); // Convert to milliseconds since epoch
 
@@ -77,17 +98,29 @@ if (!schoolQuerySnapshot.empty) {
         if (confirmDelete) {
           console.log("Confirm Delete Clicked");
           console.log(rawTimestamp);
-          deleteAnnouncement(rawTimestamp);
-          card.remove();
+          deleteAnnouncement(rawTimestamp).then(() => {
+            console.log("Announcement deleted successfully!");
+            card.remove();
+            location.reload();
+          }).catch(error => {
+            console.error("Error deleting announcement:", error);
+            // Handle error if necessary
+          });
+          
         }
       });
 
+      // // Create space col-2
+      // const cardS = document.createElement('div');
+      // cardS.className = 'col-sm-2';
+
       // Create the edit button
       const cardEditButton = document.createElement('div');
-      cardEditButton.className = 'btn btn-primary col-sm-6 justify-content-center';
-      cardEditButton.textContent = 'Edit';
+      cardEditButton.className = 'btn btn-primary col-sm-5 justify-content-center m-2';
+      cardEditButton.textContent = 'แก้ไข';
       cardEditButton.style.marginCenter = 'auto';
-      cardEditButton.id = `cardEditButton_${doc.id}`
+      // cardEditButton.id = `cardEditButton_${doc.id}`
+      cardEditButton.id = `cardEditButton_${announcementData.id}`
       console.log("Card's id: " + cardEditButton.id);
       cardEditButton.addEventListener('click', handleCardEditButtonClick);
 
@@ -108,7 +141,7 @@ if (!schoolQuerySnapshot.empty) {
         document.documentElement.scrollTop = 0;
 
         const announcementh1TextElement = document.getElementById('announcementEdith1');
-        announcementh1TextElement.innerHTML = `--Announcement Edit-- <br> ${announcementData.header}`;
+        announcementh1TextElement.innerHTML = `แก้ไขโพสต์ <br> <h5 class="mt-3"> หัวข้อเก่า : ${announcementData.header} </h5>`;
         const timestampBoxElement = document.getElementById('postTimestampEdit');
         timestampBoxElement.value = formattedDate;
 
@@ -129,11 +162,13 @@ if (!schoolQuerySnapshot.empty) {
           const postContent = document.getElementById('postContentEdit').value;
           const confirmEdit = "Are you sure to submit this edit to the announcement?";
           if (confirm(confirmEdit)) {
-            if (!postHeader || !postContent) {
+            if (!postHeader && !postContent) {
               e.preventDefault();
-              console.log('Please fill in both the header and content fields.');
+              console.log('Please fill something in the header or content fields.');
             } else {
-              editAnnouncement(rawTimestamp);
+              editAnnouncement(rawTimestamp).then(()=>{
+                location.reload();
+              });
             }
           }
         }
@@ -148,8 +183,8 @@ if (!schoolQuerySnapshot.empty) {
         console.log("No Image Found\n" + announcementData.header);
       }
 
-      const separator = document.createElement('div');
-      separator.classList.add("divider")
+      // const separator = document.createElement('div');
+      // separator.classList.add("divider")
 
       // Append elements to the card body
       cardBody.appendChild(cardTitle);
@@ -158,11 +193,13 @@ if (!schoolQuerySnapshot.empty) {
       if (announcementData.image) {
         cardBody.appendChild(cardImage);
       }
-      cardBody.appendChild(separator);
-      cardBody.appendChild(cardDeleteButton);
+      
+      // cardS
+      // cardBody.appendChild(cardS);
       cardBody.appendChild(cardEditButton);
 
-
+      //cardBody.appendChild(separator);
+      cardBody.appendChild(cardDeleteButton);
 
 
       // Append the card body to the card

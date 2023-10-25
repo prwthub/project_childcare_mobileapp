@@ -23,7 +23,7 @@
 }
 
 .nav-item {
-  margin-bottom: 20px; /* Adjust the value to increase or decrease spacing */
+  margin-bottom: 14px; /* Adjust the value to increase or decrease spacing */
 }
 
 #sidebar-container {
@@ -60,7 +60,41 @@
   display: none;
 }
 
+/* CSS สำหรับเพิ่มสไตล์ของ item ที่ถูกเลือก */
+.nav-item.active {
+  border: 2px solid black;
+  border-radius: 5px;
+}
 
 
 
 
+/* เมื่อเม้าส์โฮเวอร์ปุ่ม */
+.card.m-1.p-2.btn:hover {
+  background-color:darkturquoise; /* สีเขียวที่คุณต้องการให้ปุ่มเปลี่ยนเมื่อโฮเวอร์ */
+  color: white; /* สีของตัวอักษรเมื่อเม้าส์โฮเวอร์ */
+  cursor: pointer; /* เปลี่ยนรูปร่างของเคอร์เซอร์เป็นตัวชี้ */
+}
+
+.card.m-1.p-2.btn {
+  width: 100%; /* ทำให้ card เต็มความกว้างของ .col-2 */
+  margin-bottom: 10px; /* ระยะห่างระหว่าง cards */
+}
+
+
+
+/* กำหนด z-index เพื่อให้ dropdown menu อยู่ด้านบนสุด */
+.dropdown-menu {
+  z-index:1000;
+}
+
+/* กำหนดความสูงสูงสุดให้กับ dropdown menu */
+.dropdown-menu {
+  max-height: 200px; /* แก้ตามความต้องการของคุณ */
+  overflow-y: auto; /* ถ้ามีเนื้อหามากเกินไปแล้วให้เป็น auto เพื่อให้มีการเลื่อนแถบแสดงเมื่อมีเนื้อหามาก */
+}
+
+
+.nav-left {
+  text-align: right;
+}

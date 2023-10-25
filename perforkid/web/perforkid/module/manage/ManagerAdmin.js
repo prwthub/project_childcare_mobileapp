@@ -67,7 +67,7 @@ function addAdmin() {
                         console.error('Error adding admin: ', error);
                     });
             } else {
-                alert('อีเมลนี้ในระบบแล้ว');
+                alert('มีอีเมลนี้ในระบบแล้ว');
             }
         });
     } else {

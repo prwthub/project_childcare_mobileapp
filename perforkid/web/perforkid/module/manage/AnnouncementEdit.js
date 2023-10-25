@@ -73,6 +73,7 @@ export async function editAnnouncement(timestamp) {
                 await FirebaseAPI.updateDoc(announcementDocument.ref, {
                     header: postHeader,
                     content: postContent,
+                    date: new Date(),
                     image: image
                 });
 

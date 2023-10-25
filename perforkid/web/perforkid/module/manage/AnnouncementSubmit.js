@@ -73,6 +73,8 @@ export async function submitAnnouncement() {
                 content: postContent,
                 date: new Date(),
                 image: image
+            }).then(()=>{
+                location.reload();
             });
             console.log('Announcement added successfully!');
             window.alert('Announcement added successfully!');

@@ -82,7 +82,7 @@ if (!schoolQuerySnapshot.empty) {
             // Create the card title
             const cardTitle = document.createElement('h5');
             cardTitle.className = 'card-title';
-            cardTitle.textContent = vanData['car-number']
+            cardTitle.textContent = "รถเบอร์ " + vanData['car-number']
 
             // Add an event listener to the card
             card.addEventListener('click', function () {
@@ -104,7 +104,7 @@ if (!schoolQuerySnapshot.empty) {
             // Append the card to the container
             vanContainer.appendChild(cardRow);
             
-// Add a line break after each card
+            // Add a line break after each card
             // const lineBreak = document.createElement('br');
             // vanContainer.appendChild(lineBreak);
 

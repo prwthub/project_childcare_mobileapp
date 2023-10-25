@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Register</title>
+    <link rel="Icon" href="./picture/Logo_1.jpg" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -12,12 +13,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
         crossorigin="anonymous"></script>
-        
+
     <script>
         function password_show_hide() {
             let x = document.getElementById("pwd");
             let y = document.getElementById("repwd");
-            
+
             let showEyeRePwd = document.getElementById("show_eye2"); //Icon
             let hideEyeRePwd = document.getElementById("hide_eye2"); //Icon
 
@@ -65,8 +66,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
     <script type="module">
         // Initialize Firebase
-        import { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, addDoc, uploadBytes } 
-        from "./firebaseConfig/FirebaseAPI.js";
+        import { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, addDoc, uploadBytes }
+            from "./firebaseConfig/FirebaseAPI.js";
         firebase.initializeApp(firebaseConfig);
     </script>
 
@@ -77,54 +78,60 @@
                 style="border-radius: 1rem 0 0 1rem;" />
         </div>
 
-        <div class="form-outline mb-3">
-            <h4 class="fw-normal mb-2 pb-1" style="letter-spacing: 1px; color: #393f81;">Register</h4>
+        <form id="registerSubbed">
+            <div class="form-outline mb-3">
+                <h3 class="fw-normal mb-4 pb-1" style="letter-spacing: 1px; color: #393f81;">
+                    <b>Register your account</b>
+                </h3>
 
-    <form id = "registerSubbed">
-            <input type="text" name="username_or_email" class="form-control" id="username_or_email" class="form-control form-control-lg"
-                required placeholder='username or email'>
-        </div>
+                <!-- <form id="registerSubbed"> -->
+                <input type="text" name="username_or_email" class="form-control" id="username_or_email"
+                    class="form-control form-control-lg" required placeholder='email'>
+            </div>
 
-        <div class="input-group form-outline mb-3">
-            <input type="password" name="firstPwd" class="form-control" id="pwd" class="form-control form-control-lg"
-                required placeholder='Password'>
+            <div class="input-group form-outline mb-3">
+                <input type="password" name="firstPwd" class="form-control" id="pwd"
+                    class="form-control form-control-lg" required placeholder='Password'>
 
-        </div>
+            </div>
 
-        <div class="input-group form-outline mb-3">
-            <input type="password" name="confirmPwd" class="form-control" id="repwd" class="form-control form-control-lg"
-                required placeholder='Re-enter Password'>
-            <span class="input-group-text" onclick="password_show_hide();">
-                <i class="bi bi-eye-fill" id="show_eye2"></i>
-                <i class="bi bi-eye-slash-fill d-none" id="hide_eye2"></i>
-            </span>
-        </div>
+            <div class="input-group form-outline mb-3">
+                <input type="password" name="confirmPwd" class="form-control" id="repwd"
+                    class="form-control form-control-lg" required placeholder='Re-enter Password'>
+                <span class="input-group-text" onclick="password_show_hide();">
+                    <i class="bi bi-eye-fill" id="show_eye2"></i>
+                    <i class="bi bi-eye-slash-fill d-none" id="hide_eye2"></i>
+                </span>
+            </div>
 
-        <div class="input-group form-outline mb-3">
-            <select class="form-control" id="school_dropdown_field" name="school_name">
-                <option value="" disabled selected>Select school</option>
-                <script src = "./authen/DataQueryForReg.js" type="module"></script>
-        </div>
+            <div class="input-group form-outline mb-3">
+                <select class="form-control" id="school_dropdown_field" name="school_name">
+                    <option value="" disabled selected>Select school</option>
+                    <script src="./authen/DataQueryForReg.js" type="module"></script>
+            </div>
 
-        <div class="form-outline mb-3">
-            <input type="text" name="school_admin_code" class="form-control" id="school_admin_code" class="form-control form-control-lg" required
-                placeholder='School code'>
-        </div>
+            <div class="form-outline mb-3">
+                <input type="text" name="school_admin_code" class="form-control" id="school_admin_code"
+                    class="form-control form-control-lg" required placeholder='Enter School code (xxxxxxxx)'>
+            </div>
 
+            <div class="pt-1 mb-4">
+                <script type="module" src="./authen/RegisterProcedure.js"></script>
+                <button id="registerBtn" class="btn btn-dark btn-lg btn-block" type="submit">Register</button>
+
+            </div>
+
+        </form>
         <div class="pt-1 mb-4">
-            <script type="module" src="./authen/RegisterProcedure.js" ></script>
-            <button id = "registerBtn" class="btn btn-dark btn-lg btn-block" type="submit">Register</button>
-
-        </div>
-
-    </form>
-        <div class="pt-1 mb-4">
-            <a href="./AdminLanding.html" class="btn btn-success">Go back to Login</a>
+            <center>
+                <br><br>
+                มีบัญชีแล้ว <a href="./AdminLanding.html">กลับไปหน้าเข้าสู่ระบบ</a>
+                <!-- <a href="./AdminRegister.html" class="btn btn-success">Register</a> -->
+            </center>
         </div>
 
     </div>
-
-
+    </div>
 
 </body>
 
