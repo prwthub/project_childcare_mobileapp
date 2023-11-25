@@ -1,0 +1,100 @@
+.divider {
+  border-top: 1px solid black;
+  margin: 20px 0;
+}
+
+.smallDivider {
+  border-top: 1px solid black;
+  margin: 5px 0;
+}
+
+.delete-button-container {
+  float: right; /* ให้ปุ่มอยู่ด้านขวาของการ์ด */
+}
+
+.announcement-content {
+  white-space: pre-line;
+}
+
+.navbar-brand {
+  font-size:25px;
+  font-weight: bold;
+  margin-left: 0;
+}
+
+.nav-item {
+  margin-bottom: 14px; /* Adjust the value to increase or decrease spacing */
+}
+
+#sidebar-container {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 22vw;
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: space-between; /* This will push the brand to the right */
+  align-items: flex-end; /* This will vertically center the items */
+  width: 100%; /* Make sure it takes full width */
+}
+
+.navbar {
+  min-height: 100px; /* Adjust the value as needed */
+  flex-grow: 1;
+  max-height: calc(100% - 0px); /* Adjust this value to leave space for navbar */
+}
+
+.navOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
+
+/* CSS สำหรับเพิ่มสไตล์ของ item ที่ถูกเลือก */
+.nav-item.active {
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+
+
+
+/* เมื่อเม้าส์โฮเวอร์ปุ่ม */
+.card.m-1.p-2.btn:hover {
+  background-color:darkturquoise; /* สีเขียวที่คุณต้องการให้ปุ่มเปลี่ยนเมื่อโฮเวอร์ */
+  color: white; /* สีของตัวอักษรเมื่อเม้าส์โฮเวอร์ */
+  cursor: pointer; /* เปลี่ยนรูปร่างของเคอร์เซอร์เป็นตัวชี้ */
+}
+
+.card.m-1.p-2.btn {
+  width: 100%; /* ทำให้ card เต็มความกว้างของ .col-2 */
+  margin-bottom: 10px; /* ระยะห่างระหว่าง cards */
+}
+
+
+
+/* กำหนด z-index เพื่อให้ dropdown menu อยู่ด้านบนสุด */
+.dropdown-menu {
+  z-index:1000;
+}
+
+/* กำหนดความสูงสูงสุดให้กับ dropdown menu */
+.dropdown-menu {
+  max-height: 200px; /* แก้ตามความต้องการของคุณ */
+  overflow-y: auto; /* ถ้ามีเนื้อหามากเกินไปแล้วให้เป็น auto เพื่อให้มีการเลื่อนแถบแสดงเมื่อมีเนื้อหามาก */
+}
+
+
+.nav-left {
+  text-align: right;
+}

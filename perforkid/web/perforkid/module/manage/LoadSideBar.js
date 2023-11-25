@@ -54,17 +54,19 @@ sidebarRequest.onreadystatechange = function () {
 };
 sidebarRequest.send();
 
-// Navbar Small screen test
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const overlay = document.getElementById('navOverlay');
     const toggleOverlayBtn = document.getElementById('toggleOverlay');
 
-    const toggleOverlay = function () {
-        overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-    };
+    if (overlay && toggleOverlayBtn) {
+        const toggleOverlay = function () {
+            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+        };
 
-    toggleOverlayBtn.addEventListener('click', toggleOverlay);
+        toggleOverlayBtn.addEventListener('click', toggleOverlay);
+    } 
 });
+
 
 
 // In your LogoutFirebaseAuthen.js module

@@ -61,7 +61,7 @@ if (!schoolQuerySnapshot.empty) {
 
       // Create a Bootstrap card element
       const card = document.createElement('div');
-      card.className = 'card m-1';
+      card.className = 'card m-1 mb-5';
 
       // Create the card body
       const cardBody = document.createElement('div');
@@ -177,10 +177,14 @@ if (!schoolQuerySnapshot.empty) {
 
       const cardImage = document.createElement('div');
       cardImage.className = 'card-text d-flex justify-content-center';
-      cardImage.innerHTML = `
-  <img src="${announcementData.image}" alt="Announcement Image" class="img-fluid">`;
+      
+      // 
       if (!announcementData.image) {
+        cardImage.innerHTML = ``;
         console.log("No Image Found\n" + announcementData.header);
+      }else{
+        cardImage.innerHTML = `
+      <img src="${announcementData.image}" alt="Announcement Image" class="img-fluid">`;
       }
 
       // const separator = document.createElement('div');
