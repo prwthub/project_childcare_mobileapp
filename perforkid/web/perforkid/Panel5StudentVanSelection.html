@@ -85,6 +85,16 @@
                     document.getElementById('schoolName').textContent = currentUser.school_name;
                     // document.getElementById('loggedin').textContent = currentUser.loggedin;
                     document.getElementById('role').textContent = currentUser.role;
+                
+                    const currentUserRole = currentUser.role; // แทนค่าด้วยข้อมูลสิทธิ์ของผู้ใช้ปัจจุบัน
+
+                    const deleteVanButton = document.getElementById("deleteVan");
+
+                    if (currentUserRole != "super admin") {
+                        // ถ้าไม่ใช่ super admin ซ่อนปุ่มลบ
+                        deleteVanButton.style.display = "none";
+                    }
+
                 </script>
 
                 <div class="divider"></div>
