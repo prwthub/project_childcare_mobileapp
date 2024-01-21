@@ -139,7 +139,7 @@ function upload(file) {
 
                         console.log("Data uploaded to Firestore successfully!");
                         // alert("Upload to Firestore successful! (4)");
-                        alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                        //alert("เพิ่มข้อมูลสำเร็จแล้ว!");
                       })
                       .catch((error) => {
                         console.error("Error deleting documents in subcollection:", error);
@@ -171,7 +171,7 @@ function upload(file) {
                           studentListRef.add(item);
                         });
                         console.log("New document created and data uploaded to Firestore successfully!");
-                        alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                        //alert("เพิ่มข้อมูลสำเร็จแล้ว!");
                       })
                       .catch((error) => {
                         console.error("Error creating new document:", error);
@@ -223,7 +223,7 @@ function upload(file) {
                           });
 
                           console.log("Data uploaded to Firestore successfully!");
-                          alert("เพิ่มข้อมูลสำเร็จแล้ว! (All)");
+                          alert("เพิ่มข้อมูลสำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
                         }).then(()=>{
                           //location.reload(); // remark
                         })
@@ -253,4 +253,10 @@ function upload(file) {
       });
   };
   reader.readAsArrayBuffer(file);
+
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 10000);
+
 }

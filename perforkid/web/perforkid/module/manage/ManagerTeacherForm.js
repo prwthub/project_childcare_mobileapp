@@ -84,7 +84,7 @@ function upload(file) {
 
                 console.log("Data uploaded to Firestore successfully!");
                 // alert("Upload to Firestore successful! (4)");
-                alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                alert("เพิ่มข้อมูลสำเร็จแล้ว! กรุณารอสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
               });
             });
           })
@@ -101,6 +101,11 @@ function upload(file) {
       });
   };
   reader.readAsArrayBuffer(file);
+
+
+  setTimeout(() => {
+    window.location.href = '../../Panel2Teacher.html';
+  }, 5000);
 }
   
 
