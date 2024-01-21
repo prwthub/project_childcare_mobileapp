@@ -45,10 +45,13 @@ if (!schoolQuerySnapshot.empty) {
     
     //===
     posts.forEach((doc) => {
-      console.log(doc.id);
-      console.log(doc.date);
-      console.log(doc.content);
-      console.log(doc.header);
+      console.log("doc.id : ",doc.id);
+      console.log("doc.header : ",doc.header);
+      console.log("doc.date : ",doc.date);
+      console.log("doc.content : ",doc.content);
+      console.log("doc.image : ",doc.image);
+      console.log("doc : ",doc);
+      console.log("");
     })
     
     // This is for each post's edit button

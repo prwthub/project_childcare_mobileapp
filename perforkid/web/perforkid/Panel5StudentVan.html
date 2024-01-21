@@ -20,49 +20,47 @@
 
 <body>
   <div class="container-fluid">
-      <div class="row">
-          <div class="col-3">
-              <div id="sidebar-container"></div>
-              <script src="./module/manage/LoadSideBar.js" type="module"></script>
-          </div>
+    <div class="row">
+      <div class="col-3">
+        <div id="sidebar-container"></div>
+        <script src="./module/manage/LoadSideBar.js" type="module"></script>
+      </div>
 
-          <div class="col-9 p-4 bg-light">
-              <h4>User Information</h4>
-              <p style="font-size: 14px; margin-bottom: 3px;">Email: <span id="email"></span></p>
-              <p style="font-size: 14px; margin-bottom: 3px;">School Name: <span id="schoolName"></span></p>
-              <!-- <p style="font-size: 14px; margin-bottom: 3px;">logged in: <span id="loggedin"></span></p> -->
-              <p style="font-size: 14px; margin-bottom: 3px;">role: <span id="role"></span></p>
-              <br>
-      
-              <script type="module">
-                  // Import currentUser
-                  import currentUser from './module/user/currentUser.js';
-              
-                  // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
-                  const storedUser = sessionStorage.getItem('currentUser');
-      
-                  if (storedUser) {
-                      // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
-                      const storedCurrentUser = JSON.parse(storedUser);
-                      // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
-                      currentUser.email = storedCurrentUser.email;
-                      currentUser.school_name = storedCurrentUser.school_name;
-                      currentUser.loggedin = storedCurrentUser.loggedin;
-                      currentUser.role = storedCurrentUser.role;
-                  }
-      
-                  if(currentUser.loggedin == 'no'){
-                      window.location.href = "./AdminLanding.html";
-                  }
-      
-                  // ตั้งค่าข้อความใน element ตามค่าใน currentUser
-                  document.getElementById('email').textContent = currentUser.email;
-                  document.getElementById('schoolName').textContent = currentUser.school_name;
-                  // document.getElementById('loggedin').textContent = currentUser.loggedin;
-                  document.getElementById('role').textContent = currentUser.role;
-              </script>
+      <div class="col-9 p-4 bg-light">
+        <h4>User Information</h4>
+        <p style="font-size: 14px; margin-bottom: 3px;">Email: <span id="email"></span></p>
+        <p style="font-size: 14px; margin-bottom: 3px;">School Name: <span id="schoolName"></span></p>
+        <!-- <p style="font-size: 14px; margin-bottom: 3px;">logged in: <span id="loggedin"></span></p> -->
+        <p style="font-size: 14px; margin-bottom: 3px;">role: <span id="role"></span></p>
+        <br>
 
-              <!-- <div class="divider"></div> -->
+        <script type="module">
+          // Import currentUser
+          import currentUser from './module/user/currentUser.js';
+
+          // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
+          const storedUser = sessionStorage.getItem('currentUser');
+
+          if (storedUser) {
+            // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+            const storedCurrentUser = JSON.parse(storedUser);
+            // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+            currentUser.email = storedCurrentUser.email;
+            currentUser.school_name = storedCurrentUser.school_name;
+            currentUser.loggedin = storedCurrentUser.loggedin;
+            currentUser.role = storedCurrentUser.role;
+          }
+
+          if (currentUser.loggedin == 'no') {
+            window.location.href = "./AdminLanding.html";
+          }
+
+          // ตั้งค่าข้อความใน element ตามค่าใน currentUser
+          document.getElementById('email').textContent = currentUser.email;
+          document.getElementById('schoolName').textContent = currentUser.school_name;
+          // document.getElementById('loggedin').textContent = currentUser.loggedin;
+          document.getElementById('role').textContent = currentUser.role;
+        </script>
 
         <div>
           <label for="van">เบอร์รถ :</label>
@@ -70,6 +68,7 @@
           <button id="createVan">เพิ่มรถ</button>
           <script src="./module/manage/newVan.js" type="module"></script>
         </div>
+        <div style="color: red;" class="mt-3">* หมายเหตุ : เบอร์รถที่เพิ่มสามารถลบได้ในภายหลัง</div>
 
         <div class="divider"></div>
         <form>
@@ -78,8 +77,13 @@
           </div>
         </form>
 
-      </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
 
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

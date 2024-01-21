@@ -25,8 +25,12 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
-  createUserWithEmailAndPassword  
-} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js'
+  createUserWithEmailAndPassword,
+  deleteUser as deleteAuthUser,
+  // getUserByEmail as getAuthUserByEmail (remove/comment this line)
+} from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js';
+
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -40,6 +44,25 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
+
+export async function deleteUser(uid) {
+  const auth = getAuth();
+  await deleteAuthUser(auth, uid);
+}
+
+export async function getUserByEmail(email) {
+  const auth = getAuth();
+  const users = await getDocs(collection(auth, 'users'));
+  
+  const user = users.docs.find(doc => doc.data().email === email);
+  
+  if (user) {
+    return user.data();
+  } else {
+    // Handle the case where the user is not found
+    return null;
+  }
+}
 
 
 export { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, 

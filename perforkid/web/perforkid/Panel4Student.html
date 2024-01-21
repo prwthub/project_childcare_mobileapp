@@ -62,14 +62,13 @@
           document.getElementById('role').textContent = currentUser.role;
         </script>
 
-        <!-- <div class="divider"></div> -->
-
         <div>
           <label for="room">ชื่อห้อง :</label>
           <input type="text" id="roomName" name="room">
           <button id="createRoom">เพิ่มห้อง</button>
           <script src="./module/manage/newRoom.js" type="module"></script>
         </div>
+        <div style="color: red;" class="mt-3">* หมายเหตุ : ห้องที่เพิ่มสามารถลบได้ในภายหลัง</div>
 
         <div class="divider"></div>
         <form>
@@ -78,7 +77,13 @@
           </div>
         </form>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
       </div>
+    </div>
+  </div>
 </body>
 
 </html>

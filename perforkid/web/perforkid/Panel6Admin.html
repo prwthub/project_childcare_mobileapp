@@ -32,7 +32,7 @@
         <p style="font-size: 14px; margin-bottom: 3px;">School Name: <span id="schoolName"></span></p>
         <!-- <p style="font-size: 14px; margin-bottom: 3px;">logged in: <span id="loggedin"></span></p> -->
         <p style="font-size: 14px; margin-bottom: 3px;">role: <span id="role"></span></p>
-
+        <br>
 
         <script type="module">
           // Import currentUser
@@ -62,21 +62,18 @@
           document.getElementById('role').textContent = currentUser.role;
         </script>
 
-        <!-- <div id="addnew">
-          <script src="./module/manage/ManagerAdmin.js" type="module"></script>
-        </div> -->
-        
         <div>
           <label for="room">Email :</label>
           <input type="text" id="inputemail" name="email" required>
           <button id="addAdminButton">เพิ่มรายชื่อ</button>
           <script src="./module/manage/ManagerAdmin.js" type="module"></script>
         </div>
+        <div style="color: red;" class="mt-3">* หมายเหตุ : รายชื่อที่เพิ่มสามารถลบได้ในภายหลัง</div>
 
         <div class="divider"></div>
         <form>
           <script src="./module/show/ShowAdminQuery.js" type="module"></script>
-          <div id="studentRoomContainer">
+          <div id="adminContainer">
           </div>
         </form>
 

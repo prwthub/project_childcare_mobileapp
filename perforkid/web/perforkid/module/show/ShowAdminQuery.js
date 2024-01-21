@@ -1,11 +1,50 @@
 import currentUser from "../user/currentUser.js";
 import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
+// 
+// Import the necessary functions from the Firebase Authentication module
+import { getAuth, deleteUser as deleteAuthUser, onAuthStateChanged, fetchSignInMethodsForEmail, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js';
+
+// Function to delete a user by email
+async function deleteUserByEmail(email) {
+  const auth = getAuth();
+  
+  try {
+    // Get the user by email
+    const user = await getUserByEmail(email);
+
+    // Check if the user exists
+    if (user) {
+      // Delete the user by UID
+      await deleteAuthUser(auth, user.uid);
+      console.log('User deleted successfully from Firebase Authentication:', email);
+    } else {
+      console.log('User not found in Firebase Authentication:', email);
+    }
+  } catch (error) {
+    console.error('Error deleting user from Firebase Authentication:', error);
+  }
+}
+
+// Function to get a user by email
+async function getUserByEmail(email) {
+  const auth = getAuth();
+
+  try {
+    // Get user information by email
+    const userRecord = await getAuthUserByEmail(auth, email);
+    return userRecord; // ไม่ต้องแปลงเป็น JSON ในฟังก์ชันนี้
+  } catch (error) {
+    // Handle errors or return null if the user is not found
+    return null;
+  }
+}
+
 const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = '../../style/Styling.css';
 document.head.appendChild(link);
-
+//
 async function fetchAdminData() {
   const db = FirebaseAPI.getFirestore();
   const adminRef = FirebaseAPI.collection(db, 'admin');
@@ -26,12 +65,43 @@ async function fetchAdminData() {
       })
       .sort((a, b) => a.email.localeCompare(b.email, undefined, { sensitivity: 'base' }));
 
-    admins.forEach(admin => {
+    admins.forEach(async (admin) => {
       console.log("email: " + admin.email);
       console.log("school: " + admin.school_name);
       console.log("role: " + admin.role);
       console.log("doc.id: " + admin.id);
+      try {
+        // Get the user by email
+        const email = admin.email;
+        const user2 = await getUserByEmail(email);
+        console.log('user2:', user2); // เพิ่มบรรทัดนี้
+      
+        // Check if the user exists
+        if (user2) {
+          // Delete the user by UID
+          console.log('user2.uid = ', user2.uid);
+          console.log('user2.email = ', user2.email);
+        } else {
+          console.log('User not found in Firebase Authentication:', email); // เพิ่มบรรทัดนี้
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    
+      // const auth = getAuth();
+      // // Set up an authentication state observer
+      // onAuthStateChanged(auth, (user) => {
+      //   if (user) {
+      //     // User is signed in
+      //     console.log("User UID:", user.uid);
+      //     console.log("User Email:", user.email);
+      //   } else {
+      //     // User is signed out
+      //     console.log("User is signed out");
+      //   }
+      // });
       console.log("");
+      
 
       // Create card element
       const card = document.createElement('div');
@@ -82,8 +152,27 @@ async function fetchAdminData() {
               console.log("If super admin condition passed, entered the condition.");
               console.log('Admin Reference:', adminRef.path);
               console.log('Deleting document with ID:', admin.id); // Use admin.id instead of doc.id
+              
+              // Remove from firebase firestore
               const docRef = FirebaseAPI.doc(FirebaseAPI.collection(db, 'admin'), admin.id); // Create a reference to the document
               await FirebaseAPI.deleteDoc(docRef);  // Use admin.id instead of doc.id
+
+              // Remove from Firebase Authentication
+              // try {
+              //   const user = await FirebaseAPI.getUserByEmail(admin.email);
+              //   if (user) {
+              //     await FirebaseAPI.deleteUser(user.uid);
+              //     console.log('User deleted from Firebase Authentication:', user.email);
+              //   } else {
+              //     console.log('User not found in Firebase Authentication:', admin.email);
+              //   }
+              // } catch (error) {
+              //   console.error('Error deleting user from Firebase Authentication:', error);
+              // }
+              // Example usage
+              const userEmailToDelete = admin.email;
+              deleteUserByEmail(userEmailToDelete);
+              
               // Remove card from UI after deletion
               card.remove();
               alert('Admin deleted successfully!');
@@ -108,12 +197,12 @@ async function fetchAdminData() {
       }
 
       // Append card to container
-      const studentRoomContainer = document.getElementById('studentRoomContainer');
-      studentRoomContainer.appendChild(card);
+      const adminContainer = document.getElementById('adminContainer');
+      adminContainer.appendChild(card);
 
       // Add line break and separator if needed
       const lineBreak = document.createElement('br');
-      studentRoomContainer.appendChild(lineBreak);
+      adminContainer.appendChild(lineBreak);
     });
   } else {
     console.log("No announcements found.");

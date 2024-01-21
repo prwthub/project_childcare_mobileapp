@@ -16,6 +16,13 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="Icon" href="./picture/Logo_1.jpg">
     <link rel="stylesheet" href="./style/Styling.css">
+    <!-- here -->
+    <script>
+        const paramsRoom = new URLSearchParams(window.location.search);
+        const roomNum = paramsRoom.get('room');
+        let [front, back] = roomNum.split('/');
+        const room = `${front}-${back}`;
+    </script>
 </head>
 
 <body>
@@ -26,12 +33,30 @@
                 <script src="./module/manage/LoadSideBar.js" type="module"></script>
             </div>
 
+            <!-- here -->
             <div class="col-9 p-4 bg-light">
-                <h4>User Information</h4>
-                <p style="font-size: 14px; margin-bottom: 3px;">Email: <span id="email"></span></p>
-                <p style="font-size: 14px; margin-bottom: 3px;">School Name: <span id="schoolName"></span></p>
-                <!-- <p style="font-size: 14px; margin-bottom: 3px;">logged in: <span id="loggedin"></span></p> -->
-                <p style="font-size: 14px; margin-bottom: 3px;">role: <span id="role"></span></p>
+                <div class="row">
+                    <div class="col-7" style="height: 100%;">
+                        <h4>User Information</h4>
+                        <p style="font-size: 14px; margin-bottom: 3px;">Email: <span id="email"></span></p>
+                        <p style="font-size: 14px; margin-bottom: 3px;">School Name: <span id="schoolName"></span></p>
+                        <!-- <p style="font-size: 14px; margin-bottom: 3px;">logged in: <span id="loggedin"></span></p> -->
+                        <p style="font-size: 14px; margin-bottom: 3px;">role: <span id="role"></span></p>
+                    </div>
+                    
+                    <div class="col-5">
+                        <div style="font-size: 48px;">
+                            ห้องเรียน <span id="roomDetail"></span>
+                        </div>                        
+                        
+                        <button id="deleteRoom" class="btn btn-danger btn-lg btn-block m-3">ลบห้องเรียนนี้</button>
+                        <script src="./module/manage/deleteRoom.js" type="module" room="${room}">
+                            console.log(room)
+                        </script>
+                        
+                    </div>
+                </div>
+                
 
 
                 <script type="module">
@@ -75,12 +100,6 @@
                                     type="submit">อัพโหลดแบบฟอร์ม</button> <!-- Adding a submit button -->
                                 <script src="./module/manage/ManagerStudentRoomForm.js" type="module"></script>
                             </form>
-                            <script>
-                                const paramsRoom = new URLSearchParams(window.location.search);
-                                const roomNum = paramsRoom.get('room');
-                                let [front, back] = roomNum.split('/');
-                                document.getElementById('roomDisplay').textContent = `form_student_${front}-${back}.xlsx`;
-                            </script>
 
                             <h4>step 3 : ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
                             <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
@@ -100,10 +119,17 @@
                     </div>
                 </div>
 
+                <!-- here -->
+                <script>
+                    document.getElementById('roomDisplay').textContent = `form_student_${front}-${back}.xlsx`;
+                    document.getElementById('roomDetail').textContent = `${front}-${back}`;
+                </script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
 
+
+                
             </div>
         </div>
     </div>

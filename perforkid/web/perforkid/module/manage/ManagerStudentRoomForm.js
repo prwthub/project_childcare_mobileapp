@@ -225,7 +225,7 @@ function upload(file) {
                           console.log("Data uploaded to Firestore successfully!");
                           alert("เพิ่มข้อมูลสำเร็จแล้ว! (All)");
                         }).then(()=>{
-                          location.reload();
+                          //location.reload();
                         })
                         .catch((error) => {
                           console.error("Error deleting documents in subcollection:", error);

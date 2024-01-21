@@ -62,6 +62,7 @@ function addAdmin() {
                     .then(() => {
                         console.log('Admin added successfully!');
                         alert('เพิ่ม admin สำเร็จ!');
+                        location.reload();
                     })
                     .catch((error) => {
                         console.error('Error adding admin: ', error);
