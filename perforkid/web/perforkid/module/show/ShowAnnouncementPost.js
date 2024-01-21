@@ -39,6 +39,7 @@ if (!schoolQuerySnapshot.empty) {
           content: postsData.content,
           header: postsData.header,
           image: postsData.image,
+          editStatus: postsData.editStatus
         };
       })
       .sort((a, b) => b.date - a.date);
@@ -50,6 +51,7 @@ if (!schoolQuerySnapshot.empty) {
       console.log("doc.date : ",doc.date);
       console.log("doc.content : ",doc.content);
       console.log("doc.image : ",doc.image);
+      console.log("doc.editStatus : ",doc.editStatus);
       console.log("doc : ",doc);
       console.log("");
     })
@@ -75,6 +77,7 @@ if (!schoolQuerySnapshot.empty) {
       cardTitle.className = 'card-title';
       cardTitle.style = 'font-size: 22px';
       cardTitle.textContent = announcementData.header;
+      
 
       // Create the card content
       const cardContent = document.createElement('p');
@@ -93,6 +96,9 @@ if (!schoolQuerySnapshot.empty) {
       const formattedDate = new Date(date).toLocaleString(); // Format to a human-readable string
       cardDate.className = 'card-text text-muted';
       cardDate.textContent = 'โพสต์เมื่อ : ' + formattedDate;
+      if (announcementData.editStatus == "Y") {
+        cardDate.textContent += "  (มีการแก้ไข)";
+      }
 
       const rawTimestamp = announcementData.date.toDate(); // Convert to milliseconds since epoch
 

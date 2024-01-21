@@ -74,11 +74,12 @@ export async function editAnnouncement(timestamp) {
                     header: postHeader,
                     content: postContent,
                     date: new Date(),
-                    image: image
+                    image: image,
+                    editStatus: "Y"
                 });
 
-                console.log('Announcement edited successfully!');
-                window.alert('Announcement edited successfully!');
+                console.log('แก้ไขประกาศเรียบร้อยแล้ว!');
+                window.alert('แก้ไขประกาศเรียบร้อยแล้ว!');
                 document.getElementById("announcementFormEdit").reset();
             } else {
                 console.log("Announcement not found.");

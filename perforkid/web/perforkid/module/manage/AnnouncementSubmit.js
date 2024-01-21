@@ -31,11 +31,11 @@ const submitFormFirst = document.getElementById('submitAddBtn');
 submitFormFirst.addEventListener('click', function (e) {
     const postHeader = document.getElementById('postHeaderAdd').value;
     const postContent = document.getElementById('postContentAdd').value;
-    const confirmSubmit = confirm("Please check the integrity of the content, proceed?");
+    const confirmSubmit = confirm("โปรดตรวจสอบความสมบูรณ์ของเนื้อหา ดำเนินการต่อหรือไม่");
     if (confirmSubmit) {
         if (!postHeader || !postContent) {
             e.preventDefault(); // Prevent form submission
-            alert('Please fill in both the header and content fields.'); // Provide a message to the user
+            alert('กรุณากรอกข้อมูลให้ครบทั้งส่วนหัวเรื่องและเนื้อหา'); // Provide a message to the user
         } else {
             submitAnnouncement();
         }}
@@ -54,7 +54,7 @@ export async function submitAnnouncement() {
     try {
         let image = null;
         if (file) {
-            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `${schoolName}/announcementPost/${file.name}`);
+            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `school/${schoolName}/announcementPost/${file.name}`);
             await FirebaseAPI.uploadBytes(storageRef, file);
             image = await FirebaseAPI.getDownloadURL(storageRef);
         }
@@ -72,12 +72,13 @@ export async function submitAnnouncement() {
                 header: postHeader,
                 content: postContent,
                 date: new Date(),
-                image: image
+                image: image,
+                editStatus: "N"
             }).then(()=>{
                 location.reload();
             });
-            console.log('Announcement added successfully!');
-            window.alert('Announcement added successfully!');
+            console.log('เพิ่มประกาศเรียบร้อยแล้ว!');
+            window.alert('เพิ่มประกาศเรียบร้อยแล้ว!');
             document.getElementById('announcementForm').reset();
             document.getElementById('imagePreviewAdd').innerHTML = '';
         } else {

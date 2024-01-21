@@ -39,8 +39,8 @@ export async function deleteAnnouncement(timestamp) {
                 }
 
                 await FirebaseAPI.deleteDoc(announcementDoc.ref);
-                alert('Announcement deleted successfully!');
-                console.log('Announcement deleted successfully!');
+                alert('ลบประกาศเรียบร้อยแล้ว!');
+                console.log('ลบประกาศเรียบร้อยแล้ว!');
             } else {
                 console.log("Announcement not found.");
             }
