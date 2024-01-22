@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit school</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="Icon" href="./picture/Logo_1.jpg">
+    <link rel="stylesheet" href="./style/Styling.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!-- SIDEBAR SUPPORT SECTION, COPY PASTE THIS TO OTHER FILES -->
+        <div class="row" style="min-height: 100vh;">
+            <div class="col-3 bg-dark" style="height: 100%;">
+                <div id="sidebar-container"></div>
+                <script src="./module/manage/LoadSideBar.js" type="module" defer></script>
+            </div>
+
+            <div class="col-9 p-5 bg-light">
+
+                <div class="row">
+                    <div class="col-8">
+                        <h1>Edit School</h1>
+
+                    </div>
+                </div>
+
+                <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+                <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+                <script type="module">
+                    // Initialize Firebase
+                    import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
+                    firebase.initializeApp(FirebaseAPI.firebaseConfig);
+                    import currentUser from './module/user/currentUser.js';
+                    import * as SchoolDetailEditor from './module/manage/ManagerSchoolEdit.js';
+
+                    const storedUser = sessionStorage.getItem('currentUser');
+
+                    if (storedUser) {
+                        // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+                        const storedCurrentUser = JSON.parse(storedUser);
+
+                        // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+                        currentUser.email = storedCurrentUser.email;
+                        currentUser.school_name = storedCurrentUser.school_name;
+                        currentUser.loggedin = storedCurrentUser.loggedin;
+                        currentUser.role = storedCurrentUser.role;
+                    }
+
+                    if (currentUser.loggedin == 'no') {
+                        window.location.href = "./AdminLanding.html";
+                    }
+
+                    SchoolDetailEditor.loadSchoolInfo();
+                    SchoolDetailEditor.setupImagePreview('bannerInputEdit', 'bannerPreviewEdit', 'schoolEditForm');
+                    SchoolDetailEditor.setupImagePreview('imageInputEdit', 'imagePreviewEdit', 'schoolEditForm');
+                    
+                    document.getElementById("cancelAddBtn").addEventListener('click', function () {
+                        try {
+                            SchoolDetailEditor.cancelSchoolInfoChange()
+                            console.log("You clicked cancel changes!")
+                        }
+                        catch (error) {
+                            console.error('School edit form cancalation failed', error);
+                        };
+                    });
+                    document.getElementById("schoolEditForm").addEventListener('submit', function () {
+                        SchoolDetailEditor.testfunc()
+                        .then(() => {
+                            console.log("You clicked the async function");
+                        })
+                        .catch(error => {
+                            console.log('Async function failed to execute, ', error)
+                        })
+                    });
+                </script>
+
+
+                <div class="divider"></div>
+                <script src="./module/user/userDataKeeper.js" type="module"></script>
+
+                <!-- Show current school's information-->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row pt-3">
+                            <div class="col-9 " id="schoolBanner"></div>
+                            <div class="col-3" id="schoolImage"></div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-2" id="schoolNameInitial"></div>
+                            <div class="col-5" id="schoolTitleTh"></div>
+                            <div class="col-5" id="schoolTitleEn"></div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-12 pb-3" id="schoolDescriptionTh"></div>
+                            <div class="col-12" id="schoolDescriptionEn"></div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-12" id="schoolWebsite"></div>
+                            <div class="divider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="schoolEditForm">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="form-group row">
+                                <label class="m-1" for="bannerInputAdd">
+                                    <h4>รูปแบนเนอร์โรงเรียน</h4>
+                                </label>
+                                <input type="file" class="form-control d-flex" id="bannerInputEdit"
+                                    accept=".jpg, .jpeg, .png" multiple>
+                                <div id="bannerPreviewEdit">b</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="form-group row">
+                                <label class="m-1" for="imageInputAdd">
+                                    <h4>รูปโปรไฟล์โรงเรียน</h4>
+                                </label>
+                                <input type="file" class="form-control d-flex" id="imageInputEdit"
+                                    accept=".jpg, .jpeg, .png" multiple>
+                                <div id="imagePreviewEdit">im,g</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group row">
+                                <label class="m-1" for="schoolTitleTh">
+                                    <h4>ชื่อโรงเรียน (ภาษาไทย)</h4>
+                                </label>
+                                <input type="text" class="form-control-lg d-flex" id="schoolTitleThEdit" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group row">
+                                <label class="m-1" for="schoolTitleEn">
+                                    <h4>ชื่อโรงเรียน (ภาษาอังกฤษ)</h4>
+                                </label>
+                                <input type="text" class="form-control-lg d-flex" id="schoolTitleEnEdit" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group row mt-3">
+                                <label class="m-1" for="schoolDescriptionTh">
+                                    <h4>คำอธิบายโรงเรียน (ภาษาไทย)</h4>
+                                </label>
+                                <textarea class="form-control-lg d-flex" id="schoolDescriptionThEdit" rows="5"
+                                    required></textarea>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group row mt-3">
+                                <label class="m-1" for="schoolDescriptionEn">
+                                    <h4>คำอธิบายโรงเรียน (ภาษาอังกฤษ)</h4>
+                                </label>
+                                <textarea class="form-control-lg d-flex" id="schoolDescriptionEnEdit" rows="5"
+                                    required></textarea>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group row">
+                                <label class="m-1" for="schoolWebsite">
+                                    <h4>เว็บไซต์โรงเรียน</h4>
+                                </label>
+                                <input type="text" class="form-control-lg d-flex" id="schoolWebsiteEdit" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row m-4" style="float: none; margin: 0 auto;">
+                        <!-- <script src="./module/manage/AnnouncementSubmit.js" type="module"></script> -->
+                        <button type="button" class="btn btn-success col-sm-5 d-flex m-3" id="submitAddBtn"
+                            style=" justify-content: center; align-items: center;">
+                            บันทึกการแก้ไข &#10004;
+                        </button>
+                        <button type="button" class="btn btn-danger col-sm-5 d-flex m-3" id="cancelAddBtn"
+                            style=" justify-content: center; align-items: center;">
+                            ยกเลิก &#10008;
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- log out -->
+            <!-- <div class="pt-1 mb-4">
+              <script type="module" src="./authen/LogoutFirebaseAuthen.js"></script>
+              <button id="signOutBtn" class="btn btn-dark btn-lg btn-block" type="button">Logout</button>
+            </div> -->
+
+            <h3 id="schoolText"></h3>
+
+            <!-- <button type = "button" class ="btn btn-info" id="sortByDateButton">Sort</button>
+              <script src = "PostSort.js" type = "module"></script> -->
+
+            <ul id="fileList"></ul>
+
+            <div id="announcementContainer"></div>
+            <!-- <script src="./module/show/ShowAnnouncementPost.js" type="module"></script> -->
+
+
+            <!--  <script src="FormInputShowAll.js" type="module"></script> 
+              Import show every file in storage script, uncomment this to use this module -->
+
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>
