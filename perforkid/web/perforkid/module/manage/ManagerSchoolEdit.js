@@ -3,6 +3,7 @@ import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
 
 const db = FirebaseAPI.getFirestore();
 
+
 // ดึงข้อมูลโรงเรียนปัจจุบันมาแสดง (ใช้งานได้)
 async function loadSchoolInfo() {
     const schoolRef = FirebaseAPI.collection(db, 'school');
@@ -27,101 +28,62 @@ async function loadSchoolInfo() {
             document.getElementById('schoolWebsite').textContent = schoolData['school-website'];
         }
     } else {
-        console.log('No matching documents found in the "school" collection.');
+        console.log('No School found!');
     }
 }
 
-// ดึงข้อมูลมาเข้าช่องกรอก (เหมือน Announcement Edit Post) (ยังไม่สำเร็จ)
-async function editSchoolInfo() { 
+// ดึงข้อมูลมาเข้าช่องกรอกแก้ไข (ใช้งานได้)
+async function editSchoolInfo() {
     try {
-        const file = document.getElementById('imageInputEdit').files[0];
-        const hasNewImage = !!file;
 
-        const schoolName = currentUser.school_name;
-        const schoolRef = FirebaseAPI.collection(db, 'school');
+        const editOverlay = document.getElementById('editOverlay');
+        editOverlay.style.display = 'block';
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
 
-        console.log("School Edit button submit clicked");
-        const query = FirebaseAPI.query(schoolRef, FirebaseAPI.where("school-name", "==", currentUser.school_name));
-        const schoolQuerySnapshot = await FirebaseAPI.getDocs(query);
+        document.getElementById('imagePreviewEdit').innerHTML = document.getElementById('schoolImage').innerHTML;
+        document.getElementById('bannerPreviewEdit').innerHTML = document.getElementById('schoolBanner').innerHTML;
+        document.getElementById('schoolTitleThEdit').value = document.getElementById('schoolTitleTh').textContent;
+        document.getElementById('schoolTitleEnEdit').value = document.getElementById('schoolTitleEn').textContent
+        document.getElementById('schoolDescriptionThEdit').value = document.getElementById('schoolDescriptionTh').textContent
+        document.getElementById('schoolDescriptionEnEdit').value = document.getElementById('schoolDescriptionEn').textContent
+        document.getElementById('schoolWebsiteEdit').value = document.getElementById('schoolWebsite').textContent
 
-        if (!schoolQuerySnapshot.empty) {
-            const schoolDocument = schoolQuerySnapshot.docs[0];
-            const announcementRef = FirebaseAPI.collection(schoolDocument.ref, 'announcement');
-
-            const announcementQuerySnapshot = await FirebaseAPI.getDocs(
-                FirebaseAPI.query(announcementRef, FirebaseAPI.where("date", "==", new Date(timestamp)))
-            );
-
-            console.log("Date compare code block passed");
-
-            if (!announcementQuerySnapshot.empty) {
-                const announcementDocument = announcementQuerySnapshot.docs[0];
-                const announcementData = announcementDocument.data();
-
-                let image = null;
-                if (hasNewImage && !keepOldImage) {
-                    const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `${schoolName}/announcementPost/${file.name}`);
-                    await FirebaseAPI.uploadBytes(storageRef, file);
-                    image = await FirebaseAPI.getDownloadURL(storageRef);
-
-                    if (announcementData.image) {
-                        const imageRef = FirebaseAPI.ref(FirebaseAPI.storage, announcementData.image);
-
-                        // Delete the image from storage
-                        await FirebaseAPI.deleteObject(imageRef);
-                        console.log('Image deleted successfully!');
-                    }
-                } else {
-                    image = keepOldImage ? announcementData.image : null;
-                }
-
-                const schoolName = document.getElementById('schoolNameInitialEdit').value;
-                const schoolTitleTh = document.getElementById('schoolTitleThEdit').value;
-                const schoolTitleEn = document.getElementById('schoolTitleEnEdit').value;
-                const schoolDescriptionTh = document.getElementById('schoolDescriptionThEdit').value;
-                const schoolDescriptionEn = document.getElementById('schoolDescriptionEnEdit').value;
-                const schoolWebsite =  document.getElementById('schoolWebsiteEdit').value;
-
-
-                await FirebaseAPI.updateDoc(announcementDocument.ref, {
-                    "school-name": schoolName,
-                    "school-title-th": schoolTitleTh,
-                    "school-title-en": schoolTitleEn,
-                    "school-description-th": schoolDescriptionTh,
-                    "school-description-en": schoolDescriptionEn,
-                    "schoolWebsite": schoolWebsite
-                });
-
-                console.log('Announcement edited successfully!');
-                window.alert('Announcement edited successfully!');
-                document.getElementById("announcementFormEdit").reset();
-            } else {
-                console.log("Announcement not found.");
-            }
-        } else {
-            console.log("School document not found.");
-        }
-    } catch (error) {
-        console.error('Error editing announcement:', error);
+    } catch (Exception) {
+        console.log(Exception);
     }
 }
 
 // อัพเดทข้อมูลลง Firestore + Storage (ยังไม่สำเร็จ)
 async function submitSchoolInfo() {
-
-    const postHeader = document.getElementById('postHeaderAdd').value;
-    const postContent = document.getElementById('postContentAdd').value;
+    console.log("You clicked submit form!")
+    const bannerImage = document.getElementById('bannerInputEdit').files[0];
+    const schoolImage = document.getElementById('imageInputEdit').files[0];
     const schoolName = currentUser.school_name;
-
-    const file = document.getElementById('imageInputAdd').files[0];
+    const schoolTitleTh = document.getElementById('schoolTitleThEdit').value;
+    const schoolTitleEn = document.getElementById('schoolTitleEnEdit').value;
+    const schoolDescriptionTh = document.getElementById('schoolDescriptionThEdit').value;
+    const schoolDescriptionEn = document.getElementById('schoolDescriptionEnEdit').value;
+    const schoolWebsite = document.getElementById('schoolWebsiteEdit').value;
     const db = FirebaseAPI.getFirestore();
 
     try {
-        let image = null;
-        if (file) {
-            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `${schoolName}/announcementPost/${file.name}`);
-            await FirebaseAPI.uploadBytes(storageRef, file);
-            image = await FirebaseAPI.getDownloadURL(storageRef);
+        const storagePath = `school/${schoolName}/general-asset/`;
+
+
+        if (bannerImage || schoolImage) {
+            console.log("EIther here's banner or profile here")
+            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, storagePath);
+
+            const schoolImageRef = child(storageRef, `${storagePath}${schoolImage.name}`);
+            const bannerImageRef = child(storageRef, `${storagePath}${schoolImage.name}`);
+            await uploadAndRetrieveURL(schoolImageRef, bannerImage);
+            await uploadAndRetrieveURL(bannerImageRef, schoolImage);
+
+            async function uploadAndRetrieveURL(storageRef, file) {
+                await uploadBytes(storageRef, file);
+                return getDownloadURL(storageRef);
+            }
         }
 
         const schoolRef = FirebaseAPI.collection(db, 'school');
@@ -130,37 +92,46 @@ async function submitSchoolInfo() {
         );
 
         if (!schoolQuerySnapshot.empty) {
-            const schoolDocument = schoolQuerySnapshot.docs[0];
-            const announcementRef = FirebaseAPI.collection(schoolDocument.ref, 'announcement');
 
-            await FirebaseAPI.addDoc(announcementRef, {
-                header: postHeader,
-                content: postContent,
-                date: new Date(),
-                image: image
-            }).then(() => {
-                location.reload();
-            });
-            console.log('Announcement added successfully!');
-            window.alert('Announcement added successfully!');
-            document.getElementById('announcementForm').reset();
-            document.getElementById('imagePreviewAdd').innerHTML = '';
+                const schoolData  = schoolQuerySnapshot.docs[0];
 
+                const body = {
+                    "school-image": schoolImageRef,
+                    "school-banner": bannerImageRef,
+                    "school-name": schoolName,
+                    "school-title-th": schoolTitleTh,
+                    "school-title-en": schoolTitleEn,
+                    "school-description-th": schoolDescriptionTh,
+                    "school-description-en": schoolDescriptionEn,
+                    "schoolWebsite": schoolWebsite
+                }
+
+                await FirebaseAPI.setDoc(schoolData.ref, body).then(() => {
+                    location.reload();
+                });
+
+                console.log('Announcement added successfully!');
+                cancelSchoolInfoChange();
+
+            
         } else {
             console.log("School document not found.");
         }
     } catch (error) {
-        console.error('Error uploading image or adding announcement:', error);
+        console.error('Error uploading image or updating school information:', error);
     }
 }
 
 // รีเซ็ต Form (ใช้งานได้)
 function cancelSchoolInfoChange() {
     const cancelAddBtn = document.getElementById('cancelAddBtn');
-    const announcementForm = document.getElementById('schoolEditForm');
+    const schoolForm = document.getElementById('schoolEditForm');
+    editOverlay.style.display = 'none';
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 
     cancelAddBtn.addEventListener('click', function () {
-        announcementForm.reset();
+        schoolForm.reset();
     });
 }
 
