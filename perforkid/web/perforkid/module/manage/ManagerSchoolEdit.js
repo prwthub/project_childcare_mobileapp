@@ -80,7 +80,6 @@ async function submitSchoolInfo() {
 
         if (bannerImage || schoolImage) {
             console.log("Found new image to update!")
-            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `school/${schoolName}/image_library/school_profile`);
 
             async function uploadAndRetrieveURL(storageRef, file) {
                 const uploadTaskSnapshot = await FirebaseAPI.uploadBytes(storageRef, file);
@@ -90,11 +89,13 @@ async function submitSchoolInfo() {
             }
 
             if (schoolImage) {
+                const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `school/${schoolName}/image_library/school_profile/${schoolImage.name}`);
                 const schoolImageRef = await uploadAndRetrieveURL(storageRef, schoolImage);
                 body["school-image"] = schoolImageRef;
             }
             
             if (bannerImage) {
+                const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `school/${schoolName}/image_library/school_profile/${bannerImage.name}`);
                 const bannerImageRef = await uploadAndRetrieveURL(storageRef, bannerImage);
                 body["school-banner"] = bannerImageRef;
             }
@@ -105,6 +106,9 @@ async function submitSchoolInfo() {
             FirebaseAPI.query(schoolRef, FirebaseAPI.where("school-name", "==", schoolName))
         );
 
+        console.log(schoolImage)
+        console.log(bannerImage)
+
         if (!schoolQuerySnapshot.empty) {
 
             const schoolData = schoolQuerySnapshot.docs[0];
@@ -112,6 +116,7 @@ async function submitSchoolInfo() {
             await FirebaseAPI.updateDoc(schoolData.ref, body).then(() => {
                 console.log('School Information added successfully!');
                 alert("School Information added successfully!");
+                location.reload();
             });
 
         } else {
