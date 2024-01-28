@@ -54,7 +54,7 @@ async function editSchoolInfo() {
     }
 }
 
-// อัพเดทข้อมูลลง Firestore + Storage (ยังไม่สำเร็จ)
+// อัพเดทข้อมูลลง Firestore + Storage (ใช้งานได้)
 async function submitSchoolInfo() {
     console.log("You clicked submit form!")
     const bannerImage = document.getElementById('bannerInputEdit').files[0];
@@ -67,25 +67,39 @@ async function submitSchoolInfo() {
     const schoolWebsite = document.getElementById('schoolWebsiteEdit').value;
     const db = FirebaseAPI.getFirestore();
 
-    try {
-        const storagePath = `school/${schoolName}/general-asset/`;
+    const body = {
+        "school-name": schoolName,
+        "school-title-th": schoolTitleTh,
+        "school-title-en": schoolTitleEn,
+        "school-description-th": schoolDescriptionTh,
+        "school-description-en": schoolDescriptionEn,
+        "school-website": schoolWebsite
+    }
 
+    try {
 
         if (bannerImage || schoolImage) {
-            console.log("EIther here's banner or profile here")
-            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, storagePath);
-
-            const schoolImageRef = child(storageRef, `${storagePath}${schoolImage.name}`);
-            const bannerImageRef = child(storageRef, `${storagePath}${schoolImage.name}`);
-            await uploadAndRetrieveURL(schoolImageRef, bannerImage);
-            await uploadAndRetrieveURL(bannerImageRef, schoolImage);
+            console.log("Found new image to update!")
+            const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `school/${schoolName}/image_library/school_profile`);
 
             async function uploadAndRetrieveURL(storageRef, file) {
-                await uploadBytes(storageRef, file);
-                return getDownloadURL(storageRef);
+                const uploadTaskSnapshot = await FirebaseAPI.uploadBytes(storageRef, file);
+                const fileRef = uploadTaskSnapshot.ref;
+                const downloadURL = await FirebaseAPI.getDownloadURL(fileRef);
+                return downloadURL
             }
-        }
 
+            if (schoolImage) {
+                const schoolImageRef = await uploadAndRetrieveURL(storageRef, schoolImage);
+                body["school-image"] = schoolImageRef;
+            }
+            
+            if (bannerImage) {
+                const bannerImageRef = await uploadAndRetrieveURL(storageRef, bannerImage);
+                body["school-banner"] = bannerImageRef;
+            }
+
+        }
         const schoolRef = FirebaseAPI.collection(db, 'school');
         const schoolQuerySnapshot = await FirebaseAPI.getDocs(
             FirebaseAPI.query(schoolRef, FirebaseAPI.where("school-name", "==", schoolName))
@@ -93,27 +107,13 @@ async function submitSchoolInfo() {
 
         if (!schoolQuerySnapshot.empty) {
 
-                const schoolData  = schoolQuerySnapshot.docs[0];
+            const schoolData = schoolQuerySnapshot.docs[0];
 
-                const body = {
-                    "school-image": schoolImageRef,
-                    "school-banner": bannerImageRef,
-                    "school-name": schoolName,
-                    "school-title-th": schoolTitleTh,
-                    "school-title-en": schoolTitleEn,
-                    "school-description-th": schoolDescriptionTh,
-                    "school-description-en": schoolDescriptionEn,
-                    "schoolWebsite": schoolWebsite
-                }
+            await FirebaseAPI.updateDoc(schoolData.ref, body).then(() => {
+                console.log('School Information added successfully!');
+                alert("School Information added successfully!");
+            });
 
-                await FirebaseAPI.setDoc(schoolData.ref, body).then(() => {
-                    location.reload();
-                });
-
-                console.log('Announcement added successfully!');
-                cancelSchoolInfoChange();
-
-            
         } else {
             console.log("School document not found.");
         }
