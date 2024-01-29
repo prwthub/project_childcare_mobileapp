@@ -51,7 +51,7 @@ export async function editAnnouncement(timestamp) {
 
                 let image = null;
                 if (hasNewImage && !keepOldImage) {
-                    const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `${schoolName}/announcementPost/${file.name}`);
+                    const storageRef = FirebaseAPI.ref(FirebaseAPI.storage, `school/${schoolName}/announcementPost/${file.name}`);
                     await FirebaseAPI.uploadBytes(storageRef, file);
                     image = await FirebaseAPI.getDownloadURL(storageRef);
 
