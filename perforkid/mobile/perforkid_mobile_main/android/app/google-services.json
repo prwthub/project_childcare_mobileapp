@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "741346506533",
+    "project_id": "perforkid-application",
+    "storage_bucket": "perforkid-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741346506533:android:6cd8b93ff80c1ee96d8ccc",
+        "android_client_info": {
+          "package_name": "com.mycompany.perforkid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741346506533-n55lgiok6fhcas5ed656l7goi1h654os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.perforkid",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "741346506533-djg1ek8sa5fq31i846jf7vae4kr1e0dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOa_BXD0IQGzUaGBlH-F0P-EZIRbXwASI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741346506533-djg1ek8sa5fq31i846jf7vae4kr1e0dm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "741346506533-e5d4pgkqp39379l7tardsnb9bqi2ndt2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.perforkid"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /admin/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /school/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /school/{parent}/announcement/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /{path=**}/announcement/{document} {
+      allow read: if true;
+    }
+
+
+    match /school/{parent}/car/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /{path=**}/car/{document} {
+      allow read: if true;
+    }
+
+
+    match /school/{parent}/card/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /{path=**}/card/{document} {
+      allow read: if true;
+    }
+
+
+    match /school/{parent}/driver/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /{path=**}/driver/{document} {
+      allow read: if true;
+    }
+
+
+    match /school/{parent}/student/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /{path=**}/student/{document} {
+      allow read: if true;
+    }
+
+
+    match /school/{parent}/teacher/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if false;
+      allow delete: if false;
+    }
+
+    match /{path=**}/teacher/{document} {
+      allow read: if true;
+    }
+
+  }
+}
