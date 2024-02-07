@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import 'parent_personal_profile_model.dart';
 export 'parent_personal_profile_model.dart';
 
@@ -39,6 +40,17 @@ class _ParentPersonalProfileWidgetState
     super.dispose();
   }
 
+  void _toggleThemeMode(BuildContext context) {
+  ThemeMode currentMode = Theme.of(context).brightness == Brightness.light
+      ? ThemeMode.light
+      : ThemeMode.dark;
+
+  ThemeMode newMode = currentMode == ThemeMode.light
+      ? ThemeMode.dark
+      : ThemeMode.light;
+    setDarkModeSetting(context, newMode);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isiOS) {
@@ -61,11 +73,11 @@ class _ParentPersonalProfileWidgetState
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
             body: Center(
               child: SizedBox(
-                width: 50.0,
-                height: 50.0,
+                width: 50,
+                height: 50,
                 child: SpinKitRing(
                   color: FlutterFlowTheme.of(context).primaryText,
-                  size: 50.0,
+                  size: 50,
                 ),
               ),
             ),
@@ -88,8 +100,8 @@ class _ParentPersonalProfileWidgetState
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(
-                width: MediaQuery.sizeOf(context).width * 1.0,
-                height: 160.0,
+                width: MediaQuery.sizeOf(context).width,
+                height: 160,
                 decoration: BoxDecoration(
                   color: Color(0xFFED8D9B),
                 ),
@@ -97,8 +109,7 @@ class _ParentPersonalProfileWidgetState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 40.0, 20.0, 0.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(20, 40, 20, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -109,14 +120,14 @@ class _ParentPersonalProfileWidgetState
                               Card(
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 color: Color(0xFFE0E3E7),
-                                elevation: 0.0,
+                                elevation: 0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(2.0),
+                                  padding: EdgeInsets.all(2),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderRadius: BorderRadius.circular(8),
                                     child: CachedNetworkImage(
                                       fadeInDuration:
                                           Duration(milliseconds: 500),
@@ -124,8 +135,8 @@ class _ParentPersonalProfileWidgetState
                                           Duration(milliseconds: 500),
                                       imageUrl:
                                           'https://picsum.photos/seed/339/600',
-                                      width: 80.0,
-                                      height: 80.0,
+                                      width: 80,
+                                      height: 80,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -134,14 +145,14 @@ class _ParentPersonalProfileWidgetState
                               Card(
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 color: Color(0x00FFFFFF),
-                                elevation: 0.0,
+                                elevation: 0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.all(2.0),
+                                  padding: EdgeInsets.all(2),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderRadius: BorderRadius.circular(8),
                                     child: CachedNetworkImage(
                                       fadeInDuration:
                                           Duration(milliseconds: 500),
@@ -149,8 +160,8 @@ class _ParentPersonalProfileWidgetState
                                           Duration(milliseconds: 500),
                                       imageUrl:
                                           'https://thumbs.dreamstime.com/b/perplexed-middle-age-man-feeling-grumpy-over-white-background-portrait-irriated-middle-age-man-looking-very-displeased-204286004.jpghttps://thumbs.dreamstime.com/b/perplexed-middle-age-man-feeling-grumpy-over-white-background-portrait-irriated-middle-age-man-looking-very-displeased-204286004.jpg',
-                                      width: 80.0,
-                                      height: 80.0,
+                                      width: 80,
+                                      height: 80,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -160,8 +171,8 @@ class _ParentPersonalProfileWidgetState
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  8.0, 0.0, 0.0, 0.0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -174,13 +185,13 @@ class _ParentPersonalProfileWidgetState
                                         .override(
                                           fontFamily: 'Outfit',
                                           color: Colors.white,
-                                          fontSize: 24.0,
+                                          fontSize: 24,
                                           fontWeight: FontWeight.w500,
                                         ),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 4.0, 0.0, 0.0),
+                                        0, 4, 0, 0),
                                     child: Text(
                                       '{ที่อยู่อีเมลล์}',
                                       style: FlutterFlowTheme.of(context)
@@ -188,7 +199,7 @@ class _ParentPersonalProfileWidgetState
                                           .override(
                                             fontFamily: 'Plus Jakarta Sans',
                                             color: Color(0xB4FFFFFF),
-                                            fontSize: 14.0,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.normal,
                                           ),
                                     ),
@@ -204,46 +215,45 @@ class _ParentPersonalProfileWidgetState
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 10.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 0.0, 10.0, 0.0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   context.pushNamed('studentTravelCheck');
                                 },
                                 text: 'เปลี่ยน / เช็คสถานะนักเรียน',
                                 options: FFButtonOptions(
-                                  width: 200.0,
-                                  height: 50.0,
-                                  padding: EdgeInsets.all(0.0),
+                                  width: 200,
+                                  height: 50,
+                                  padding: EdgeInsets.all(0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
+                                      0, 0, 0, 0),
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
                                         fontFamily: 'RSU',
-                                        fontSize: 20.0,
+                                        fontSize: 20,
                                         useGoogleFonts: false,
                                       ),
-                                  elevation: 3.0,
+                                  elevation: 3,
                                   borderSide: BorderSide(
                                     color: Color(0xFFDBE2E7),
-                                    width: 1.0,
+                                    width: 1,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
@@ -252,41 +262,40 @@ class _ParentPersonalProfileWidgetState
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 0.0, 10.0, 0.0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   context.pushNamed('parentCard');
                                 },
                                 text: 'บัตรผู้ปกครอง',
                                 options: FFButtonOptions(
-                                  width: 200.0,
-                                  height: 50.0,
-                                  padding: EdgeInsets.all(0.0),
+                                  width: 200,
+                                  height: 50,
+                                  padding: EdgeInsets.all(0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
+                                      0, 0, 0, 0),
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
                                         fontFamily: 'RSU',
-                                        fontSize: 20.0,
+                                        fontSize: 20,
                                         useGoogleFonts: false,
                                       ),
-                                  elevation: 3.0,
+                                  elevation: 3,
                                   borderSide: BorderSide(
                                     color: Color(0xFFDBE2E7),
-                                    width: 1.0,
+                                    width: 1,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
@@ -295,41 +304,40 @@ class _ParentPersonalProfileWidgetState
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 0.0, 10.0, 0.0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   context.pushNamed('viewVisitorList');
                                 },
                                 text: 'รายการบัตรผู้มารับแทน',
                                 options: FFButtonOptions(
-                                  width: 200.0,
-                                  height: 50.0,
-                                  padding: EdgeInsets.all(0.0),
+                                  width: 200,
+                                  height: 50,
+                                  padding: EdgeInsets.all(0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
+                                      0, 0, 0, 0),
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
                                         fontFamily: 'RSU',
-                                        fontSize: 20.0,
+                                        fontSize: 20,
                                         useGoogleFonts: false,
                                       ),
-                                  elevation: 3.0,
+                                  elevation: 3,
                                   borderSide: BorderSide(
                                     color: Color(0xFFDBE2E7),
-                                    width: 1.0,
+                                    width: 1,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
@@ -338,41 +346,40 @@ class _ParentPersonalProfileWidgetState
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 0.0, 10.0, 0.0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   context.pushNamed('visitorCardMaker');
                                 },
                                 text: 'ประวัติการออกบัตรผู้มารับแทน',
                                 options: FFButtonOptions(
-                                  width: 200.0,
-                                  height: 50.0,
-                                  padding: EdgeInsets.all(0.0),
+                                  width: 200,
+                                  height: 50,
+                                  padding: EdgeInsets.all(0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
+                                      0, 0, 0, 0),
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
                                         fontFamily: 'RSU',
-                                        fontSize: 20.0,
+                                        fontSize: 20,
                                         useGoogleFonts: false,
                                       ),
-                                  elevation: 3.0,
+                                  elevation: 3,
                                   borderSide: BorderSide(
                                     color: Color(0xFFDBE2E7),
-                                    width: 1.0,
+                                    width: 1,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
@@ -381,41 +388,84 @@ class _ParentPersonalProfileWidgetState
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 10.0),
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 0.0, 10.0, 0.0),
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
                                   context.pushNamed('viewVisitorList');
                                 },
                                 text: 'ตรวจสอบบัตรผู้มารับแทน',
                                 options: FFButtonOptions(
-                                  width: 200.0,
-                                  height: 50.0,
-                                  padding: EdgeInsets.all(0.0),
+                                  width: 200,
+                                  height: 50,
+                                  padding: EdgeInsets.all(0),
                                   iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
+                                      0, 0, 0, 0),
                                   color: FlutterFlowTheme.of(context)
                                       .primaryBackground,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .bodyLarge
                                       .override(
                                         fontFamily: 'RSU',
-                                        fontSize: 20.0,
+                                        fontSize: 20,
                                         useGoogleFonts: false,
                                       ),
-                                  elevation: 3.0,
+                                  elevation: 3,
                                   borderSide: BorderSide(
                                     color: Color(0xFFDBE2E7),
-                                    width: 1.0,
+                                    width: 1,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                              child: Builder(
+                                builder: (context) => FFButtonWidget(
+                                  onPressed: () async {
+                                    _toggleThemeMode(context);
+                                  },
+                                  text: 'เปลี่ยนธีมสีสว่าง / มืด',
+                                  options: FFButtonOptions(
+                                    width: 200,
+                                    height: 50,
+                                    padding: EdgeInsets.all(0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 0),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .bodyLarge
+                                        .override(
+                                          fontFamily: 'RSU',
+                                          fontSize: 20,
+                                          useGoogleFonts: false,
+                                        ),
+                                    elevation: 3,
+                                    borderSide: BorderSide(
+                                      color: Color(0xFFDBE2E7),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                               ),
                             ),
@@ -424,19 +474,18 @@ class _ParentPersonalProfileWidgetState
                       ),
                     ),
                     Align(
-                      alignment: AlignmentDirectional(0.0, 1.0),
+                      alignment: AlignmentDirectional(0, 1),
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 10.0, 0.0, 10.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 10),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(
                               child: Align(
-                                alignment: AlignmentDirectional(0.0, 1.0),
+                                alignment: AlignmentDirectional(0, 1),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      10.0, 0.0, 10.0, 0.0),
+                                      10, 0, 10, 0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
                                       GoRouter.of(context).prepareAuthEvent();
@@ -450,29 +499,29 @@ class _ParentPersonalProfileWidgetState
                                     },
                                     text: 'ออกจากระบบ',
                                     options: FFButtonOptions(
-                                      width: 110.0,
-                                      height: 50.0,
+                                      width: 110,
+                                      height: 50,
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 0.0),
+                                          0, 0, 0, 0),
                                       iconPadding:
                                           EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
+                                              0, 0, 0, 0),
                                       color: FlutterFlowTheme.of(context).error,
                                       textStyle: FlutterFlowTheme.of(context)
                                           .bodyLarge
                                           .override(
                                             fontFamily: 'RSU',
                                             color: Color(0xFF14181B),
-                                            fontSize: 20.0,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
-                                      elevation: 3.0,
+                                      elevation: 3,
                                       borderSide: BorderSide(
                                         color: Colors.white,
-                                        width: 1.0,
+                                        width: 1,
                                       ),
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
                                 ),

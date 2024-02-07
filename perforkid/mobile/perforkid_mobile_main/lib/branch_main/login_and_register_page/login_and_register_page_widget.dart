@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import 'login_and_register_page_model.dart';
 export 'login_and_register_page_model.dart';
 
@@ -84,20 +85,20 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primary,
         body: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 70.0, 0.0, 0.0),
+          padding: EdgeInsetsDirectional.fromSTEB(0, 70, 0, 0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 60.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 60),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
                       'https://cdn.discordapp.com/attachments/1123511845257482301/1123512186795479070/Logo_1.png',
-                      width: 240.0,
-                      height: 184.0,
+                      width: 240,
+                      height: 184,
                       fit: BoxFit.fitWidth,
                     ),
                   ],
@@ -107,21 +108,26 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                 child: Column(
                   children: [
                     Align(
-                      alignment: Alignment(0.0, 0),
+                      alignment: Alignment(0, 0),
+                      child: Center(
                       child: TabBar(
                         isScrollable: true,
                         labelColor: Colors.white,
-                        labelPadding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
+                        labelPadding:
+                            EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                         labelStyle: FlutterFlowTheme.of(context).titleMedium,
                         unselectedLabelStyle: TextStyle(),
                         indicatorColor: Colors.white,
                         tabs: [
                           Tab(
-                            text: 'เข้าสู่ระบบ',
+                            child: Text('เข้าสู่ระบบ',
+                                style: TextStyle(fontFamily: 'RSU', fontSize: 20)),
                           ),
                           Tab(
-                            text: 'ลงชื่อเข้าใช้',
+                            child: Text(
+                              'ลงชื่อเข้าใช้',
+                              style: TextStyle(fontFamily: 'RSU', fontSize: 20),
+                            ),
                           ),
                         ],
                         controller: _model.tabBarController,
@@ -130,18 +136,19 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                         },
                       ),
                     ),
+                    ),
                     Expanded(
                       child: TabBarView(
                         controller: _model.tabBarController,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(24.0),
+                            padding: EdgeInsets.all(24),
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      20.0, 0.0, 20.0, 0.0),
+                                      20, 0, 20, 0),
                                   child: TextFormField(
                                     controller: _model.emailAddressController,
                                     focusNode: _model.emailAddressFocusNode,
@@ -153,7 +160,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                           .override(
                                             fontFamily: 'RSU',
                                             color: Color(0xFF57636C),
-                                            fontSize: 20.0,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
@@ -163,54 +170,50 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                           .override(
                                             fontFamily: 'RSU',
                                             color: Color(0xFF57636C),
-                                            fontSize: 20.0,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
                                       enabledBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Colors.white,
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0x00000000),
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       errorBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0x00000000),
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       focusedErrorBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0x00000000),
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       filled: true,
                                       fillColor: Colors.white,
                                       contentPadding:
                                           EdgeInsetsDirectional.fromSTEB(
-                                              20.0, 24.0, 20.0, 24.0),
+                                              20, 24, 20, 24),
                                     ),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
                                           fontFamily: 'RSU',
                                           color: Color(0xFF0F1113),
-                                          fontSize: 20.0,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.normal,
                                           useGoogleFonts: false,
                                         ),
@@ -222,7 +225,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                 ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      20.0, 12.0, 20.0, 0.0),
+                                      20, 12, 20, 0),
                                   child: TextFormField(
                                     controller: _model.passwordController,
                                     focusNode: _model.passwordFocusNode,
@@ -234,7 +237,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                           .override(
                                             fontFamily: 'RSU',
                                             color: Color(0xFF57636C),
-                                            fontSize: 20.0,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
@@ -244,47 +247,43 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                           .override(
                                             fontFamily: 'RSU',
                                             color: Color(0xFF57636C),
-                                            fontSize: 20.0,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
                                       enabledBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Colors.white,
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0x00000000),
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       errorBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0x00000000),
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       focusedErrorBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0x00000000),
-                                          width: 0.0,
+                                          width: 0,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       filled: true,
                                       fillColor: Colors.white,
                                       contentPadding:
                                           EdgeInsetsDirectional.fromSTEB(
-                                              20.0, 24.0, 20.0, 24.0),
+                                              20, 24, 20, 24),
                                       suffixIcon: InkWell(
                                         onTap: () => setState(
                                           () => _model.passwordVisibility =
@@ -297,7 +296,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                               ? Icons.visibility_outlined
                                               : Icons.visibility_off_outlined,
                                           color: Color(0xFF57636C),
-                                          size: 20.0,
+                                          size: 20,
                                         ),
                                       ),
                                     ),
@@ -306,7 +305,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         .override(
                                           fontFamily: 'RSU',
                                           color: Color(0xFF0F1113),
-                                          fontSize: 20.0,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.normal,
                                           useGoogleFonts: false,
                                         ),
@@ -318,7 +317,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                 ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 24.0, 0.0, 0.0),
+                                      0, 24, 0, 0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
                                       GoRouter.of(context).prepareAuthEvent();
@@ -338,27 +337,27 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                     },
                                     text: 'เข้าสู่ระบบ',
                                     options: FFButtonOptions(
-                                      width: 230.0,
-                                      height: 50.0,
+                                      width: 230,
+                                      height: 50,
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 0.0),
+                                          0, 0, 0, 0),
                                       iconPadding:
                                           EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
+                                              0, 0, 0, 0),
                                       color: Colors.white,
                                       textStyle: FlutterFlowTheme.of(context)
                                           .titleSmall
                                           .override(
                                             fontFamily: 'RSU',
                                             color: Color(0xFFF5576E),
-                                            fontSize: 20.0,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.normal,
                                             useGoogleFonts: false,
                                           ),
-                                      elevation: 3.0,
+                                      elevation: 3,
                                       borderSide: BorderSide(
                                         color: Colors.transparent,
-                                        width: 1.0,
+                                        width: 1,
                                       ),
                                     ),
                                   ),
@@ -367,7 +366,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.all(24.0),
+                            padding: EdgeInsets.all(24),
                             child: SingleChildScrollView(
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
@@ -379,7 +378,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 0.0, 20.0, 0.0),
+                                                  20, 0, 20, 0),
                                           child: TextFormField(
                                             controller:
                                                 _model.userNameCreateController,
@@ -394,8 +393,8 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                       .override(
                                                         fontFamily: 'RSU',
                                                         color:
-                                                            Color(0xFF0F1113),
-                                                        fontSize: 20.0,
+                                                            Color(0xFF57636C),
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -408,7 +407,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -417,50 +416,49 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Colors.white,
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               errorBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedErrorBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               filled: true,
                                               fillColor: Colors.white,
                                               contentPadding:
                                                   EdgeInsetsDirectional
-                                                      .fromSTEB(20.0, 24.0,
-                                                          20.0, 24.0),
+                                                      .fromSTEB(20, 24, 20, 24),
                                             ),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
                                                   fontFamily: 'RSU',
                                                   color: Color(0xFF0F1113),
-                                                  fontSize: 20.0,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.normal,
                                                   useGoogleFonts: false,
                                                 ),
@@ -479,7 +477,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 12.0, 20.0, 0.0),
+                                                  20, 12, 20, 0),
                                           child: TextFormField(
                                             controller: _model
                                                 .emailAddressCreateController,
@@ -495,7 +493,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -508,7 +506,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -517,50 +515,49 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Colors.white,
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               errorBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedErrorBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               filled: true,
                                               fillColor: Colors.white,
                                               contentPadding:
                                                   EdgeInsetsDirectional
-                                                      .fromSTEB(20.0, 24.0,
-                                                          20.0, 24.0),
+                                                      .fromSTEB(20, 24, 20, 24),
                                             ),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
                                                   fontFamily: 'RSU',
                                                   color: Color(0xFF0F1113),
-                                                  fontSize: 20.0,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.normal,
                                                   useGoogleFonts: false,
                                                 ),
@@ -579,7 +576,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 12.0, 20.0, 0.0),
+                                                  20, 12, 20, 0),
                                           child: TextFormField(
                                             controller:
                                                 _model.passwordCreateController,
@@ -596,7 +593,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -609,7 +606,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -618,43 +615,42 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Colors.white,
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               errorBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedErrorBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               filled: true,
                                               fillColor: Colors.white,
                                               contentPadding:
                                                   EdgeInsetsDirectional
-                                                      .fromSTEB(20.0, 24.0,
-                                                          20.0, 24.0),
+                                                      .fromSTEB(20, 24, 20, 24),
                                               suffixIcon: InkWell(
                                                 onTap: () => setState(
                                                   () => _model
@@ -671,7 +667,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                       : Icons
                                                           .visibility_off_outlined,
                                                   color: Color(0xFF57636C),
-                                                  size: 20.0,
+                                                  size: 20,
                                                 ),
                                               ),
                                             ),
@@ -680,7 +676,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                 .override(
                                                   fontFamily: 'RSU',
                                                   color: Color(0xFF0F1113),
-                                                  fontSize: 20.0,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.normal,
                                                   useGoogleFonts: false,
                                                 ),
@@ -699,7 +695,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 12.0, 20.0, 6.0),
+                                                  20, 12, 20, 6),
                                           child: TextFormField(
                                             controller: _model
                                                 .passwordConfirmController,
@@ -716,7 +712,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -729,7 +725,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -738,43 +734,42 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Colors.white,
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               errorBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedErrorBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               filled: true,
                                               fillColor: Colors.white,
                                               contentPadding:
                                                   EdgeInsetsDirectional
-                                                      .fromSTEB(20.0, 24.0,
-                                                          20.0, 24.0),
+                                                      .fromSTEB(20, 24, 20, 24),
                                               suffixIcon: InkWell(
                                                 onTap: () => setState(
                                                   () => _model
@@ -791,7 +786,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                       : Icons
                                                           .visibility_off_outlined,
                                                   color: Color(0xFF57636C),
-                                                  size: 20.0,
+                                                  size: 20,
                                                 ),
                                               ),
                                             ),
@@ -799,8 +794,8 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                 .bodyMedium
                                                 .override(
                                                   fontFamily: 'RSU',
-                                                  color: Color(0xFF0F1113),
-                                                  fontSize: 20.0,
+                                                  color: Color(0xFF57636C),
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.normal,
                                                   useGoogleFonts: false,
                                                 ),
@@ -813,9 +808,8 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                     ],
                                   ),
                                   Divider(
-                                    thickness: 2.0,
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
+                                    thickness: 2,
+                                    color: Colors.white,
                                   ),
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
@@ -825,7 +819,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 6.0, 20.0, 0.0),
+                                                  20, 6, 20, 0),
                                           child: FlutterFlowDropDown<String>(
                                             controller: _model
                                                     .dropDownValueController ??=
@@ -834,15 +828,15 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                             options: ['Option 1'],
                                             onChanged: (val) => setState(() =>
                                                 _model.dropDownValue = val),
-                                            width: 300.0,
-                                            height: 90.0,
+                                            width: 300,
+                                            height: 90,
                                             textStyle:
                                                 FlutterFlowTheme.of(context)
                                                     .bodyMedium
                                                     .override(
                                                       fontFamily: 'RSU',
                                                       color: Color(0xFF57636C),
-                                                      fontSize: 20.0,
+                                                      fontSize: 20,
                                                       useGoogleFonts: false,
                                                     ),
                                             hintText: 'เลือกโรงเรียน',
@@ -851,25 +845,24 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryText,
-                                              size: 24.0,
+                                              size: 24,
                                             ),
                                             fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryText,
-                                            elevation: 2.0,
+                                                Colors.white,
+                                            elevation: 2,
                                             borderColor:
                                                 FlutterFlowTheme.of(context)
                                                     .info,
-                                            borderWidth: 2.0,
-                                            borderRadius: 8.0,
-                                            margin: EdgeInsets.all(20.0),
+                                            borderWidth: 2,
+                                            borderRadius: 8,
+                                            margin: EdgeInsets.all(20),
                                             hidesUnderline: true,
                                             isOverButton: true,
                                             isSearchable: false,
                                             isMultiSelect: false,
                                           ),
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                   Row(
@@ -879,7 +872,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  20.0, 12.0, 20.0, 0.0),
+                                                  20, 12, 20, 0),
                                           child: TextFormField(
                                             controller: _model
                                                 .schoolCodeInputController,
@@ -894,8 +887,8 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                       .override(
                                                         fontFamily: 'RSU',
                                                         color:
-                                                            Color(0xFF0F1113),
-                                                        fontSize: 20.0,
+                                                            Color(0xFF57636C),
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -908,7 +901,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                         fontFamily: 'RSU',
                                                         color:
                                                             Color(0xFF57636C),
-                                                        fontSize: 20.0,
+                                                        fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.normal,
                                                         useGoogleFonts: false,
@@ -917,50 +910,49 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Colors.white,
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               errorBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               focusedErrorBorder:
                                                   UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: Color(0x00000000),
-                                                  width: 1.0,
+                                                  width: 1,
                                                 ),
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(8),
                                               ),
                                               filled: true,
                                               fillColor: Colors.white,
                                               contentPadding:
                                                   EdgeInsetsDirectional
-                                                      .fromSTEB(20.0, 24.0,
-                                                          20.0, 24.0),
+                                                      .fromSTEB(20, 24, 20, 24),
                                             ),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
                                                 .override(
                                                   fontFamily: 'RSU',
                                                   color: Color(0xFF0F1113),
-                                                  fontSize: 20.0,
+                                                  fontSize: 20,
                                                   fontWeight: FontWeight.normal,
                                                   useGoogleFonts: false,
                                                 ),
@@ -974,7 +966,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 24.0, 0.0, 40.0),
+                                        0, 24, 0, 40),
                                     child: FFButtonWidget(
                                       onPressed: () async {
                                         GoRouter.of(context).prepareAuthEvent();
@@ -1009,27 +1001,27 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                       },
                                       text: 'สร้างบัญชี',
                                       options: FFButtonOptions(
-                                        width: 230.0,
-                                        height: 50.0,
+                                        width: 230,
+                                        height: 50,
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 0.0, 0.0, 0.0),
+                                            0, 0, 0, 0),
                                         iconPadding:
                                             EdgeInsetsDirectional.fromSTEB(
-                                                0.0, 0.0, 0.0, 0.0),
+                                                0, 0, 0, 0),
                                         color: Colors.white,
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
                                               fontFamily: 'RSU',
                                               color: Color(0xFFF5576E),
-                                              fontSize: 20.0,
+                                              fontSize: 20,
                                               fontWeight: FontWeight.normal,
                                               useGoogleFonts: false,
                                             ),
-                                        elevation: 3.0,
+                                        elevation: 3,
                                         borderSide: BorderSide(
                                           color: Colors.transparent,
-                                          width: 1.0,
+                                          width: 1,
                                         ),
                                       ),
                                     ),

@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+
 import 'announcement_post_model.dart';
 export 'announcement_post_model.dart';
 
@@ -50,14 +51,9 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
     }
 
     return StreamBuilder<List<SchoolRecord>>(
-      stream: FirebaseFirestore.instance
-      .collection('school')
-      .doc('VFt4sM3EJvZPNSyT8ZFT')
-      .collection('announcement')
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-      .map((doc) => SchoolRecord.fromSnapshot(doc))
-      .toList()),
+      stream: querySchoolRecord(
+        singleRecord: true,
+      ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
@@ -65,11 +61,11 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
             body: Center(
               child: SizedBox(
-                width: 50.0,
-                height: 50.0,
+                width: 50,
+                height: 50,
                 child: SpinKitRing(
                   color: FlutterFlowTheme.of(context).primaryText,
-                  size: 50.0,
+                  size: 50,
                 ),
               ),
             ),
@@ -97,7 +93,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                   backgroundColor: Color(0xFFED8D9B),
                   automaticallyImplyLeading: false,
                   title: Align(
-                    alignment: AlignmentDirectional(0.0, 0.0),
+                    alignment: AlignmentDirectional(0, 0),
                     child: Text(
                       'ประกาศโรงเรียน',
                       textAlign: TextAlign.center,
@@ -107,8 +103,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                             fontFamily: 'RSU',
                             color:
                                 FlutterFlowTheme.of(context).primaryBackground,
-                            fontSize: 30.0,
-                            letterSpacing: 2.0,
+                            fontSize: 30,
+                            letterSpacing: 2,
                             fontWeight: FontWeight.normal,
                             useGoogleFonts: false,
                           ),
@@ -116,7 +112,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                   ),
                   actions: [],
                   centerTitle: true,
-                  elevation: 4.0,
+                  elevation: 4,
                 )
               ],
               body: Builder(
@@ -130,16 +126,16 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                           Stack(
                             children: [
                               Container(
-                                width: MediaQuery.sizeOf(context).width * 1.0,
+                                width: MediaQuery.sizeOf(context).width,
                                 height: MediaQuery.sizeOf(context).height * 0.2,
                                 decoration: BoxDecoration(
                                   color: FlutterFlowTheme.of(context)
                                       .secondaryBackground,
                                   boxShadow: [
                                     BoxShadow(
-                                      blurRadius: 4.0,
+                                      blurRadius: 4,
                                       color: Color(0x33000000),
-                                      offset: Offset(0.0, 10.0),
+                                      offset: Offset(0, 10),
                                     )
                                   ],
                                 ),
@@ -147,8 +143,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Container(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          1.0,
+                                      width: MediaQuery.sizeOf(context).width,
                                       height:
                                           MediaQuery.sizeOf(context).height *
                                               0.2,
@@ -156,12 +151,11 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                         children: [
                                           ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(0.0),
+                                                BorderRadius.circular(0),
                                             child: Image.network(
-                                              'https://media.istockphoto.com/id/1317007945/photo/exterior-view-of-a-typical-american-school-building.jpg?s=612x612&w=0&k=20&c=FffTSUEMo9VODNLVR6AL7KEEgdMIucu5wgixzTMiBgk=',
+                                              'https://media.discordapp.net/attachments/1189412887068934146/1201887325974437918/GFFXYzqa4AAYuvq.png?ex=65d4ae4c&is=65c2394c&hm=b7321a47b27c7eb298fb086379c5fd40c644feb87e28faf1444438e14d5ce700&=&format=webp&quality=lossless&width=704&height=807',
                                               width: MediaQuery.sizeOf(context)
-                                                      .width *
-                                                  1.0,
+                                                  .width,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -174,63 +168,61 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                 child: Align(
                                                   alignment:
                                                       AlignmentDirectional(
-                                                          0.0, 0.0),
+                                                          0, 0),
                                                   child: Stack(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            0.0, 0.0),
+                                                            0, 0),
                                                     children: [
                                                       Container(
-                                                        width: 150.0,
-                                                        height: 150.0,
+                                                        width: 150,
+                                                        height: 150,
                                                         decoration:
                                                             BoxDecoration(
                                                           color:
                                                               Color(0x7F000000),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(
-                                                                      10.0),
+                                                                  .circular(10),
                                                         ),
                                                         child: Align(
                                                           alignment:
                                                               AlignmentDirectional(
-                                                                  0.0, 0.0),
+                                                                  0, 0),
                                                           child: Padding(
                                                             padding:
                                                                 EdgeInsets.all(
-                                                                    10.0),
+                                                                    10),
                                                             child: Card(
                                                               clipBehavior: Clip
                                                                   .antiAliasWithSaveLayer,
                                                               color:
                                                                   Colors.white,
-                                                              elevation: 1.0,
+                                                              elevation: 1,
                                                               shape:
                                                                   RoundedRectangleBorder(
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            10.0),
+                                                                            10),
                                                               ),
                                                               child: Align(
                                                                 alignment:
                                                                     AlignmentDirectional(
-                                                                        0.0,
-                                                                        0.0),
+                                                                        0, 0),
                                                                 child: Padding(
                                                                   padding:
                                                                       EdgeInsets
                                                                           .all(
-                                                                              5.0),
+                                                                              5),
                                                                   child:
                                                                       ClipRRect(
                                                                     borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            8.0),
+                                                                        BorderRadius
+                                                                            .circular(8),
                                                                     child: Image
                                                                         .network(
-                                                                      'https://png.pngtree.com/png-clipart/20211017/original/pngtree-school-logo-png-image_6851480.png',
+                                                                      'https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png',
                                                                       fit: BoxFit
                                                                           .cover,
                                                                     ),
@@ -256,18 +248,18 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                             ],
                           ),
                           Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
+                            alignment: AlignmentDirectional(0, 0),
                             child: Container(
-                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              width: MediaQuery.sizeOf(context).width,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .primaryBackground,
                                 boxShadow: [
                                   BoxShadow(
-                                    blurRadius: 40.0,
+                                    blurRadius: 40,
                                     color: Color(0x33FFFFFF),
-                                    offset: Offset(0.0, 5.0),
-                                    spreadRadius: 20.0,
+                                    offset: Offset(0, 5),
+                                    spreadRadius: 20,
                                   )
                                 ],
                                 shape: BoxShape.rectangle,
@@ -277,9 +269,9 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                 children: [
                                   Expanded(
                                     child: Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      alignment: AlignmentDirectional(0, 0),
                                       child: Padding(
-                                        padding: EdgeInsets.all(15.0),
+                                        padding: EdgeInsets.all(15),
                                         child: Text(
                                           announcementPostSchoolRecord!
                                               .schoolName,
@@ -291,7 +283,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .primaryText,
-                                                fontSize: 25.0,
+                                                fontSize: 25,
                                                 fontWeight: FontWeight.normal,
                                                 useGoogleFonts: false,
                                               ),
@@ -304,8 +296,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                             ),
                           ),
                           Divider(
-                            height: 0.0,
-                            thickness: 1.0,
+                            height: 0,
+                            thickness: 1,
                             color: FlutterFlowTheme.of(context).primaryText,
                           ),
                           Column(
@@ -333,20 +325,20 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                           announcementGenerate[
                                               announcementGenerateIndex];
                                       return Padding(
-                                        padding: EdgeInsets.all(20.0),
+                                        padding: EdgeInsets.all(20),
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
                                             boxShadow: [
                                               BoxShadow(
-                                                blurRadius: 4.0,
+                                                blurRadius: 4,
                                                 color: Color(0x33000000),
-                                                offset: Offset(0.0, 2.0),
+                                                offset: Offset(0, 2),
                                               )
                                             ],
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
+                                                BorderRadius.circular(8),
                                             border: Border.all(
                                               color:
                                                   FlutterFlowTheme.of(context)
@@ -358,8 +350,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                             children: [
                                               Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        10.0, 10.0, 10.0, 0.0),
+                                                    .fromSTEB(10, 10, 10, 0),
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -410,8 +401,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                               ),
                                               Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        10.0, 10.0, 10.0, 0.0),
+                                                    .fromSTEB(10, 10, 10, 0),
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -422,17 +412,14 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  10.0,
-                                                                  0.0),
+                                                                  0, 0, 10, 0),
                                                       child: Icon(
                                                         Icons.circle,
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
                                                                 .primaryText,
-                                                        size: 10.0,
+                                                        size: 10,
                                                       ),
                                                     ),
                                                     Text(
@@ -444,7 +431,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                               .override(
                                                                 fontFamily:
                                                                     'Readex Pro',
-                                                                fontSize: 20.0,
+                                                                fontSize: 20,
                                                               ),
                                                     ),
                                                   ],
@@ -452,8 +439,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                               ),
                                               Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        10.0, 10.0, 10.0, 0.0),
+                                                    .fromSTEB(10, 10, 10, 0),
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -467,14 +453,14 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                               .override(
                                                                 fontFamily:
                                                                     'Readex Pro',
-                                                                fontSize: 16.0,
+                                                                fontSize: 16,
                                                               ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.all(10.0),
+                                                padding: EdgeInsets.all(10),
                                                 child: InkWell(
                                                   splashColor:
                                                       Colors.transparent,
@@ -493,7 +479,7 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                         child:
                                                             FlutterFlowExpandedImageView(
                                                           image: Image.network(
-                                                            'https://t3.ftcdn.net/jpg/03/74/84/90/360_F_374849081_sou5wJtrl5bcYbmo5YMS10bWPcYc5Kln.jpg',
+                                                            'https://www.nasco.co.th/wp-content/uploads/2022/06/placeholder.png',
                                                             fit: BoxFit.contain,
                                                           ),
                                                           allowRotation: false,
@@ -511,11 +497,11 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              8.0),
+                                                              8),
                                                       child: Image.network(
-                                                        'https://t3.ftcdn.net/jpg/03/74/84/90/360_F_374849081_sou5wJtrl5bcYbmo5YMS10bWPcYc5Kln.jpg',
-                                                        width: 300.0,
-                                                        height: 200.0,
+                                                        'https://www.nasco.co.th/wp-content/uploads/2022/06/placeholder.png',
+                                                        width: 300,
+                                                        height: 200,
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),
