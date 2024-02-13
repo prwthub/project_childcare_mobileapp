@@ -1,4 +1,4 @@
-import 'dart:async';
+ import 'dart:async';
 
 import 'package:collection/collection.dart';
 
@@ -16,31 +16,61 @@ class SchoolRecord extends FirestoreRecord {
     _initializeFields();
   }
 
-  // "picture" field.
-  String? _picture;
-  String get picture => _picture ?? '';
-  bool hasPicture() => _picture != null;
+  // "school_driver_update" field.
+  DateTime? _schoolDriverUpdate;
+  DateTime? get schoolDriverUpdate => _schoolDriverUpdate;
+  bool hasSchoolDriverUpdate() => _schoolDriverUpdate != null;
 
-  // "school" field.
-  String? _school;
-  String get school => _school ?? '';
-  bool hasSchool() => _school != null;
+  // "school_banner" field.
+  String? _schoolBanner;
+  String get schoolBanner => _schoolBanner ?? '';
+  bool hasSchoolBanner() => _schoolBanner != null;
+
+  // "school_description_en" field.
+  String? _schoolDescriptionEn;
+  String get schoolDescriptionEn => _schoolDescriptionEn ?? '';
+  bool hasSchoolDescriptionEn() => _schoolDescriptionEn != null;
+
+  // "school_descriptioon_th" field.
+  String? _schoolDescriptionTh;
+  String get schoolDescriptionTh => _schoolDescriptionTh ?? '';
+  bool hasschoolDescriptionTh() => _schoolDescriptionTh != null;
+
+  // "school_image" field.
+  String? _schoolImage;
+  String get schoolImage => _schoolImage ?? '';
+  bool hasSchoolImage() => _schoolImage != null;
 
   // "school_name" field.
   String? _schoolName;
   String get schoolName => _schoolName ?? '';
   bool hasSchoolName() => _schoolName != null;
 
-  // "banner" field.
-  String? _banner;
-  String get banner => _banner ?? '';
-  bool hasBanner() => _banner != null;
+  // "school_title_en" field.
+  String? _schoolTitleEn;
+  String get schoolTitleEn => _schoolTitleEn ?? '';
+  bool hasSchoolTitleEn() => _schoolTitleEn != null;
+
+  // "school_title_th" field.
+  String? _schoolTitleTh;
+  String get schoolTitleTh => _schoolTitleTh ?? '';
+  bool hasSchoolTitleTh() => _schoolTitleTh != null;
+
+  // "school_website" field.
+  String? _schoolWebsite;
+  String get schoolWebsite => _schoolWebsite ?? '';
+  bool hasSchoolWebsite() => _schoolWebsite != null;
 
   void _initializeFields() {
-    _picture = snapshotData['picture'] as String?;
-    _school = snapshotData['school'] as String?;
-    _schoolName = snapshotData['school_name'] as String?;
-    _banner = snapshotData['banner'] as String?;
+    _schoolDriverUpdate = snapshotData['school-driver-update'] as DateTime?;
+    _schoolBanner = snapshotData['school-banner'] as String?;
+    _schoolDescriptionEn = snapshotData['school-description-en'] as String?;
+    _schoolDescriptionTh = snapshotData['school-description-th'] as String?;
+    _schoolImage = snapshotData['school-image'] as String?;
+    _schoolName = snapshotData['school-name'] as String?;
+    _schoolTitleEn = snapshotData['school-title-en'] as String?;
+    _schoolTitleTh = snapshotData['school-title-th'] as String?;
+    _schoolWebsite = snapshotData['school-website'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -77,17 +107,27 @@ class SchoolRecord extends FirestoreRecord {
 }
 
 Map<String, dynamic> createSchoolRecordData({
-  String? picture,
-  String? school,
+  DateTime? schoolDriverUpdate,
+  String? schoolBanner,
+  String? schoolDescriptionEn,
+  String? schoolDescriptionTh,
+  String? schoolImage,
   String? schoolName,
-  String? banner,
+  String? schoolTitleEn,
+  String? schoolTitleTh,
+  String? schoolWebsite,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
-      'picture': picture,
-      'school': school,
+      'school_driver_update': schoolDriverUpdate,
+      'school_banner': schoolBanner,
+      'school_description_en': schoolDescriptionEn,
+      'school_descriptioon_th': schoolDescriptionTh,
+      'school_image': schoolImage,
       'school_name': schoolName,
-      'banner': banner,
+      'school_title_en': schoolTitleEn,
+      'school_title_th': schoolTitleTh,
+      'school_website': schoolWebsite,
     }.withoutNulls,
   );
 
@@ -99,15 +139,29 @@ class SchoolRecordDocumentEquality implements Equality<SchoolRecord> {
 
   @override
   bool equals(SchoolRecord? e1, SchoolRecord? e2) {
-    return e1?.picture == e2?.picture &&
-        e1?.school == e2?.school &&
+    return e1?.schoolDriverUpdate == e2?.schoolDriverUpdate &&
+        e1?.schoolBanner == e2?.schoolBanner &&
+        e1?.schoolDescriptionEn == e2?.schoolDescriptionEn &&
+        e1?.schoolDescriptionTh == e2?.schoolDescriptionTh &&
+        e1?.schoolImage == e2?.schoolImage &&
         e1?.schoolName == e2?.schoolName &&
-        e1?.banner == e2?.banner;
+        e1?.schoolTitleEn == e2?.schoolTitleEn &&
+        e1?.schoolTitleTh == e2?.schoolTitleTh &&
+        e1?.schoolWebsite == e2?.schoolWebsite;
   }
 
   @override
-  int hash(SchoolRecord? e) => const ListEquality()
-      .hash([e?.picture, e?.school, e?.schoolName, e?.banner]);
+  int hash(SchoolRecord? e) => const ListEquality().hash([
+        e?.schoolDriverUpdate,
+        e?.schoolBanner,
+        e?.schoolDescriptionEn,
+        e?.schoolDescriptionTh,
+        e?.schoolImage,
+        e?.schoolName,
+        e?.schoolTitleEn,
+        e?.schoolTitleTh,
+        e?.schoolWebsite
+      ]);
 
   @override
   bool isValidKey(Object? o) => o is SchoolRecord;

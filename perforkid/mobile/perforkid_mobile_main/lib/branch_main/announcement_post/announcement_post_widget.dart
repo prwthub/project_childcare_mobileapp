@@ -3,7 +3,6 @@ import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/random_data_util.dart' as random_data;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -72,6 +71,10 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
           );
         }
         List<SchoolRecord> announcementPostSchoolRecordList = snapshot.data!;
+        // Return an empty Container when the item does not exist.
+        if (snapshot.data!.isEmpty) {
+          return Container();
+        }
         final announcementPostSchoolRecord =
             announcementPostSchoolRecordList.isNotEmpty
                 ? announcementPostSchoolRecordList.first
@@ -153,7 +156,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(0),
                                             child: Image.network(
-                                              'https://media.discordapp.net/attachments/1189412887068934146/1201887325974437918/GFFXYzqa4AAYuvq.png?ex=65d4ae4c&is=65c2394c&hm=b7321a47b27c7eb298fb086379c5fd40c644feb87e28faf1444438e14d5ce700&=&format=webp&quality=lossless&width=704&height=807',
+                                              announcementPostSchoolRecord!
+                                                  .schoolBanner,
                                               width: MediaQuery.sizeOf(context)
                                                   .width,
                                               fit: BoxFit.cover,
@@ -222,7 +226,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                                             .circular(8),
                                                                     child: Image
                                                                         .network(
-                                                                      'https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png',
+                                                                      announcementPostSchoolRecord!
+                                                                          .schoolImage,
                                                                       fit: BoxFit
                                                                           .cover,
                                                                     ),
@@ -273,8 +278,11 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                       child: Padding(
                                         padding: EdgeInsets.all(15),
                                         child: Text(
-                                          announcementPostSchoolRecord!
-                                              .schoolName,
+                                          valueOrDefault<String>(
+                                            announcementPostSchoolRecord
+                                              .schoolTitleTh,
+                                            '...',
+                                          ),
                                           textAlign: TextAlign.end,
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
@@ -303,27 +311,38 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                           Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Builder(
-                                builder: (context) {
-                                  final announcementGenerate = List.generate(
-                                      random_data.randomInteger(0, 0),
-                                      (index) => random_data.randomString(
-                                            0,
-                                            0,
-                                            true,
-                                            false,
-                                            false,
-                                          )).toList();
+                              StreamBuilder<List<AnnouncementRecord>>(
+                                stream: queryAnnouncementRecord(
+                                  limit: 10,
+                                ),
+                                builder: (context, snapshot) {
+                                  // Customize what your widget looks like when it's loading.
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 50,
+                                        height: 50,
+                                        child: SpinKitRing(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          size: 50,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  List<AnnouncementRecord>
+                                      listViewAnnouncementRecordList =
+                                      snapshot.data!;
                                   return ListView.builder(
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    itemCount: announcementGenerate.length,
-                                    itemBuilder:
-                                        (context, announcementGenerateIndex) {
-                                      final announcementGenerateItem =
-                                          announcementGenerate[
-                                              announcementGenerateIndex];
+                                    itemCount:
+                                        listViewAnnouncementRecordList.length,
+                                    itemBuilder: (context, listViewIndex) {
+                                      final listViewAnnouncementRecord =
+                                          listViewAnnouncementRecordList[
+                                              listViewIndex];
                                       return Padding(
                                         padding: EdgeInsets.all(20),
                                         child: Container(
@@ -380,7 +399,13 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                               ),
                                                         ),
                                                         Text(
-                                                          '{วันที่โพสต์พร้อมเวลา}',
+                                                          valueOrDefault<
+                                                              String>(
+                                                            listViewAnnouncementRecord
+                                                                .date
+                                                                ?.toString(),
+                                                            '...',
+                                                          ),
                                                           textAlign:
                                                               TextAlign.end,
                                                           style: FlutterFlowTheme
@@ -423,7 +448,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      '..{หัวข้อประกาศ}..',
+                                                      listViewAnnouncementRecord
+                                                          .header,
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -445,7 +471,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                       MainAxisSize.max,
                                                   children: [
                                                     Text(
-                                                      '..{เนื้อหาโพสต์}..',
+                                                      listViewAnnouncementRecord
+                                                          .content,
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
@@ -479,11 +506,14 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                         child:
                                                             FlutterFlowExpandedImageView(
                                                           image: Image.network(
-                                                            'https://www.nasco.co.th/wp-content/uploads/2022/06/placeholder.png',
+                                                            listViewAnnouncementRecord
+                                                                .image,
                                                             fit: BoxFit.contain,
                                                           ),
                                                           allowRotation: false,
-                                                          tag: 'postImageTag',
+                                                          tag:
+                                                              listViewAnnouncementRecord
+                                                                  .image,
                                                           useHeroAnimation:
                                                               true,
                                                         ),
@@ -491,7 +521,9 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                     );
                                                   },
                                                   child: Hero(
-                                                    tag: 'postImageTag',
+                                                    tag:
+                                                        listViewAnnouncementRecord
+                                                            .image,
                                                     transitionOnUserGestures:
                                                         true,
                                                     child: ClipRRect(
@@ -499,7 +531,8 @@ class _AnnouncementPostWidgetState extends State<AnnouncementPostWidget> {
                                                           BorderRadius.circular(
                                                               8),
                                                       child: Image.network(
-                                                        'https://www.nasco.co.th/wp-content/uploads/2022/06/placeholder.png',
+                                                        listViewAnnouncementRecord
+                                                            .image,
                                                         width: 300,
                                                         height: 200,
                                                         fit: BoxFit.cover,

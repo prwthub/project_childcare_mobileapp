@@ -188,7 +188,7 @@ class _NavBarPageState extends State<NavBarPage> {
                   size: currentIndex == 1 ? 24.0 : 24.0,
                 ),
                 Text(
-                  'Room',
+                  'ห้องเรียน',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: currentIndex == 1 ? Colors.white : Color(0xFF444444),
@@ -208,7 +208,7 @@ class _NavBarPageState extends State<NavBarPage> {
                   size: 24.0,
                 ),
                 Text(
-                  'Map',
+                  'รถตู้',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: currentIndex == 2 ? Colors.white : Color(0xFF444444),
