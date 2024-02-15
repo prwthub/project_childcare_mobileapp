@@ -120,7 +120,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                         indicatorColor: Colors.white,
                         tabs: [
                           Tab(
-                            child: Text('เข้าสู่ระบบ',
+                            child: Text('เข้าสู่ระบบ1',
                                 style: TextStyle(fontFamily: 'RSU', fontSize: 20)),
                           ),
                           Tab(
@@ -335,7 +335,7 @@ class _LoginAndRegisterPageWidgetState extends State<LoginAndRegisterPageWidget>
                                       context.goNamedAuth(
                                           'announcementPost', context.mounted);
                                     },
-                                    text: 'เข้าสู่ระบบ',
+                                    text: 'เข้าสู่ระบบ2',
                                     options: FFButtonOptions(
                                       width: 230,
                                       height: 50,
