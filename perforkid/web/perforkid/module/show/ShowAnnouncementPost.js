@@ -5,7 +5,7 @@ import { editAnnouncement } from "../manage/AnnouncementEdit.js";
 
 const link = document.createElement('link');
 link.rel = 'stylesheet';
-link.href = './Styling.css';
+link.href = '../../style/Styling.css';
 document.head.appendChild(link);
 
 const db = FirebaseAPI.getFirestore();
