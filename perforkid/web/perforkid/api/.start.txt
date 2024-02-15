@@ -1,3 +1,10 @@
+start
+npm install 
+npm install --save express
+npm install firebase
+npm install firebase-admin
+npm install nodemon
+
 var express = require("express");
 var app = express();
 const PORT = process.env.PORT || 5050;
