@@ -60,3 +60,49 @@ exports.getStudentBySchoolAndRoom = async (req, res) => {
                                         room : newStudentRoom });
     }
 };
+
+
+
+// get Room by schoolName and studentRoom
+exports.getRoomBySchoolAndRoom = async (req, res) => {
+    const { schoolName, studentRoom } = req.params; // Assuming schoolName and roomName are passed as route parameters
+    const [font, back] = studentRoom.split("-");
+    var newStudentRoom = font + "/" + back;
+    
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the students subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const studentsRef = schoolDocRef.collection('student');
+
+        // Query students by room
+        const studentsQuerySnapshot = await studentsRef.where('room', '==', newStudentRoom).get();
+
+        if (studentsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Room not found" });
+        }
+        
+        // here
+        const roomDocRef = studentsQuerySnapshot.docs[0].ref;
+        const studentListRef = roomDocRef.collection('student-list');
+
+        // end here
+
+
+        // Retrieve room data
+        // const roomData = studentsQuerySnapshot.docs.map(doc => doc.data());
+
+        // console.log(roomData);
+        // return res.status(200).json(roomData);
+    } catch (error) {
+        console.error("Error getting room by school and room:", error);
+        return res.status(500).json({ error: "Something went wrong, please try again" });
+    }
+};

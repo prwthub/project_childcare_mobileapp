@@ -4,7 +4,8 @@ const app = express();
 const { getSchool, 
         getSchoolByName } = require('./school.js');
 
-const { getStudentBySchoolAndRoom } = require('./student.js');
+const { getStudentBySchoolAndRoom,
+        getRoomBySchoolAndRoom } = require('./student.js');
 
 const { getTeacherBySchool,
         getTeacherBySchoolAndClassRoom,
@@ -14,8 +15,11 @@ const { getTeacherBySchool,
 app.get('/getSchool', getSchool);
 app.get('/getSchool/:schoolName', getSchoolByName);
 
+
 // student
 app.get('/getStudentBySchoolAndRoom/:schoolName/:studentRoom', getStudentBySchoolAndRoom);
+app.get('/getRoomBySchoolAndRoom/:schoolName/:studentRoom', getRoomBySchoolAndRoom);
+
 
 // teacher
 app.get('/getTeacherBySchool/:schoolName', getTeacherBySchool);
