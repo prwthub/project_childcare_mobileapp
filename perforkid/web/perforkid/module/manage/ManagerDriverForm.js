@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import {getStorage,ref,uploadBytes,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import {getFirestore,collection,addDoc,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -70,7 +70,7 @@ function upload(file) {
               // เข้าไปยัง sub collection 'driver' ในเอกสารของโรงเรียน
               const driverRef = schoolDoc.ref.collection("driver");
 
-              // ลบข้อมูลที่อยู่ใน sub collection 'teacher'
+              // ลบข้อมูลที่อยู่ใน sub collection 'driver'
               driverRef.get().then((driverSnapshot) => {
                 driverSnapshot.forEach((driverDoc) => {
                   // ใช้ doc(id).delete() เพื่อลบเอกสาร
@@ -81,6 +81,12 @@ function upload(file) {
                 jsonData.forEach((item) => {
                   driverRef.add(item);
                 });
+
+                // เพิ่มฟิลด์ "latest-driver-update" ในเอกสารโรงเรียน
+                schoolDoc.ref.update({
+                  "latest-driver-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
+                });
+
 
                 console.log("Data uploaded to Firestore successfully!");
                 //alert("Upload to Firestore successful! (4)");
@@ -105,7 +111,7 @@ function upload(file) {
 
   setTimeout(() => {
     window.location.href = '../../Panel3Driver.html';
-  }, 5000);
+  }, 10000);
 }
   
 
@@ -123,6 +129,29 @@ function upload(file) {
 // });
 
 
+async function fetchLatestDriverUpdate() {
+  const db = getFirestore();
+  const schoolRef = collection(db, 'school');
+  const querySnapshot = await getDocs(query(schoolRef, where('school-name', '==', currentUser.school_name)));
+
+  let date = null;
+
+  querySnapshot.forEach((schoolDoc) => {
+    // ดึงข้อมูล field "latest-driver-update" จากเอกสาร
+    const data = schoolDoc.data();
+    const latestDriverUpdate = data["latest-driver-update"];
+    if (latestDriverUpdate) {
+      date = latestDriverUpdate;
+    } else {
+      date = "ยังไม่มีประวัติการอัพเดทล่าสุด";
+    }
+  });
+
+  return date;
+}
+
+
+
 // Event listener for the file input
 const uploadForm = document.getElementById("uploadForm");
 uploadForm.addEventListener('submit', function (e) {
@@ -138,3 +167,14 @@ uploadForm.addEventListener('submit', function (e) {
     alert("กรุณาอัปโหลด ไฟล์ชื่อ form_driver.xlsx เท่านั้น");
   }
 });
+
+
+
+// for latest driver update
+const latestDriverUpdate = await fetchLatestDriverUpdate();
+const latestDriverUpdateElement = document.getElementById("latestDriverUpdate");
+if (latestDriverUpdateElement) {
+  latestDriverUpdateElement.innerText = "( Latest Driver Update: " + latestDriverUpdate + " )"
+} else {
+  latestDriverUpdateElement.innerText = "( Latest Driver Update: No upload history found. )"
+}

@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import {getStorage,ref,uploadBytes,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import {getFirestore,collection,addDoc,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -82,6 +82,12 @@ function upload(file) {
                   teacherRef.add(item);
                 });
 
+                // เพิ่มฟิลด์ "latest-teacher-update" ในเอกสารโรงเรียน
+                schoolDoc.ref.update({
+                  "latest-teacher-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
+                });
+
+
                 console.log("Data uploaded to Firestore successfully!");
                 // alert("Upload to Firestore successful! (4)");
                 alert("เพิ่มข้อมูลสำเร็จแล้ว! กรุณารอสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
@@ -105,7 +111,7 @@ function upload(file) {
 
   setTimeout(() => {
     window.location.href = '../../Panel2Teacher.html';
-  }, 5000);
+  }, 10000);
 }
   
 
@@ -123,6 +129,29 @@ function upload(file) {
 // });
 
 
+async function fetchLatestTeacherUpdate() {
+  const db = getFirestore();
+  const schoolRef = collection(db, 'school');
+  const querySnapshot = await getDocs(query(schoolRef, where('school-name', '==', currentUser.school_name)));
+
+  let date = null;
+
+  querySnapshot.forEach((schoolDoc) => {
+    // ดึงข้อมูล field "latest-teacher-update" จากเอกสาร
+    const data = schoolDoc.data();
+    const latestTeacherUpdate = data["latest-teacher-update"];
+    if (latestTeacherUpdate) {
+      date = latestTeacherUpdate;
+    } else {
+      date = "ยังไม่มีประวัติการอัพเดทล่าสุด";
+    }
+  });
+
+  return date;
+}
+
+
+
 // Event listener for the file input
 const uploadForm = document.getElementById("uploadForm");
 uploadForm.addEventListener('submit', function (e) {
@@ -138,3 +167,15 @@ uploadForm.addEventListener('submit', function (e) {
     alert(`กรุณาอัปโหลด ไฟล์ชื่อ form_teacher.xlsx เท่านั้น`);
   }
 });
+
+
+
+
+// for latest teacher update
+const latestTeacherUpdate = await fetchLatestTeacherUpdate();
+const latestTeacherUpdateElement = document.getElementById("latestTeacherUpdate");
+if (latestTeacherUpdateElement) {
+  latestTeacherUpdateElement.innerText = "( Latest Teacher Update: " + latestTeacherUpdate + " )"
+} else {
+  latestTeacherUpdateElement.innerText = "( Latest Teacher Update: No upload history found. )"
+}

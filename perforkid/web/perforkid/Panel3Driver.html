@@ -90,6 +90,7 @@
               <form id="uploadForm">
                 <h4>step 2 : อัพโหลดไฟล์</h4>
                 <h6>เมื่อกรอกข้อมูลไฟล์ <b style="color: red;">form_driver.xlsx</b> เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
+                <p id="latestDriverUpdate"></p>
                 <input type="file" class="form-control" id="uploadDriverForm" title="Choose file" accept=".xlsx" />
                 <button id="UploadFormBtn" class="btn btn-success btn-lg btn-block m-3"
                   type="submit">อัพโหลดแบบฟอร์ม</button> <!-- Adding a submit button -->
@@ -101,6 +102,7 @@
               <ul id="fileList" folder="form_driver"></ul>
               <script src="./module/show/Show.js" type="module"></script><br>
             </div>
+            
 
             <!-- <div class="col-1"></div> -->
 
@@ -119,6 +121,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
       </div>
     </div>

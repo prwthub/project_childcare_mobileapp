@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import { getStorage, ref, uploadBytes, } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import { getFirestore, collection, addDoc, } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -65,6 +65,58 @@ uploadButton.addEventListener('submit', function (e) {
     alert(`กรุณาอัปโหลด ไฟล์ชื่อ form_student_${front}-${back}.xlsx เท่านั้น`);
   }
 });
+
+
+
+async function fetchLatestStudentUpdate(room, currentUser) {
+  const db = getFirestore();
+  const schoolRef = collection(db, 'school');
+  const querySnapshots = await getDocs(query(schoolRef, where('school-name', '==', currentUser.school_name)));
+
+  let result = null;
+
+  if (!querySnapshots.empty) {
+    const schoolDoc = querySnapshots.docs[0]; // Get the document object
+    const schoolDocRef = schoolDoc.ref; // Extract document reference
+    
+    // Now schoolDocRef should be a DocumentReference
+    const studentRef = collection(schoolDocRef, 'student');
+    const studentQuerySnapshot = await getDocs(query(studentRef, where('room', '==', room)));
+
+    studentQuerySnapshot.forEach((studentDoc) => {
+      const data = studentDoc.data();
+      const latestStudentUpdate = data["latest-student-update"];
+      if (latestStudentUpdate != null) {
+        result = latestStudentUpdate;
+      } else {
+        result = "ยังไม่มีประวัติการอัพเดทล่าสุด";
+      }
+    });
+  }
+
+  return result; 
+}
+
+
+
+
+
+
+// for latest student update
+const latestStudentUpdate = await fetchLatestStudentUpdate(room, currentUser);
+const latestStudentUpdateElement = document.getElementById("latestStudentUpdate");
+if (latestStudentUpdateElement) {
+  latestStudentUpdateElement.innerText = "( Latest student Update: " + latestStudentUpdate + " )"
+} else {
+  latestStudentUpdateElement.innerText = "( Latest student Update: No upload history found. )"
+}
+
+
+
+
+
+
+
 
 // upload Form 1
 // Function to upload an .xlsx file to Firebase Storage and then Firestore
@@ -136,6 +188,10 @@ function upload(file) {
                         jsonData.forEach((item) => {
                           studentListRef.add(item);
                         });
+
+                        studentDoc.ref.update({
+                          "latest-student-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
+                        });                        
 
                         console.log("Data uploaded to Firestore successfully!");
                         // alert("Upload to Firestore successful! (4)");
@@ -222,6 +278,10 @@ function upload(file) {
                             studentListRef.add(item);
                           });
 
+                          studentDoc.ref.update({
+                            "latest-student-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
+                          });  
+
                           console.log("Data uploaded to Firestore successfully!");
                           alert("เพิ่มข้อมูลสำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
                         }).then(()=>{
@@ -257,6 +317,6 @@ function upload(file) {
 
   setTimeout(() => {
     window.location.reload();
-  }, 10000);
+  }, 20000);
 
 }
