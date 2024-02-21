@@ -1,4 +1,4 @@
-start
+how to start
 npm install 
 npm install --save express
 npm install firebase
