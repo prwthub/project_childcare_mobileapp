@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 const { getSchool, 
         getSchoolByName } = require('./school.js');
@@ -12,19 +13,19 @@ const { getTeacherBySchool,
         getTeacherBySchoolAndTeachingRoom } = require('./teacher.js');
 
 // school
-app.get('/getSchool', getSchool);
-app.get('/getSchool/:schoolName', getSchoolByName);
+app.post('/getSchool', getSchool);
+app.post('/getSchoolBySchoolName', getSchoolByName);
 
 
 // student
-app.get('/getStudentBySchoolAndRoom/:schoolName/:studentRoom', getStudentBySchoolAndRoom);
-app.get('/getRoomBySchoolAndRoom/:schoolName/:studentRoom', getRoomBySchoolAndRoom);
+app.post('/getStudentBySchoolAndRoom/:schoolName/:studentRoom', getStudentBySchoolAndRoom);
+app.post('/getRoomBySchoolAndRoom/:schoolName/:studentRoom', getRoomBySchoolAndRoom);
 
 
 // teacher
-app.get('/getTeacherBySchool/:schoolName', getTeacherBySchool);
-app.get('/getTeacherBySchoolAndClassRoom/:schoolName/:classRoom', getTeacherBySchoolAndClassRoom);
-app.get('/getTeacherBySchoolAndTeachingRoom/:schoolName/:teachingRoom', getTeacherBySchoolAndTeachingRoom);
+app.post('/getTeacherBySchool/:schoolName', getTeacherBySchool);
+app.post('/getTeacherBySchoolAndClassRoom/:schoolName/:classRoom', getTeacherBySchoolAndClassRoom);
+app.post('/getTeacherBySchoolAndTeachingRoom/:schoolName/:teachingRoom', getTeacherBySchoolAndTeachingRoom);
 
 
 const PORT = process.env.PORT || 3000;

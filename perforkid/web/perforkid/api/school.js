@@ -22,7 +22,7 @@ exports.getSchool = async (req, res) => {
 
 // get School by schoolName
 exports.getSchoolByName = async (req, res) => {
-    const { schoolName } = req.params; // Assuming school-name is passed as a route parameter
+    const { schoolName } = req.body; // Assuming school-name is passed as a route parameter
 
     try {
         const schoolsRef = db.collection('school');
