@@ -17,21 +17,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-// API Endpoint for listing files in storage
+// get Files by ( schoolName, folderName )
 exports.listStorageFiles = async (req, res) => {
+    const { schoolName, folderName } = req.body;
     try {
-        const folderPath = "school/data/";
+        const folderPath = "school/" + schoolName + "/" + folderName;
         const storageRef = ref(storage, folderPath);
         const files = await listAll(storageRef);
 
-        // Collect file names
-        const fileNames = [];
-        files.items.forEach(async (itemRef) => {
+        // Collect file names asynchronously using Promise.all
+        const fileNamesPromises = files.items.map(async (itemRef) => {
             const metadata = await getMetadata(itemRef);
             if (metadata && metadata.name) {
-                fileNames.push(metadata.name);
+                return metadata.name;
             }
         });
+
+        // Wait for all file name promises to resolve
+        const fileNames = await Promise.all(fileNamesPromises);
 
         // Return file names
         res.status(200).json(fileNames);
@@ -41,11 +44,12 @@ exports.listStorageFiles = async (req, res) => {
     }
 }
 
-// API Endpoint for downloading file from storage
+
+// download File by ( schoolName, folderName, fileName )
 exports.downloadStorageFile = async (req, res) => {
+    const { schoolName, folderName, fileName } = req.body;
     try {
-        const fileName = req.params.fileName;
-        const filePath = "school/data/" + fileName;
+        const filePath = "school/" + schoolName + "/" + folderName + "/" + fileName;
         const fileRef = ref(storage, filePath);
         const downloadURL = await getDownloadURL(fileRef);
 

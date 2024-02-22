@@ -1,6 +1,8 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 app.use(express.json());
+app.use(cors()); // ใช้ CORS middleware
 
 const { getSchool, 
         getSchoolBySchoolName } = require('./school.js');
@@ -20,8 +22,9 @@ const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndCarNumber,
         getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
 
-const { listStorageFile,
+const { listStorageFiles, 
         downloadStorageFile } = require('./storage.js');
+
 
 
 
@@ -54,7 +57,7 @@ app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);
 
 
 // storage
-app.post('/storage/listStorageFile', listStorageFile);
+app.post('/storage/listStorageFiles', listStorageFiles);
 app.post('/storage/downloadStorageFile', downloadStorageFile);
 
 
