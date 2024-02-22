@@ -1,9 +1,8 @@
 const { db } = require("../util/admin.js");
 
-// get teachers by school
-exports.getTeacherBySchool = async (req, res) => {
-    const { schoolName } = req.params; // Assuming school-name is passed as a route parameter
-    
+// get teachers by ( schoolName )
+exports.getTeacherBySchoolName = async (req, res) => {
+    const { schoolName } = req.body;
     try {
         // Get reference to the school document
         const schoolsRef = db.collection('school');
@@ -35,12 +34,11 @@ exports.getTeacherBySchool = async (req, res) => {
 };
 
 
-// get teachers by school and class-room
-exports.getTeacherBySchoolAndClassRoom = async (req, res) => {
-    const { schoolName, classRoom } = req.params; // Assuming school-name and class-room are passed as route parameters
-    const [font, back] = classRoom.split("-");
-    var newClassRoom = font + "/" + back;
-
+// get teachers by ( schoolName, classRoom )
+exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
+    const { schoolName, classRoom } = req.body;
+    // const [font, back] = classRoom.split("-");
+    // var newClassRoom = font + "/" + back;
     try {
         // Get reference to the school document
         const schoolsRef = db.collection('school');
@@ -55,7 +53,7 @@ exports.getTeacherBySchoolAndClassRoom = async (req, res) => {
         const teachersRef = schoolDocRef.collection('teacher');
 
         // Query teachers by class-room
-        const teachersQuerySnapshot = await teachersRef.where('class-room', '==', newClassRoom).get();
+        const teachersQuerySnapshot = await teachersRef.where('class-room', '==', classRoom).get();
 
         if (teachersQuerySnapshot.empty) {
             return res.status(404).json({ error: "No teachers found class in the specified room" });
@@ -76,12 +74,11 @@ exports.getTeacherBySchoolAndClassRoom = async (req, res) => {
 };
 
 
-// get teachers by school and teaching-room
-exports.getTeacherBySchoolAndTeachingRoom = async (req, res) => {
-    const { schoolName, teachingRoom } = req.params; // Assuming school-name and teaching-room are passed as route parameters
-    const [font, back] = teachingRoom.split("-");
-    var newTeachingRoom = font + "/" + back;
-
+// get teachers by ( schoolName, teachingRoom )
+exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
+    const { schoolName, teachingRoom } = req.body;
+    // const [font, back] = teachingRoom.split("-");
+    // var newTeachingRoom = font + "/" + back;
     try {
         // Get reference to the school document
         const schoolsRef = db.collection('school');
@@ -96,7 +93,7 @@ exports.getTeacherBySchoolAndTeachingRoom = async (req, res) => {
         const teachersRef = schoolDocRef.collection('teacher');
 
         // Query teachers by teaching-room
-        const teachersQuerySnapshot = await teachersRef.where('teaching-room', 'array-contains', newTeachingRoom).get();
+        const teachersQuerySnapshot = await teachersRef.where('teaching-room', 'array-contains-any', teachingRoom).get();
 
         if (teachersQuerySnapshot.empty) {
             return res.status(404).json({ error: "No teachers found teaching in the specified room" });
@@ -115,3 +112,4 @@ exports.getTeacherBySchoolAndTeachingRoom = async (req, res) => {
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
 };
+
