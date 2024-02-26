@@ -1,0 +1,583 @@
+{
+	"info": {
+		"_postman_id": "474a415d-336a-40ed-977a-18d983b00584",
+		"name": "perforkid",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30166086"
+	},
+	"item": [
+		{
+			"name": "initial [ parent, teacher ]",
+			"item": [
+				{
+					"name": "for parent",
+					"item": [
+						{
+							"name": "✅ getInitialDataByParentEmail",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"schoolName\": \"TEST\",\r\n    \"parentEmail\": \"jing-22@example.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/initial/parent/getInitialDataByParentEmail",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"initial",
+										"parent",
+										"getInitialDataByParentEmail"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅ getInitialDataByStudentId",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"schoolName\": \"TEST\",\r\n    \"studentId\": \"34107\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/initial/parent/getInitialDataByStudentId",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"initial",
+										"parent",
+										"getInitialDataByStudentId"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "for teacher",
+					"item": [
+						{
+							"name": "✅ getInitialDataByTeacherEmail",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"schoolName\": \"TEST\",\r\n    \"teacherEmail\": \"chatcha@example.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/initial/teacher/getInitialDataByTeacherEmail",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"initial",
+										"teacher",
+										"getInitialDataByTeacherEmail"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅ getInitialDataByTeacherId",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"schoolName\": \"TEST\",\r\n    \"teacherId\": \"10987\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/initial/teacher/getInitialDataByTeacherId",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"initial",
+										"teacher",
+										"getInitialDataByTeacherId"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "school",
+			"item": [
+				{
+					"name": "✅ getSchool",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/school/getSchool",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"school",
+								"getSchool"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getSchoolBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"TEST\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/school/getSchoolBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"school",
+								"getSchoolBySchoolName"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "teacher",
+			"item": [
+				{
+					"name": "✅ getTeacherBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getTeacherBySchoolNameAndClassRoom",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"classRoom\": \"1/1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndClassRoom",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolNameAndClassRoom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getTeacherBySchoolNameAndTeachingRoom",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"teachingRoom\": \"1/2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndTeachingRoom",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolNameAndTeachingRoom"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "driver",
+			"item": [
+				{
+					"name": "✅ getDriverBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/driver/getDriverBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"driver",
+								"getDriverBySchoolName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getDriverBySchoolNameAndCarNumber",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"carNumber\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/driver/getDriverBySchoolNameAndCarNumber",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"driver",
+								"getDriverBySchoolNameAndCarNumber"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[ student, room ]",
+			"item": [
+				{
+					"name": "student",
+					"item": [
+						{
+							"name": "✅ getStudentBySchoolName",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/student/getStudentBySchoolName",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"student",
+										"getStudentBySchoolName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅ getStudentBySchoolNameAndRoom",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\",\n    \"studentRoom\": \"1/1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/student/getStudentBySchoolNameAndRoom",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"student",
+										"getStudentBySchoolNameAndRoom"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "room",
+					"item": [
+						{
+							"name": "✅ getRoomBySchoolNameAndRoom",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\",\n    \"studentRoom\": \"1/1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/room/getRoomBySchoolNameAndRoom",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"room",
+										"getRoomBySchoolNameAndRoom"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[ studentCar, car ]",
+			"item": [
+				{
+					"name": "studentCar",
+					"item": [
+						{
+							"name": "✅ getStudentCarBySchoolName",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/getStudentCarBySchoolName",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"getStudentCarBySchoolName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅ getStudentCarBySchoolNameAndCarNumber",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\",\n    \"carNumber\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/getStudentCarBySchoolNameAndCarNumber",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"getStudentCarBySchoolNameAndCarNumber"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "car",
+					"item": [
+						{
+							"name": "✅ getCarBySchoolNameAndCarNumber",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\",\n    \"carNumber\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/car/getCarBySchoolNameAndCarNumber",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"car",
+										"getCarBySchoolNameAndCarNumber"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "storage",
+			"item": [
+				{
+					"name": "✅ listStorageFiles",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"TEST\",\r\n    \"folderName\": \"form_car\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/storage/listStorageFiles",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"storage",
+								"listStorageFiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "??? downloadStorageFile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"TEST\",\r\n    \"folderName\": \"form_driver\",\r\n    \"fileName\": \"form_driver.xlsx\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/storage/downloadStorageFile",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"storage",
+								"downloadStorageFile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
