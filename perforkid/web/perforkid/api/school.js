@@ -1,6 +1,6 @@
 const { db } = require("../util/admin.js");
 
-// get School (no req)
+// ✅ get School ( no req )
 exports.getSchool = async (req, res) => {
     const schoolsRef = db.collection('school');
     try{
@@ -20,10 +20,10 @@ exports.getSchool = async (req, res) => {
 };
 
 
-// get School by schoolName
-exports.getSchoolByName = async (req, res) => {
-    const { schoolName } = req.params; // Assuming school-name is passed as a route parameter
 
+// ✅ get School by ( schoolName )
+exports.getSchoolBySchoolName = async (req, res) => {
+    const { schoolName } = req.body; 
     try {
         const schoolsRef = db.collection('school');
         const querySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();

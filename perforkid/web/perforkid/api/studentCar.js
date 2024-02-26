@@ -1,40 +1,40 @@
 const { db } = require("../util/admin.js");
 
-// ✅ get Student by ( schoolName )
-exports.getStudentBySchoolName = async (req, res) => {
+// ✅ get StudentCar by ( schoolName )
+exports.getStudentCarBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
     try {
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
-
+    
         if (schoolQuerySnapshot.empty) {
             return res.status(404).json({ error: "School not found" });
         }
-
-        // Get reference to the students subcollection
+    
+        // Get reference to the cars subcollection
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
-        const studentsRef = schoolDocRef.collection('student');
-
-        // Query students by room (all)
-        const studentsQuerySnapshot = await studentsRef.where('room', '==', 'all').get();
-
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == all
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', 'all').get();
+    
         // Array to store promises of student data retrieval
         const studentDataPromises = [];
-
-        // Iterate through each student document
-        studentsQuerySnapshot.forEach(studentDoc => {
-            // Get reference to the student-list subcollection
-            const studentListRef = studentDoc.ref.collection('student-list');
+    
+        // Iterate through each car document
+        carsQuerySnapshot.forEach(carDoc => {
+            // Get reference to the student list subcollection
+            const studentListRef = carDoc.ref.collection('student-car');
             const studentListPromise = studentListRef.get();
             
             // Push the promise into the array
             studentDataPromises.push(studentListPromise);
         });
-
+    
         // Wait for all promises to resolve
         const studentDataSnapshots = await Promise.all(studentDataPromises);
-
+    
         // Map the results
         let studentData = [];
         studentDataSnapshots.forEach(snapshot => {
@@ -45,21 +45,74 @@ exports.getStudentBySchoolName = async (req, res) => {
                 });
             });
         });
-
+    
         return res.status(200).json(studentData);
     } catch (error) {
         console.error("Error retrieving students:", error);
         return res.status(500).json({ error: "Internal server error" });
-    }
+    }    
 };
 
 
 
-// ✅ get Student by ( schoolName, studentRoom )
-exports.getStudentBySchoolNameAndRoom = async (req, res) => {
-    const { schoolName, studentRoom } = req.body;
-    // const [font, back] = studentRoom.split("-");
-    // var newStudentRoom = font + "/" + back;
+// ✅ get StudentCar by ( schoolName, carNumber )
+exports.getStudentCarBySchoolNameAndCarNumber = async (req, res) => {
+    const { schoolName, carNumber } = req.body;
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == carNumber
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', carNumber).get();
+    
+        // Array to store promises of student data retrieval
+        const studentDataPromises = [];
+    
+        // Iterate through each car document
+        carsQuerySnapshot.forEach(carDoc => {
+            // Get reference to the student list subcollection
+            const studentListRef = carDoc.ref.collection('student-car');
+            const studentListPromise = studentListRef.get();
+            
+            // Push the promise into the array
+            studentDataPromises.push(studentListPromise);
+        });
+    
+        // Wait for all promises to resolve
+        const studentDataSnapshots = await Promise.all(studentDataPromises);
+    
+        // Map the results
+        let studentData = [];
+        studentDataSnapshots.forEach(snapshot => {
+            snapshot.forEach(doc => {
+                studentData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            });
+        });
+    
+        return res.status(200).json(studentData);
+    } catch (error) {
+        console.error("Error retrieving students:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }   
+};
+
+
+
+// ✅ get Car by ( schoolName, carNumber )
+exports.getCarBySchoolNameAndCarNumber = async (req, res) => {
+    const { schoolName, carNumber } = req.body;
     try {
         // Get reference to the school document
         const schoolsRef = db.collection('school');
@@ -71,80 +124,23 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
 
         // Get reference to the students subcollection
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
-        const studentsRef = schoolDocRef.collection('student');
+        const carRef = schoolDocRef.collection('car');
 
-        // Query students by room == studentRoom
-        const studentsQuerySnapshot = await studentsRef.where('room', '==', studentRoom).get();
+        // Query students by car
+        const carQuerySnapshot = await carRef.where('car-number', '==', carNumber).get();
 
-        // Array to store promises of student data retrieval
-        const studentDataPromises = [];
-
-        // Iterate through each student document
-        studentsQuerySnapshot.forEach(studentDoc => {
-            // Get reference to the student-list subcollection
-            const studentListRef = studentDoc.ref.collection('student-list');
-            const studentListPromise = studentListRef.get();
-            
-            // Push the promise into the array
-            studentDataPromises.push(studentListPromise);
-        });
-
-        // Wait for all promises to resolve
-        const studentDataSnapshots = await Promise.all(studentDataPromises);
-
-        // Map the results
-        let studentData = [];
-        studentDataSnapshots.forEach(snapshot => {
-            snapshot.forEach(doc => {
-                studentData.push({
-                    id: doc.id,
-                    ...doc.data()
-                });
-            });
-        });
-
-        return res.status(200).json(studentData);
-    } catch (error) {
-        console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
-    }
-};
-
-
-
-// ✅ get Room by ( schoolName, studentRoom )
-exports.getRoomBySchoolNameAndRoom = async (req, res) => {
-    const { schoolName, studentRoom } = req.body;
-    // const [font, back] = studentRoom.split("-");
-    // var newStudentRoom = font + "/" + back;
-    try {
-        // Get reference to the school document
-        const schoolsRef = db.collection('school');
-        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
-
-        if (schoolQuerySnapshot.empty) {
-            return res.status(404).json({ error: "School not found" });
+        if (carQuerySnapshot.empty) {
+            return res.status(404).json({ error: "CarNumber not found" });
         }
 
-        // Get reference to the students subcollection
-        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
-        const studentsRef = schoolDocRef.collection('student');
-
-        // Query students by room
-        const studentsQuerySnapshot = await studentsRef.where('room', '==', studentRoom).get();
-
-        if (studentsQuerySnapshot.empty) {
-            return res.status(404).json({ error: "Room not found" });
-        }
-
-        const roomData = studentsQuerySnapshot.docs.map(doc => ({
+        const carData = carQuerySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
-        console.log(roomData);
-        return res.status(200).json(roomData);
+        console.log(carData);
+        return res.status(200).json(carData);
     } catch (error) {
-        console.error("Error getting room by school and room:", error);
+        console.error("Error getting car by school and car:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
 };

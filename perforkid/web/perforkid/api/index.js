@@ -1,30 +1,74 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+app.use(express.json());
+app.use(cors()); // ใช้ CORS middleware
+
+const { getParentInitialDataByParentEmail,
+        getParentInitialDataByStudentId,
+        getTeacherInitialDataByTeacherEmail,
+        getTeacherInitialDataByTeacherId } = require('./initial.js');
 
 const { getSchool, 
-        getSchoolByName } = require('./school.js');
+        getSchoolBySchoolName } = require('./school.js');
 
-const { getStudentBySchoolAndRoom,
-        getRoomBySchoolAndRoom } = require('./student.js');
+const { getTeacherBySchoolName,
+        getTeacherBySchoolNameAndClassRoom,
+        getTeacherBySchoolNameAndTeachingRoom } = require('./teacher.js');
 
-const { getTeacherBySchool,
-        getTeacherBySchoolAndClassRoom,
-        getTeacherBySchoolAndTeachingRoom } = require('./teacher.js');
+const { getDriverBySchoolName,
+        getDriverBySchoolNameAndCarNumber } = require('./driver.js');
+
+const { getStudentBySchoolName,
+        getStudentBySchoolNameAndRoom,
+        getRoomBySchoolNameAndRoom } = require('./student.js');
+
+const { getStudentCarBySchoolName,
+        getStudentCarBySchoolNameAndCarNumber,
+        getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
+
+const { listStorageFiles, 
+        downloadStorageFile } = require('./storage.js');
+
+
+// initial 
+app.post('/initial/parent/getInitialDataByParentEmail', getParentInitialDataByParentEmail);             // ✅
+app.post('/initial/parent/getInitialDataByStudentId', getParentInitialDataByStudentId);                 // ✅
+app.post('/initial/teacher/getInitialDataByTeacherEmail', getTeacherInitialDataByTeacherEmail);         // ✅
+app.post('/initial/teacher/getInitialDataByTeacherId', getTeacherInitialDataByTeacherId);               // ✅
+
 
 // school
-app.get('/getSchool', getSchool);
-app.get('/getSchool/:schoolName', getSchoolByName);
-
-
-// student
-app.get('/getStudentBySchoolAndRoom/:schoolName/:studentRoom', getStudentBySchoolAndRoom);
-app.get('/getRoomBySchoolAndRoom/:schoolName/:studentRoom', getRoomBySchoolAndRoom);
+app.post('/school/getSchool', getSchool);                                                               // ✅
+app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                       // ✅        
 
 
 // teacher
-app.get('/getTeacherBySchool/:schoolName', getTeacherBySchool);
-app.get('/getTeacherBySchoolAndClassRoom/:schoolName/:classRoom', getTeacherBySchoolAndClassRoom);
-app.get('/getTeacherBySchoolAndTeachingRoom/:schoolName/:teachingRoom', getTeacherBySchoolAndTeachingRoom);
+app.post('/teacher/getTeacherBySchoolName', getTeacherBySchoolName);
+app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);            // ✅  
+app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);      // ✅
+
+
+// driver
+app.post('/driver/getDriverBySchoolName', getDriverBySchoolName);                                       // ✅
+app.post('/driver/getDriverBySchoolNameAndCarNumber', getDriverBySchoolNameAndCarNumber);               // ✅
+
+
+// student , room
+app.post('/student/getStudentBySchoolName', getStudentBySchoolName);                                    // ✅
+app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);                      // ✅
+app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                               // ✅
+
+
+// studentCar , car
+app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);                           // ✅
+app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);   // ✅
+app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                        // ✅
+
+
+// storage
+app.post('/storage/listStorageFiles', listStorageFiles);                                                // ✅
+app.post('/storage/downloadStorageFile', downloadStorageFile);                                          // ???
 
 
 const PORT = process.env.PORT || 3000;

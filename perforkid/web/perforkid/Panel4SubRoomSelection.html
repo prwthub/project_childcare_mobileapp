@@ -47,13 +47,27 @@
                     <div class="col-5">
                         <div style="font-size: 48px;">
                             ห้องเรียน <span id="roomDetail"></span>
-                        </div>                        
-                        
-                        <button id="deleteRoom" class="btn btn-danger btn-lg btn-block m-3">ลบห้องเรียนนี้</button>
+                            <span id="ellipsis" style="cursor: pointer;" onclick="toggleDeleteButton()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <button id="deleteRoom" class="btn btn-danger btn-lg btn-block m-3" style="display: none;">ลบห้องเรียนนี้</button>
+                        <script>
+                            // ฟังก์ชันเพื่อแสดงหรือซ่อนปุ่มลบห้องเรียน
+                            function toggleDeleteButton() {
+                                var deleteButton = document.getElementById("deleteRoom");
+                                if (deleteButton.style.display === "none") {
+                                    deleteButton.style.display = "block";
+                                } else {
+                                    deleteButton.style.display = "none";
+                                }
+                            }
+                        </script>
                         <script src="./module/manage/deleteRoom.js" type="module" room="${room}">
                             console.log(room)
                         </script>
-                        
                     </div>
                 </div>
                 
@@ -106,17 +120,49 @@
                                 <h4>step 2 : อัพโหลดไฟล์</h4>
                                 <h6>เมื่อกรอกข้อมูลไฟล์ <span id="roomDisplay" style="color: red;"></span> เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
                                 <p id="latestStudentUpdate"></p>
-                                <input type="file" class="form-control" id="SubmitStudentFormBtn" title="Choose file" accept=".xlsx" />
-                                <button id="UploadFormBtn" class="btn btn-success btn-lg btn-block m-3"
-                                    type="submit">อัพโหลดแบบฟอร์ม</button> <!-- Adding a submit button -->
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h5>อัพโหลดไฟล์แบบฟอร์ม</h5>
+                                        <input type="file" class="form-control" id="SubmitStudentFormBtn" title="Choose file" accept=".xlsx" />
+                                    </div>
+                                    <div class="col-4">
+                                        <button id="UploadFormBtn" class="btn btn-success btn-lg btn-block m-3" type="submit" style="font-size: 14px;">อัพโหลดแบบฟอร์ม</button>
+                                    </div>
+                                </div>
+                                
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h5>อัพโหลดตารางเรียน</h5>
+                                        <input type="file" class="form-control" id="SubmitStudentTableBtn" title="Choose file" accept=".jpg" />
+                                    </div>
+                                    <div class="col-4">
+                                        <button id="UploadFormBtn" class="btn btn-success btn-lg btn-block m-3" type="submit" style="font-size: 14px;">อัพโหลดตารางเรียน</button>
+                                    </div>
+                                </div>
                                 <script src="./module/manage/ManagerStudentRoomForm.js" type="module"></script>
                             </form>
+                            <!-- <form id="studentRoomForm">
+                                <h4>step 2 : อัพโหลดไฟล์</h4>
+                                <h6>เมื่อกรอกข้อมูลไฟล์ <span id="roomDisplay" style="color: red;"></span> เรียบร้อยแล้ว ให้ทำการอัพโหลดไฟล์</h6>
+                                <p id="latestStudentUpdate"></p>
+                                <input type="file" class="form-control" id="SubmitStudentFormBtn" title="Choose file" accept=".xlsx" />
+                                <button id="UploadFormBtn" class="btn btn-success btn-lg btn-block m-3"
+                                    type="submit">อัพโหลดแบบฟอร์ม</button> 
+                                <script src="./module/manage/ManagerStudentRoomForm.js" type="module"></script>
+                            </form> -->
 
                             <br>
                             <h4>step 3 : ดาวน์โหลดแบบฟอร์มเดิมเพื่อเช็คหรือแก้ไขข้อมูล</h4>
                             <h6>กดปุ่มข้างล่างเพื่อดาวน์โหลดแบบฟอร์มที่เคยอัพโหลด</h6>
+                            <h5>แบบฟอร์ม</h5>
                             <ul id="fileList" folder="form_student"></ul>
-                            <script src="./module/show/Show.js" type="module"></script><br>
+                            <h5>ตารางเรียน</h5>
+                            <ul id="fileTable" folder="form_student_table"></ul>
+                            <script src="./module/show/Show.js" type="module"></script>
+                            <script src="./module/show/ShowTable.js" type="module"></script>
+                            <br>
                         </div>
 
                         <div class="col-5">

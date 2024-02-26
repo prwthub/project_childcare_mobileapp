@@ -56,13 +56,26 @@ uploadButton.addEventListener('submit', function (e) {
   e.preventDefault();
   console.log("Student Form Submit Button clicked");
   const fileInput = document.getElementById('SubmitStudentFormBtn');
-  const xlsxfile = fileInput.files[0];
-  if ((xlsxfile && xlsxfile.name.endsWith(".xlsx")) &&
-    xlsxfile.name.startsWith(`form_student_${front}-${back}`)) {
-    upload(xlsxfile, room);
-  } else {
-    //alert(`Please select form_student_${front}-${back}.xlsx file.`);
-    alert(`กรุณาอัปโหลด ไฟล์ชื่อ form_student_${front}-${back}.xlsx เท่านั้น`);
+  const fileTable = document.getElementById('SubmitStudentTableBtn');
+
+  if (fileInput.files.length > 0) {
+    const xlsxfile = fileInput.files[0];
+    if ((xlsxfile && xlsxfile.name.endsWith(".xlsx")) && xlsxfile.name.startsWith(`form_student_${front}-${back}`)) {
+      upload(xlsxfile, room);
+    } else {
+      //alert(`Please select form_student_${front}-${back}.xlsx file.`);
+      alert(`กรุณาอัปโหลด ไฟล์ชื่อ form_student_${front}-${back}.xlsx เท่านั้น`);
+    }
+  }
+
+  if (fileTable.files.length > 0) {
+    const jpgfile = fileTable.files[0];
+    if ((jpgfile && jpgfile.name.endsWith(".jpg")) && jpgfile.name.startsWith(`student_${front}-${back}`)) {
+      uploadTable(jpgfile, room);
+    } else {
+      //alert(`Please select student_${front}-${back}.xlsx file.`);
+      alert(`กรุณาอัปโหลด ไฟล์ชื่อ student_${front}-${back}.jpg เท่านั้น`);
+    }
   }
 });
 
@@ -319,4 +332,37 @@ function upload(file) {
     window.location.reload();
   }, 20000);
 
+}
+
+
+
+
+// Function to upload an .jpg file to Firebase Storage 
+function uploadTable(file) {
+  console.log("Upload table function entered.");
+  var school = currentUser.school_name;
+  // สร้างชื่อไฟล์ใหม่โดยใช้ template literals
+  let newFileNameFormatted = `student_${front}-${back}.jpg`;
+  // สร้าง storage reference
+  const storageRef = ref(storage, `school/${school}/form_student_table/year${front}/${newFileNameFormatted}`);
+
+  // ตรวจสอบว่ามีไฟล์ที่ถูกเลือกหรือไม่
+  if (file) {
+    // อัปโหลดไฟล์ไปยัง Firebase Storage
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('File uploaded successfully');
+      alert("อัปโหลดไฟล์สำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+      // เพิ่มโค้ดเพิ่มเติมที่ต้องการทำหลังจากอัปโหลดไฟล์สำเร็จ
+    }).catch((error) => {
+      console.error('Error uploading file: ', error);
+      alert("เกิดข้อผิดพลาดในการอัปโหลดไฟล์");
+      // เพิ่มการจัดการข้อผิดพลาดในการอัปโหลดไฟล์
+    });
+  } else {
+    console.error('No file selected');
+    // เพิ่มการจัดการเมื่อไม่มีไฟล์ที่ถูกเลือก
+  }
 }
