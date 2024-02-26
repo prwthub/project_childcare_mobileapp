@@ -1,6 +1,6 @@
 const { db } = require("../util/admin.js");
 
-// get School ( no req )
+// ✅ get School ( no req )
 exports.getSchool = async (req, res) => {
     const schoolsRef = db.collection('school');
     try{
@@ -20,7 +20,8 @@ exports.getSchool = async (req, res) => {
 };
 
 
-// get School by ( schoolName )
+
+// ✅ get School by ( schoolName )
 exports.getSchoolBySchoolName = async (req, res) => {
     const { schoolName } = req.body; 
     try {

@@ -4,6 +4,11 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // ใช้ CORS middleware
 
+const { getParentInitialDataByParentEmail,
+        getParentInitialDataByStudentId,
+        getTeacherInitialDataByTeacherEmail,
+        getTeacherInitialDataByTeacherId } = require('./initial.js');
+
 const { getSchool, 
         getSchoolBySchoolName } = require('./school.js');
 
@@ -26,39 +31,44 @@ const { listStorageFiles,
         downloadStorageFile } = require('./storage.js');
 
 
+// initial 
+app.post('/initial/parent/getInitialDataByParentEmail', getParentInitialDataByParentEmail);             // ✅
+app.post('/initial/parent/getInitialDataByStudentId', getParentInitialDataByStudentId);                 // ✅
+app.post('/initial/teacher/getInitialDataByTeacherEmail', getTeacherInitialDataByTeacherEmail);         // ✅
+app.post('/initial/teacher/getInitialDataByTeacherId', getTeacherInitialDataByTeacherId);               // ✅
 
 
 // school
-app.post('/school/getSchool', getSchool);
-app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);
+app.post('/school/getSchool', getSchool);                                                               // ✅
+app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                       // ✅        
 
 
 // teacher
 app.post('/teacher/getTeacherBySchoolName', getTeacherBySchoolName);
-app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);
-app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);
+app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);            // ✅  
+app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);      // ✅
 
 
 // driver
-app.post('/driver/getDriverBySchoolName', getDriverBySchoolName);
-app.post('/driver/getDriverBySchoolNameAndCarNumber', getDriverBySchoolNameAndCarNumber);
+app.post('/driver/getDriverBySchoolName', getDriverBySchoolName);                                       // ✅
+app.post('/driver/getDriverBySchoolNameAndCarNumber', getDriverBySchoolNameAndCarNumber);               // ✅
 
 
 // student , room
-app.post('/student/getStudentBySchoolName', getStudentBySchoolName);
-app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);
-app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);
+app.post('/student/getStudentBySchoolName', getStudentBySchoolName);                                    // ✅
+app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);                      // ✅
+app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                               // ✅
 
 
 // studentCar , car
-app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);
-app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);
-app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);
+app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);                           // ✅
+app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);   // ✅
+app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                        // ✅
 
 
 // storage
-app.post('/storage/listStorageFiles', listStorageFiles);
-app.post('/storage/downloadStorageFile', downloadStorageFile);
+app.post('/storage/listStorageFiles', listStorageFiles);                                                // ✅
+app.post('/storage/downloadStorageFile', downloadStorageFile);                                          // ???
 
 
 const PORT = process.env.PORT || 3000;

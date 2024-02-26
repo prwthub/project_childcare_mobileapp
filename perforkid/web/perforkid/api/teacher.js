@@ -1,6 +1,6 @@
 const { db } = require("../util/admin.js");
 
-// get teachers by ( schoolName )
+// ✅ get teachers by ( schoolName )
 exports.getTeacherBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
     try {
@@ -34,7 +34,8 @@ exports.getTeacherBySchoolName = async (req, res) => {
 };
 
 
-// get teachers by ( schoolName, classRoom )
+
+// ✅ get teachers by ( schoolName, classRoom )
 exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
     const { schoolName, classRoom } = req.body;
     // const [font, back] = classRoom.split("-");
@@ -74,7 +75,8 @@ exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
 };
 
 
-// get teachers by ( schoolName, teachingRoom )
+
+// ✅ get teachers by ( schoolName, teachingRoom )
 exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
     const { schoolName, teachingRoom } = req.body;
     // const [font, back] = teachingRoom.split("-");
@@ -92,24 +94,32 @@ exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const teachersRef = schoolDocRef.collection('teacher');
 
-        // Query teachers by teaching-room
-        const teachersQuerySnapshot = await teachersRef.where('teaching-room', 'array-contains-any', teachingRoom).get();
+        // Query teachers by class-room
+        const teachersQuerySnapshot = await teachersRef.get();
+
+        // // Map through teachers and return the data
+        // const teacherData = teachersQuerySnapshot.docs.map(doc => ({
+        //     id: doc.id,
+        //     subject: doc.data().subject,
+        //     teachingRoom: doc.data()['teaching-room'], 
+        // }));
 
         if (teachersQuerySnapshot.empty) {
-            return res.status(404).json({ error: "No teachers found teaching in the specified room" });
+            return res.status(404).json({ error: "No teachers found class in the specified room" });
         }
 
-        // Map through teachers and return the data
-        const teacherData = teachersQuerySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        // Filter teachers by teaching room
+        const teacherData = teachersQuerySnapshot.docs
+            .filter(doc => doc.data()['teaching-room'].includes(teachingRoom))
+            .map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
 
         console.log(teacherData);
         return res.status(200).json(teacherData);
     } catch (error) {
-        console.error("Error getting teachers by school and teaching-room:", error);
+        console.error("Error getting teachers by school and class-room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
 };
-
