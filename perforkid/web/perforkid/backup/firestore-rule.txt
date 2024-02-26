@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+    match /databases/{database}/documents {
+    match /{document=**} {
+      // allow read, write: if request.auth.token.email.matches("firebase@flutterflow.io");
+      allow read, write: if true;
+    }
+
+
+        // This rule allows anyone with your Firestore database reference to view, edit,
+        // and delete all data in your Firestore database. It is useful for getting
+        // started, but it is configured to expire after 30 days because it
+        // leaves your app open to attackers. At that time, all client
+        // requests to your Firestore database will be denied.
+        //
+        // Make sure to write security rules for your app before that time, or else
+        // all client requests to your Firestore database will be denied until you Update
+        // your rules
+        match /{document=**} {
+            match /school/{document} {
+              	allow read: if true
+            }
+            match /school/{schoolList}/annoucement/{schoolAnnouncement} {
+              	allow read, write: if true;
+            }
+            
+            match /school/{schoolList}/student/{schoolStudent} {
+              	allow read, write, update, delete: if true;
+            }
+            
+            match /school/{schoolList}/student/{schoolStudent}/student-list/{subdocument} {
+              	allow read, write, update, delete: if true;
+            }
+            
+            match /school/{schoolList}/car/{schoolStudent}/student-car/{subdocument} {
+              	allow read, write, update, delete: if true;
+            }
+            
+            match /admin/{document} {
+              	allow read, write, update, delete: if true;
+            }
+            
+            
+            match /testing/{document} {
+                allow read, write, update, delete: if true;
+                match /{subcollection}/{subdocument} {
+                  	allow read, write, update, delete: if true;
+                }
+            }
+            
+            
+            // ให้เข้าถึงได้เฉพาะเอกสารใน collection "school"
+            match /school/{document} {
+              	allow read, write, update: if true;
+            		// ให้เข้าถึงได้เฉพาะเอกสารใน subcollection ของเอกสารใน collection "school"
+                match /{subcollection}/{subdocument} {
+                  	allow read, write, update, delete: if true;
+                    // ให้เข้าถึงได้เฉพาะเอกสารใน subcollection ของเอกสารใน subcollection นั้นๆ
+                    match /{subcollection}/{subdocument} {
+                  			allow read, write, update, delete: if true;
+                		}
+                }
+            }
+            
+            
+            // // ให้เข้าถึงได้เฉพาะเอกสารใน subcollection "student" ของเอกสารใน collection "school"
+            // match /school/{schoolId}/student/{studentId} {
+            //   	allow read, write, update, delete: if true;
+            // }
+            // // ให้เข้าถึงได้เฉพาะเอกสารใน subcollection "student-list" ของเอกสารใน subcollection "student"
+            // match /school/{schoolId}/student/{studentId}/student-list/{documentId} {
+            //   	allow read, write, update, delete: if true;
+            // }
+        }
+    }
+}
