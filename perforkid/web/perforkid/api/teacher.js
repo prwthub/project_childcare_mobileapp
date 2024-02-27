@@ -35,6 +35,82 @@ exports.getTeacherBySchoolName = async (req, res) => {
 
 
 
+// ✅ get teachers by ( schoolName, teacherEmail )
+exports.getTeacherBySchoolNameAndTeacherEmail = async (req, res) => {
+    const { schoolName, teacherEmail } = req.body;
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the teacher subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const teachersRef = schoolDocRef.collection('teacher');
+
+        const teachersQuerySnapshot = await teachersRef.get();
+
+        let teacherData = [];
+        teachersQuerySnapshot.forEach(doc => {
+            if (doc.data().email === teacherEmail) {
+                teacherData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            }
+        });
+
+        console.log(teacherData);
+        return res.status(200).json(teacherData);
+    } catch (error) {
+        console.error("Error getting teachers by school and class-room:", error);
+        return res.status(500).json({ error: "Something went wrong, please try again" });
+    }
+};
+
+
+
+// ✅ get teachers by ( schoolName, teacherId )
+exports.getTeacherBySchoolNameAndTeacherId = async (req, res) => {
+    const { schoolName, teacherId } = req.body;
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the teacher subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const teachersRef = schoolDocRef.collection('teacher');
+
+        const teachersQuerySnapshot = await teachersRef.get();
+
+        let teacherData = [];
+        teachersQuerySnapshot.forEach(doc => {
+            if (doc.data()["teacher-ID"] === teacherId) {
+                teacherData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            }
+        });
+
+        console.log(teacherData);
+        return res.status(200).json(teacherData);
+    } catch (error) {
+        console.error("Error getting teachers by school and class-room:", error);
+        return res.status(500).json({ error: "Something went wrong, please try again" });
+    }
+};
+
+
+
 // ✅ get teachers by ( schoolName, classRoom )
 exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
     const { schoolName, classRoom } = req.body;

@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-//✅ get Files by ( schoolName, folderName )
+// ✅ get Files by ( schoolName, folderName )
 exports.listStorageFiles = async (req, res) => {
     const { schoolName, folderName } = req.body;
     try {
@@ -45,7 +45,7 @@ exports.listStorageFiles = async (req, res) => {
 }
 
 
-// download File by ( schoolName, folderName, fileName )
+// ?? download File by ( schoolName, folderName, fileName )
 exports.downloadStorageFile = async (req, res) => {
     const { schoolName, folderName, fileName } = req.body;
     try {

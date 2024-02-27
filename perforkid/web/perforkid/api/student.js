@@ -148,3 +148,36 @@ exports.getRoomBySchoolNameAndRoom = async (req, res) => {
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
 };
+
+
+
+// ?? get Schedule by ( schoolName, studentRoom )
+exports.getScheduleBySchoolNameAndRoom = async (req, res) => {
+    const { schoolName, studentRoom } = req.body;
+    const [font, back] = studentRoom.split("-");
+
+    try {
+        const folderPath = "school/" + schoolName + "/" + "year" + font + "/" + "student_" + font + "-" + back + "/" + ".jpg";
+        const storageRef = ref(storage, folderPath);
+        const files = await listAll(storageRef);
+
+        // Assuming there's only one file, if there are multiple files, you need to iterate and choose one
+        const fileRef = files.items[0];
+
+        // Get download URL for the image
+        const downloadURL = await getDownloadURL(fileRef);
+
+        // Fetch the image byte array
+        const response = await fetch(downloadURL);
+        const imageByteArray = await response.arrayBuffer();
+
+        // Set appropriate headers
+        res.setHeader('Content-Type', 'image/jpeg');
+
+        // Send image byte array as response
+        res.send(Buffer.from(imageByteArray));
+    } catch (error) {
+        console.error("Error getting image:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}

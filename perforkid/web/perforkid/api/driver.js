@@ -34,6 +34,85 @@ exports.getDriverBySchoolName = async (req, res) => {
 };
 
 
+
+// ✅ get drivers by ( schoolName, driverEmail )
+exports.getDriverBySchoolNameAndDriverEmail = async (req, res) => {
+    const { schoolName, driverEmail } = req.body;
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the driver subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const driversRef = schoolDocRef.collection('driver');
+
+        // Retrieve all documents from driver subcollection
+        const driversQuerySnapshot = await driversRef.get();
+
+        let driverData = [];
+        driversQuerySnapshot.forEach(doc => {
+            if (doc.data().email === driverEmail) {
+                driverData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            }
+        });
+
+        console.log(driverData);
+        return res.status(200).json(driverData);
+    } catch (error) {
+        console.error("Error getting drivers by school name:", error);
+        return res.status(500).json({ error: "Something went wrong, please try again" });
+    }
+};
+
+
+
+// ✅ get drivers by ( schoolName, driverId )
+exports.getDriverBySchoolNameAndDriverId = async (req, res) => {
+    const { schoolName, driverId } = req.body;
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the driver subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const driversRef = schoolDocRef.collection('driver');
+
+        // Retrieve all documents from driver subcollection
+        const driversQuerySnapshot = await driversRef.get();
+
+        let driverData = [];
+        driversQuerySnapshot.forEach(doc => {
+            if (doc.data()["driver-ID"] === driverId) {
+                driverData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            }
+        });
+
+        console.log(driverData);
+        return res.status(200).json(driverData);
+    } catch (error) {
+        console.error("Error getting drivers by school name:", error);
+        return res.status(500).json({ error: "Something went wrong, please try again" });
+    }
+};
+
+
+
 // ✅ get drivers by ( schoolName, carNumber )
 exports.getDriverBySchoolNameAndCarNumber = async (req, res) => {
     const { schoolName, carNumber } = req.body;

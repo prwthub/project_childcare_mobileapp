@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "474a415d-336a-40ed-977a-18d983b00584",
 		"name": "perforkid",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "30166086"
 	},
 	"item": [
@@ -26,17 +26,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/initial/parent/getInitialDataByParentEmail",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"initial",
-										"parent",
-										"getInitialDataByParentEmail"
-									]
-								}
+								"url": "{{local}}/initial/parent/getInitialDataByParentEmail"
 							},
 							"response": []
 						},
@@ -54,17 +44,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/initial/parent/getInitialDataByStudentId",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"initial",
-										"parent",
-										"getInitialDataByStudentId"
-									]
-								}
+								"url": "{{local}}/initial/parent/getInitialDataByStudentId"
 							},
 							"response": []
 						}
@@ -87,17 +67,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/initial/teacher/getInitialDataByTeacherEmail",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"initial",
-										"teacher",
-										"getInitialDataByTeacherEmail"
-									]
-								}
+								"url": "{{local}}/initial/teacher/getInitialDataByTeacherEmail"
 							},
 							"response": []
 						},
@@ -115,17 +85,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/initial/teacher/getInitialDataByTeacherId",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"initial",
-										"teacher",
-										"getInitialDataByTeacherId"
-									]
-								}
+								"url": "{{local}}/initial/teacher/getInitialDataByTeacherId"
 							},
 							"response": []
 						}
@@ -141,16 +101,7 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"url": {
-							"raw": "{{local}}/school/getSchool",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"school",
-								"getSchool"
-							]
-						}
+						"url": "{{local}}/school/getSchool"
 					},
 					"response": []
 				},
@@ -168,16 +119,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/school/getSchoolBySchoolName",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"school",
-								"getSchoolBySchoolName"
-							]
-						}
+						"url": "{{local}}/school/getSchoolBySchoolName"
 					},
 					"response": []
 				}
@@ -200,16 +142,43 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/teacher/getTeacherBySchoolName",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"teacher",
-								"getTeacherBySchoolName"
-							]
-						}
+						"url": "{{local}}/teacher/getTeacherBySchoolName"
+					},
+					"response": []
+				},
+				{
+					"name": "✅  getTeacherBySchoolNameAndTeacherEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"teacherEmail\": \"wilairat@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/teacher/getTeacherBySchoolNameAndTeacherEmail"
+					},
+					"response": []
+				},
+				{
+					"name": "✅  getTeacherBySchoolNameAndTeacherId",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"teacherId\": \"14586\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/teacher/getTeacherBySchoolNameAndTeacherId"
 					},
 					"response": []
 				},
@@ -227,16 +196,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndClassRoom",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"teacher",
-								"getTeacherBySchoolNameAndClassRoom"
-							]
-						}
+						"url": "{{local}}/teacher/getTeacherBySchoolNameAndClassRoom"
 					},
 					"response": []
 				},
@@ -254,16 +214,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndTeachingRoom",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"teacher",
-								"getTeacherBySchoolNameAndTeachingRoom"
-							]
-						}
+						"url": "{{local}}/teacher/getTeacherBySchoolNameAndTeachingRoom"
 					},
 					"response": []
 				}
@@ -286,16 +237,43 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/driver/getDriverBySchoolName",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"driver",
-								"getDriverBySchoolName"
-							]
-						}
+						"url": "{{local}}/driver/getDriverBySchoolName"
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getDriverBySchoolNameAndDriverEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"driverEmail\": \"palatorn.ch@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/driver/getDriverBySchoolNameAndDriverEmail"
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getDriverBySchoolNameAndDriverId",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"driverId\": \"20001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/driver/getDriverBySchoolNameAndDriverId"
 					},
 					"response": []
 				},
@@ -313,16 +291,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/driver/getDriverBySchoolNameAndCarNumber",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"driver",
-								"getDriverBySchoolNameAndCarNumber"
-							]
-						}
+						"url": "{{local}}/driver/getDriverBySchoolNameAndCarNumber"
 					},
 					"response": []
 				}
@@ -348,16 +317,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/student/getStudentBySchoolName",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"student",
-										"getStudentBySchoolName"
-									]
-								}
+								"url": "{{local}}/student/getStudentBySchoolName"
 							},
 							"response": []
 						},
@@ -375,16 +335,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/student/getStudentBySchoolNameAndRoom",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"student",
-										"getStudentBySchoolNameAndRoom"
-									]
-								}
+								"url": "{{local}}/student/getStudentBySchoolNameAndRoom"
 							},
 							"response": []
 						}
@@ -407,16 +358,30 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/room/getRoomBySchoolNameAndRoom",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"room",
-										"getRoomBySchoolNameAndRoom"
-									]
-								}
+								"url": "{{local}}/room/getRoomBySchoolNameAndRoom"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "schedule",
+					"item": [
+						{
+							"name": "?? getScheduleBySchoolNameAndRoom",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\",\n    \"studentRoom\": \"1/1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{local}}/schedule/getScheduleBySchoolNameAndRoom"
 							},
 							"response": []
 						}
@@ -444,16 +409,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/studentCar/getStudentCarBySchoolName",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"studentCar",
-										"getStudentCarBySchoolName"
-									]
-								}
+								"url": "{{local}}/studentCar/getStudentCarBySchoolName"
 							},
 							"response": []
 						},
@@ -471,16 +427,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/studentCar/getStudentCarBySchoolNameAndCarNumber",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"studentCar",
-										"getStudentCarBySchoolNameAndCarNumber"
-									]
-								}
+								"url": "{{local}}/studentCar/getStudentCarBySchoolNameAndCarNumber"
 							},
 							"response": []
 						}
@@ -503,16 +450,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{local}}/car/getCarBySchoolNameAndCarNumber",
-									"host": [
-										"{{local}}"
-									],
-									"path": [
-										"car",
-										"getCarBySchoolNameAndCarNumber"
-									]
-								}
+								"url": "{{local}}/car/getCarBySchoolNameAndCarNumber"
 							},
 							"response": []
 						}
@@ -537,21 +475,12 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/storage/listStorageFiles",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"storage",
-								"listStorageFiles"
-							]
-						}
+						"url": "{{local}}/storage/listStorageFiles"
 					},
 					"response": []
 				},
 				{
-					"name": "??? downloadStorageFile",
+					"name": "?? downloadStorageFile",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -564,16 +493,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{local}}/storage/downloadStorageFile",
-							"host": [
-								"{{local}}"
-							],
-							"path": [
-								"storage",
-								"downloadStorageFile"
-							]
-						}
+						"url": "{{local}}/storage/downloadStorageFile"
 					},
 					"response": []
 				}
