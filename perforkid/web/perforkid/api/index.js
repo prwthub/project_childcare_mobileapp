@@ -35,6 +35,12 @@ const { getStudentCarBySchoolName,
 const { listStorageFiles, 
         downloadStorageFile } = require('./storage.js');
 
+const { createParentCard,
+        createVisitorCard,
+        getCardBySchoolNameAndCardType,
+        getCardBySchoolNameAndCardId,
+        deleteExpireCardBySchoolName } = require('./card.js');
+
 
 // initial 
 app.post('/initial/parent/getInitialDataByParentEmail', getParentInitialDataByParentEmail);             // ✅ get student data by parent email
@@ -52,8 +58,8 @@ app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);               
 app.post('/teacher/getTeacherBySchoolName', getTeacherBySchoolName);                                    // ✅ get all teacher data by school name
 app.post('/teacher/getTeacherBySchoolNameAndTeacherEmail', getTeacherBySchoolNameAndTeacherEmail);      // ✅ get teacher data by school name and teacher email
 app.post('/teacher/getTeacherBySchoolNameAndTeacherId', getTeacherBySchoolNameAndTeacherId);            // ✅ get teacher data by school name and teacher id
-app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);            // ✅ get teacher data by school name and class room 
-app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);      // ✅ get teacher data by school name and teaching room 
+app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);            // ✅ get all teacher data by school name and class room 
+app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);      // ✅ get all teacher data by school name and teaching room 
 
 
 // driver
@@ -74,17 +80,34 @@ app.post('/schedule/getScheduleBySchoolNameAndRoom', getScheduleBySchoolNameAndR
 app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);                           // ✅ get all student car data by school name
 app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);   // ✅ get all student car data by school name and car number
 app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                        // ✅ get car data by school name and car number
-// get car location (realtime database ???)                                                             // ??                       
+// get car location (realtime database ???)                                                             // ?? get car location by school name and car number                  
 
 
 // storage
-app.post('/storage/listStorageFiles', listStorageFiles);                                                // ✅
-app.post('/storage/downloadStorageFile', downloadStorageFile);                                          // ??
+app.post('/storage/listStorageFiles', listStorageFiles);                                                // ✅ list all storage files by folder name
+app.post('/storage/downloadStorageFile', downloadStorageFile);                                          // ?? download storage file by folder name and file name
 
 
-// announcement (get)
-// parent card  (get)
-// visitor card (get, create)
+// card
+app.post('/card/createParentCard', createParentCard);                                                   // ✅ create parent card
+app.post('/card/createVisitorCard', createVisitorCard);                                                 // ✅ create visitor card
+app.post('/card/getCardBySchoolNameAndCardType', getCardBySchoolNameAndCardType);                       // ✅ get all card data by school name and card type
+app.post('/card/getCardBySchoolNameAndCardId', getCardBySchoolNameAndCardId);                           // ✅ get card data by school name and card id
+app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);                           // ✅ delete expire card by school name
+
+
+// Main Task
+// - signIn 
+// - role
+// - studentCar by room
+// - announcement 
+// - initialDriver
+
+
+// Secondary Task
+// - all room
+// - changeStatusStudentCar
+// - createVisitorCard img
 
 
 const PORT = process.env.PORT || 3000;
