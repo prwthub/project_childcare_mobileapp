@@ -1,7 +1,7 @@
 const { db } = require("../util/admin.js");
 
 // ✅ get announcement by ( schoolName )
-exports.getAnncouncementBySchoolName = async (req, res) => {
+exports.getAnnouncementBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
     try {
         // Get reference to the school document
@@ -36,7 +36,7 @@ exports.getAnncouncementBySchoolName = async (req, res) => {
 
 
 // ✅ get announcement by ( schoolName, Id )
-exports.getAnncouncementBySchoolNameAndId = async (req, res) => {
+exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
     const { schoolName, id } = req.body;
     try {
         // Get reference to the school document
