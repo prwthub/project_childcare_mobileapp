@@ -12,6 +12,9 @@ const { getParentInitialDataByParentEmail,
 const { getSchool, 
         getSchoolBySchoolName } = require('./school.js');
 
+const { getAnncouncementBySchoolName,
+        getAnncouncementBySchoolNameAndId } = require('./announcement.js');
+
 const { getTeacherBySchoolName,
         getTeacherBySchoolNameAndTeacherEmail,
         getTeacherBySchoolNameAndTeacherId,
@@ -52,6 +55,11 @@ app.post('/initial/teacher/getInitialDataByTeacherId', getTeacherInitialDataByTe
 // school
 app.post('/school/getSchool', getSchool);                                                               // ✅ get all school data
 app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                       // ✅ get school data by school name
+
+
+// announcement
+app.post('/announcement/getAnncouncementBySchoolName', getAnncouncementBySchoolName);                   // ✅ get all announcement data by school name
+app.post('/announcement/getAnncouncementBySchoolNameAndId', getAnncouncementBySchoolNameAndId);         // ✅ get announcement data by school name and firestore-id
 
 
 // teacher
