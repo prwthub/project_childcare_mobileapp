@@ -19,13 +19,18 @@ exports.getAnnouncementBySchoolName = async (req, res) => {
         // Retrieve all documents from announcement subcollection
         const announcementQuerySnapshot = await announcementRef.get();
 
-        // Map through announcements and return the data
-        const announcementData = announcementQuerySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        // Map through announcements and format date before returning the data
+        const announcementData = announcementQuerySnapshot.docs.map(doc => {
+            const data = doc.data();
+            // Format date
+            const formattedDate = formatDate(data.date.toDate());
+            return {
+                id: doc.id,
+                ...data,
+                date: formattedDate
+            };
+        });
 
-        console.log(announcementData);
         return res.status(200).json(announcementData);
     } catch (error) {
         console.error("Error getting announcements by school name:", error);
@@ -57,10 +62,25 @@ exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
             return res.status(404).json({ error: "Announcement not found" });
         }
 
-        console.log(announcementDoc.data());
-        return res.status(200).json(announcementDoc.data());
+        // Format date before sending JSON response
+        const formattedDate = formatDate(announcementDoc.data().date.toDate());
+
+        // Modify the announcement data with formatted date
+        const modifiedAnnouncementData = {
+            ...announcementDoc.data(),
+            date: formattedDate
+        };
+
+        return res.status(200).json(modifiedAnnouncementData);
     } catch (error) {
         console.error("Error getting announcement by school name and announcement id:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
+};
+
+// Function to format date
+const formatDate = (dateString) => {
+    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const formattedDate = dateString.toLocaleDateString('en-US', options);
+    return formattedDate;
 };

@@ -107,9 +107,7 @@ app.post('/storage/downloadStorageFile', downloadStorageFile);                  
 
 // Main Task
 // - signIn 
-// - role
 // - studentCar by room
-// - initialDriver
 
 
 // Secondary Task
