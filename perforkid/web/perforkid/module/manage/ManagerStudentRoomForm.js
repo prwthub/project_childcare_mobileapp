@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 import { getStorage, ref, uploadBytes, } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
-
+import {getFirestore, collection, updateDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {getDownloadURL} from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
   authDomain: "perforkid-application.firebaseapp.com",
@@ -338,7 +338,7 @@ function upload(file) {
 
 
 // Function to upload an .jpg file to Firebase Storage 
-function uploadTable(file) {
+async function uploadTable(file, roomNumber) {
   console.log("Upload table function entered.");
   var school = currentUser.school_name;
   // สร้างชื่อไฟล์ใหม่โดยใช้ template literals
@@ -352,9 +352,8 @@ function uploadTable(file) {
     uploadBytes(storageRef, file).then((snapshot) => {
       console.log('File uploaded successfully');
       alert("อัปโหลดไฟล์สำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+
+
       // เพิ่มโค้ดเพิ่มเติมที่ต้องการทำหลังจากอัปโหลดไฟล์สำเร็จ
     }).catch((error) => {
       console.error('Error uploading file: ', error);
@@ -365,4 +364,32 @@ function uploadTable(file) {
     console.error('No file selected');
     // เพิ่มการจัดการเมื่อไม่มีไฟล์ที่ถูกเลือก
   }
+  
+  // ส่วนอัพโหลดลิ้งค์รูปจาก Storage มา Firestore ตามเงื่อนไข
+  const db = getFirestore();
+  const schoolName = currentUser.school_name;
+  const schoolRef = collection(db, 'school');
+
+  const schoolQuerySnapshot = await getDocs(query(schoolRef, where("school-name", "==", schoolName)));
+  if (!schoolQuerySnapshot.empty) {
+    console.log('schoolQuerySnapshot is not empty!', schoolQuerySnapshot)
+    const schoolDocument = schoolQuerySnapshot.docs[0];
+    const RoomRef = collection(schoolDocument.ref, 'student');
+    const StudentRoomQuerySnapShot = await getDocs(query(RoomRef, where("room", "==", roomNumber)));
+    if (!StudentRoomQuerySnapShot.empty) {
+      const studentDocument = StudentRoomQuerySnapShot.docs[0];
+      const schedule = await getDownloadURL(storageRef);
+      await updateDoc(studentDocument.ref, 
+        {
+          schedule: schedule
+        }
+      );
+      alert("--==Firestore update operation of schedule finished and successful==--")
+  }
+}
+
+setTimeout(() => {
+  window.location.reload();
+}, 3000);
+
 }
