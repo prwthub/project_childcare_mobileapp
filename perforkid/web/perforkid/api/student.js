@@ -112,6 +112,45 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
 
 
 
+// get all Room by ( schoolName )
+exports.getRoomBySchoolName = async (req, res) => {
+    const { schoolName } = req.body;
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the students subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const studentsRef = schoolDocRef.collection('student');
+
+        // Query students by room
+        const studentsQuerySnapshot = await studentsRef.get();
+
+        if (studentsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Room not found" });
+        }
+
+        let room = [];
+        studentsQuerySnapshot.forEach(studentDoc => {
+            if (studentDoc.data().room !== "all") {
+                room.push(studentDoc.data().room);
+            }
+        });
+
+        return res.status(200).json(room.sort());
+    } catch (error) {
+        console.error("Error getting room by school and room:", error);
+        return res.status(500).json({ error: "Something went wrong, please try again" });
+    }
+};
+
+
+
 // ✅ get Room by ( schoolName, studentRoom )
 exports.getRoomBySchoolNameAndRoom = async (req, res) => {
     const { schoolName, studentRoom } = req.body;

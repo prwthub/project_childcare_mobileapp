@@ -28,11 +28,15 @@ const { getDriverBySchoolName,
 
 const { getStudentBySchoolName,
         getStudentBySchoolNameAndRoom,
+        getRoomBySchoolName,
         getRoomBySchoolNameAndRoom,
         getScheduleBySchoolNameAndRoom } = require('./student.js');
 
 const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndCarNumber,
+        getStudentCarBySchoolNameAndRoom,
+        getStudentCarBySchoolNameAndId,
+        updateStudentCarStatusBySchoolNameAndId,
         getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
 
 const { createParentCard,
@@ -80,6 +84,7 @@ app.post('/driver/getDriverBySchoolNameAndCarNumber', getDriverBySchoolNameAndCa
 // student , room
 app.post('/student/getStudentBySchoolName', getStudentBySchoolName);                                            // ✅ get all student data by school name
 app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);                              // ✅ get all student data by school name and room
+app.post('/room/getRoomBySchoolName', getRoomBySchoolName);                                                     // ✅ get all room name by school name
 app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                                       // ✅ get room data by school name and room
 app.post('/schedule/getScheduleBySchoolNameAndRoom', getScheduleBySchoolNameAndRoom);                           // ?? get schedule (storage) data by school name and room
 
@@ -87,6 +92,9 @@ app.post('/schedule/getScheduleBySchoolNameAndRoom', getScheduleBySchoolNameAndR
 // studentCar , car
 app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);                                   // ✅ get all student car data by school name
 app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);           // ✅ get all student car data by school name and car number
+app.post('/studentCar/getStudentCarBySchoolNameAndRoom', getStudentCarBySchoolNameAndRoom);                     // ✅ get all student car data by school name and room
+app.post('/studentCar/getStudentCarBySchoolNameAndId', getStudentCarBySchoolNameAndId);                         // ✅ get student car data by school name and id
+app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCarStatusBySchoolNameAndId);       // ✅ update student car status by school name and id and status
 app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                                // ✅ get car data by school name and car number
 // get car location (realtime database ???)                                                                     // ?? get car location by school name and car number                  
 
@@ -107,12 +115,8 @@ app.post('/storage/downloadStorageFile', downloadStorageFile);                  
 
 // Main Task
 // - signIn 
-// - studentCar by room
-
 
 // Secondary Task
-// - all room
-// - changeStatusStudentCar
 // - createVisitorCard img
 
 
