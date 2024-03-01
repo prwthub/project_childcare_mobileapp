@@ -1,5 +1,12 @@
 const { db } = require("../util/admin.js");
 
+// Function to format date
+const formatDate = (dateString) => {
+    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const formattedDate = dateString.toLocaleDateString('en-US', options);
+    return formattedDate;
+};
+
 // ✅ get announcement by ( schoolName )
 exports.getAnnouncementBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
@@ -76,11 +83,4 @@ exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
         console.error("Error getting announcement by school name and announcement id:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
-};
-
-// Function to format date
-const formatDate = (dateString) => {
-    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const formattedDate = dateString.toLocaleDateString('en-US', options);
-    return formattedDate;
 };

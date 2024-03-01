@@ -1,4 +1,3 @@
-const e = require("express");
 const { db } = require("../util/admin.js");
 
 // Function to format date
