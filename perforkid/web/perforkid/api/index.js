@@ -4,6 +4,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const { signIn } = require('./authen.js');
+
 const { getSchool, 
         getSchoolBySchoolName } = require('./school.js');
 
@@ -47,6 +49,9 @@ const { createParentCard,
 
 const { listStorageFiles, 
         downloadStorageFile } = require('./storage.js');
+
+// authen
+app.post('/authen/signIn', signIn);                                                                             // ✅ sign in and generate token
 
 
 // school

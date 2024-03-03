@@ -1,9 +1,19 @@
-const { db } = require("../util/admin.js");
+const { db, admin } = require("../util/admin.js");
 
 // ✅ get role by ( schoolName, email )
 exports.getRoleBySchoolNameAndEmail = async (req, res) => {
     const { schoolName, email } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // ใช้ Firebase Admin SDK เพื่อยืนยัน token
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        // หาก token ถูกยืนยันแล้ว คุณสามารถใช้ข้อมูลใน decodedToken ได้ตามต้องการ
+        // เช่น คุณสามารถใช้ decodedToken.uid เพื่อระบุผู้ใช้งานได้
+        console.log("Verified token:", decodedToken);
+        // ทำสิ่งที่คุณต้องการหลังจากยืนยัน token เรียบร้อยแล้ว
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -75,8 +85,12 @@ exports.getRoleBySchoolNameAndEmail = async (req, res) => {
         }
 
     } catch (error) {
-        console.error("Error retrieving role user:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        console.error("Error getting school by name:", error);
+        if (error.code === 'auth/argument-error') {
+            return res.status(401).json({ error: "Invalid token" });
+        } else {
+            return res.status(500).json({ error: "Internal server error" });
+        }
     }
 };
 
