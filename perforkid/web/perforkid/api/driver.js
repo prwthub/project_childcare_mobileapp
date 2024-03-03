@@ -25,8 +25,11 @@ exports.getDriverBySchoolName = async (req, res) => {
             ...doc.data()
         }));
 
-        console.log(driverData);
-        return res.status(200).json(driverData);
+        if (driverData.length === 0) {
+            return res.status(404).json({ error: "No drivers found" });
+        } else {
+            return res.status(200).json(driverData);
+        }
     } catch (error) {
         console.error("Error getting drivers by school name:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -64,8 +67,11 @@ exports.getDriverBySchoolNameAndDriverEmail = async (req, res) => {
             }
         });
 
-        console.log(driverData);
-        return res.status(200).json(driverData);
+        if (driverData.length === 0) {
+            return res.status(404).json({ error: "No drivers found" });
+        } else {
+            return res.status(200).json(driverData);
+        }
     } catch (error) {
         console.error("Error getting drivers by school name:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -103,8 +109,11 @@ exports.getDriverBySchoolNameAndDriverId = async (req, res) => {
             }
         });
 
-        console.log(driverData);
-        return res.status(200).json(driverData);
+        if (driverData.length === 0) {
+            return res.status(404).json({ error: "No drivers found" });
+        } else {
+            return res.status(200).json(driverData);
+        }
     } catch (error) {
         console.error("Error getting drivers by school name:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -142,8 +151,11 @@ exports.getDriverBySchoolNameAndCarNumber = async (req, res) => {
             ...doc.data()
         }));
 
-        console.log(driverData);
-        return res.status(200).json(driverData);
+        if (driverData.length === 0) {
+            return res.status(404).json({ error: "No drivers found" });
+        } else {
+            return res.status(200).json(driverData);
+        }
     } catch (error) {
         console.error("Error getting drivers by school and class-room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });

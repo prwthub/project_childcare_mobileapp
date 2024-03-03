@@ -50,6 +50,7 @@ exports.getRoleBySchoolNameAndEmail = async (req, res) => {
                 const studentListPromise = studentListRef.get();
                 
                 // Push the promise into the array
+                // promise array will be used to wait for all promises to resolve before continuing
                 studentDataPromises.push(studentListPromise);
             });
         
@@ -105,7 +106,11 @@ exports.getTeacherInitialBySchoolNameAndEmail = async (req, res) => {
             ...doc.data()
         }));
 
-        return res.status(200).json(teacherData);
+        if (teacherData.length === 0) {
+            return res.status(404).json({ error: "Teacher not found" });
+        } else {
+            return res.status(200).json(teacherData);
+        }
     } catch (error) {
         console.error("Error retrieving teachers:", error);
         return res.status(500).json({ error: "Internal server error" });
@@ -138,7 +143,11 @@ exports.getDriverInitialBySchoolNameAndEmail = async (req, res) => {
             ...doc.data()
         }));
 
-        return res.status(200).json(driverData);
+        if (driverData.length === 0) {
+            return res.status(404).json({ error: "Driver not found" });
+        } else {
+            return res.status(200).json(driverData);
+        }
     } catch (error) {
         console.error("Error retrieving drivers:", error);
         return res.status(500).json({ error: "Internal server error" });
@@ -197,7 +206,17 @@ exports.getParentInitialBySchoolNameAndEmail = async (req, res) => {
             });
         });
     
-        return res.status(200).json(studentData);
+        if (studentData.length === 0) {
+            return res.status(404).json({ error: "Parent not found" });
+        } else {
+            studentId = [];
+            studentData.forEach(student => {
+                studentId.push(student["student-ID"]);
+            });
+
+            return res.status(200).json({ "student-ID": studentId,
+                                            "studentData": studentData });
+        }
     } catch (error) {
         console.error("Error retrieving students:", error);
         return res.status(500).json({ error: "Internal server error" });

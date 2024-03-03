@@ -38,7 +38,11 @@ exports.getAnnouncementBySchoolName = async (req, res) => {
             };
         });
 
-        return res.status(200).json(announcementData);
+        if (announcementData.length === 0) {
+            return res.status(404).json({ error: "No announcements found" });
+        } else {
+            return res.status(200).json(announcementData);
+        }
     } catch (error) {
         console.error("Error getting announcements by school name:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });

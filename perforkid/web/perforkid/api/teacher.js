@@ -25,8 +25,11 @@ exports.getTeacherBySchoolName = async (req, res) => {
             ...doc.data()
         }));
 
-        console.log(teacherData);
-        return res.status(200).json(teacherData);
+        if (teacherData.length === 0) {
+            return res.status(404).json({ error: "No teachers found" });
+        } else {
+            return res.status(200).json(teacherData);
+        }
     } catch (error) {
         console.error("Error getting teachers by school name:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -63,8 +66,11 @@ exports.getTeacherBySchoolNameAndTeacherEmail = async (req, res) => {
             }
         });
 
-        console.log(teacherData);
-        return res.status(200).json(teacherData);
+        if (teacherData.length === 0) {
+            return res.status(404).json({ error: "No teachers found" });
+        } else {
+            return res.status(200).json(teacherData);
+        }
     } catch (error) {
         console.error("Error getting teachers by school and class-room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -101,8 +107,11 @@ exports.getTeacherBySchoolNameAndTeacherId = async (req, res) => {
             }
         });
 
-        console.log(teacherData);
-        return res.status(200).json(teacherData);
+        if (teacherData.length === 0) {
+            return res.status(404).json({ error: "No teachers found" });
+        } else {
+            return res.status(200).json(teacherData);
+        }
     } catch (error) {
         console.error("Error getting teachers by school and class-room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -142,8 +151,16 @@ exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
             ...doc.data()
         }));
 
-        console.log(teacherData);
-        return res.status(200).json(teacherData);
+        if (teacherData.length === 0) {
+            return res.status(404).json({ error: "No teachers found" });
+        } else {
+            teacherId = [];
+            teacherData.forEach(doc => {
+                teacherId.push(doc["teacher-ID"]);
+            });
+            return res.status(200).json({ "teacherId": teacherId,  
+                                            "teacherData": teacherData });
+        }
     } catch (error) {
         console.error("Error getting teachers by school and class-room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -173,13 +190,6 @@ exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
         // Query teachers by class-room
         const teachersQuerySnapshot = await teachersRef.get();
 
-        // // Map through teachers and return the data
-        // const teacherData = teachersQuerySnapshot.docs.map(doc => ({
-        //     id: doc.id,
-        //     subject: doc.data().subject,
-        //     teachingRoom: doc.data()['teaching-room'], 
-        // }));
-
         if (teachersQuerySnapshot.empty) {
             return res.status(404).json({ error: "No teachers found class in the specified room" });
         }
@@ -192,8 +202,16 @@ exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
                 ...doc.data()
             }));
 
-        console.log(teacherData);
-        return res.status(200).json(teacherData);
+        if (teacherData.length === 0) {
+            return res.status(404).json({ error: "No teachers found" });
+        } else {
+            teacherId = [];
+            teacherData.forEach(doc => {
+                teacherId.push(doc["teacher-ID"]);
+            });
+            return res.status(200).json({ "teacherId": teacherId,  
+                                            "teacherData": teacherData });
+        }
     } catch (error) {
         console.error("Error getting teachers by school and class-room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });

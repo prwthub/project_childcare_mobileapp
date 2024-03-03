@@ -4,13 +4,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const { getSchool, 
+        getSchoolBySchoolName } = require('./school.js');
+
 const { getRoleBySchoolNameAndEmail,
         getTeacherInitialBySchoolNameAndEmail,
         getDriverInitialBySchoolNameAndEmail,
         getParentInitialBySchoolNameAndEmail } = require('./initial.js');
-
-const { getSchool, 
-        getSchoolBySchoolName } = require('./school.js');
 
 const { getAnnouncementBySchoolName,
         getAnnouncementBySchoolNameAndId } = require('./announcement.js');
@@ -49,16 +49,16 @@ const { listStorageFiles,
         downloadStorageFile } = require('./storage.js');
 
 
+// school
+app.post('/school/getSchool', getSchool);                                                                       // ✅ get all school data
+app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                               // ✅ get school data by school name
+
+
 // initial 
 app.post('/initial/getRoleBySchoolNameAndEmail', getRoleBySchoolNameAndEmail);                                  // ✅ get role by school name and email
 app.post('/initial/teacher/getTeacherInitialBySchoolNameAndEmail', getTeacherInitialBySchoolNameAndEmail);      // ✅ get teacher data by school name and teacher email
 app.post('/initial/driver/getDriverInitialBySchoolNameAndEmail', getDriverInitialBySchoolNameAndEmail);         // ✅ get driver data by school name and driver email
 app.post('/initial/parent/getParentInitialBySchoolNameAndEmail', getParentInitialBySchoolNameAndEmail);         // ✅ get student data by school name and parent email
-
-
-// school
-app.post('/school/getSchool', getSchool);                                                                       // ✅ get all school data
-app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                               // ✅ get school data by school name
 
 
 // announcement
@@ -113,12 +113,16 @@ app.post('/storage/downloadStorageFile', downloadStorageFile);                  
 
 
 
-// Main Task
+// Main Task 
 // - signIn 
 
 // Secondary Task
-// - createVisitorCard img
+// - createVisitorCard img (ยาก)
 
+
+// not confirm
+// - get role then get data (2 API) -> get data by school name and email (1 API) ???
+// - get room data (including schedule) schedule can it be used immediately ???
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

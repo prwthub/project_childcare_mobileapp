@@ -25,22 +25,28 @@ exports.createParentCard = async (req, res) => {
         const cardRef = schoolDocRef.collection('card');
 
         // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
-        const id = Date.now().toString() + Math.floor(Math.random() * 1000);
+        const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
+        let id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
+
+        const cardQuerySnapshot = await cardRef.where('card-Id', '==', id).get();
+        if (!cardQuerySnapshot.empty) {
+            id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
+        } // not sure
+
         const time = new Date().toISOString();
         const formattedCreateDate = formatDate(time);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
         await cardRef.add({
-            ["card-Id"]     : id,
+            ["card-ID"]     : id,
             ["card-type"]   : "parent",
             ["parent-email"]: parentEmail,
             ["parent-name"] : parentName,
-            ["student-id"]  : studentId,
+            ["student-ID"]  : studentId,
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : "none",
         });
 
-        // ส่งคำตอบกลับไปยัง client
         res.status(201).send("Parent card created successfully");
     } catch (error) {
         console.error("Error creating parent card: ", error);
@@ -67,7 +73,14 @@ exports.createVisitorCard = async (req, res) => {
         const cardRef = schoolDocRef.collection('card');
 
         // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
-        const id = Date.now().toString() + Math.floor(Math.random() * 1000);
+        const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
+        const id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
+
+        const cardQuerySnapshot = await cardRef.where('visitor-name', '==', vistorName).get();
+        if (!cardQuerySnapshot.empty) {
+            return res.status(400).json({ error: "Visitor card already exists" });
+        }
+
         const createTime = new Date();
         const formattedCreateDate = formatDate(createTime.toISOString());
         const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
@@ -75,17 +88,16 @@ exports.createVisitorCard = async (req, res) => {
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
         await cardRef.add({
-            ["card-Id"]     : id,
+            ["card-ID"]     : id,
             ["card-type"]   : "visitor",
             ["visitor-name"] : vistorName,
             ["parent-email"]: parentEmail,
             ["parent-name"] : parentName,
-            ["student-id"]  : studentId,
+            ["student-ID"]  : studentId,
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : formattedExpireDate,
         });
 
-        // ส่งคำตอบกลับไปยัง client
         res.status(201).send("Visitor card created successfully");
     } catch (error) {
         console.error("Error creating visitor card: ", error);
@@ -153,7 +165,8 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
 
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const cardRef = schoolDocRef.collection('card');
-        const cardQuerySnapshot = await cardRef.where('card-Id', '==', cardId).get();
+        const cardQuerySnapshot = await cardRef.where('card-ID', '==', cardId).get();
+
 
         if (cardQuerySnapshot.empty) {
             return res.status(404).json({ error: "Card not found" });
@@ -164,8 +177,27 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
             ...doc.data()
         }));
 
-        console.log(cardData);
-        return res.status(200).json(cardData);
+        const studentId = cardData[0]["student-ID"].split(',');
+
+        const studentRef = schoolDocRef.collection('student');
+        const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
+        
+        const studentListRef = studentQuerySnapshot.docs[0].ref;
+        const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
+
+        let studentData = [];
+        studentListQuerySnapshot.forEach(doc => {
+            studentId.forEach(id => {
+                if (doc.data()['student-ID'] == id) {
+                    studentData.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                }
+            });
+        });
+
+        return res.status(200).json({ cardData, studentData });
     } catch (error) {
         console.error("Error getting card by cardId:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -214,7 +246,11 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         });
         await Promise.all(deletePromises);
 
-        return res.status(200).json(expiredCards);
+        if (expiredCards.length === 0) {
+            return res.status(404).json({ error: "No expired cards found" });
+        } else {
+            return res.status(200).json({ message: "Expired cards deleted successfully" });
+        }
     } catch (error) {
         console.error("Error checking expire date:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });

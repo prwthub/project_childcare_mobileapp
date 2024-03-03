@@ -46,7 +46,11 @@ exports.getStudentBySchoolName = async (req, res) => {
             });
         });
 
-        return res.status(200).json(studentData);
+        if (studentData.length === 0) {
+            return res.status(404).json({ error: "No students found" });
+        } else {
+            return res.status(200).json(studentData);
+        }
     } catch (error) {
         console.error("Error retrieving students:", error);
         return res.status(500).json({ error: "Internal server error" });
@@ -76,6 +80,10 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
         // Query students by room == studentRoom
         const studentsQuerySnapshot = await studentsRef.where('room', '==', studentRoom).get();
 
+        if (studentsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Room not found" });
+        }
+
         // Array to store promises of student data retrieval
         const studentDataPromises = [];
 
@@ -103,7 +111,11 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
             });
         });
 
-        return res.status(200).json(studentData);
+        if (studentData.length === 0) {
+            return res.status(404).json({ error: "No students found" });
+        } else {
+            return res.status(200).json(studentData);
+        }
     } catch (error) {
         console.error("Error retrieving students:", error);
         return res.status(500).json({ error: "Internal server error" });
@@ -142,7 +154,11 @@ exports.getRoomBySchoolName = async (req, res) => {
             }
         });
 
-        return res.status(200).json(room.sort());
+        if (room.length === 0) {
+            return res.status(404).json({ error: "No rooms found" });
+        } else {
+            return res.status(200).json(room.sort());
+        }
     } catch (error) {
         console.error("Error getting room by school and room:", error);
         return res.status(500).json({ error: "Something went wrong, please try again" });
@@ -180,7 +196,7 @@ exports.getRoomBySchoolNameAndRoom = async (req, res) => {
             id: doc.id,
             ...doc.data()
         }));
-        console.log(roomData);
+        
         return res.status(200).json(roomData);
     } catch (error) {
         console.error("Error getting room by school and room:", error);
@@ -193,8 +209,7 @@ exports.getRoomBySchoolNameAndRoom = async (req, res) => {
 // ?? get Schedule by ( schoolName, studentRoom )
 exports.getScheduleBySchoolNameAndRoom = async (req, res) => {
     const { schoolName, studentRoom } = req.body;
-    const [font, back] = studentRoom.split("-");
-
+    const [font, back] = studentRoom.split("/");
     try {
         const folderPath = "school/" + schoolName + "/" + "year" + font + "/" + "student_" + font + "-" + back + "/" + ".jpg";
         const storageRef = ref(storage, folderPath);
