@@ -1,18 +1,19 @@
 const { db, admin } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
-// ✅ get role by ( schoolName, email )
+// ✅🔒✉️ get role by ( schoolName, email )
 exports.getRoleBySchoolNameAndEmail = async (req, res) => {
     const { schoolName, email } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
     try {
-        // ใช้ Firebase Admin SDK เพื่อยืนยัน token
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        // หาก token ถูกยืนยันแล้ว คุณสามารถใช้ข้อมูลใน decodedToken ได้ตามต้องการ
-        // เช่น คุณสามารถใช้ decodedToken.uid เพื่อระบุผู้ใช้งานได้
-        console.log("Verified token:", decodedToken);
-        // ทำสิ่งที่คุณต้องการหลังจากยืนยัน token เรียบร้อยแล้ว
+        // check token
+        const valid = await checkToken(token, schoolName);
+        const validEmail = await checkEmail(email, valid.user.email);
+        if (!valid.validToken || !validEmail) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
 
         // Get reference to the school document
         const schoolsRef = db.collection('school');
@@ -96,10 +97,20 @@ exports.getRoleBySchoolNameAndEmail = async (req, res) => {
 
 
 
-// ✅ get initial data for teacher by ( schoolName, teacherEmail )
+// ✅🔒✉️ get initial data for teacher by ( schoolName, teacherEmail )
 exports.getTeacherInitialBySchoolNameAndEmail = async (req, res) => {
     const { schoolName, teacherEmail } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        const validEmail = await checkEmail(teacherEmail, valid.user.email);
+        if (!valid.validToken || !validEmail) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -133,10 +144,20 @@ exports.getTeacherInitialBySchoolNameAndEmail = async (req, res) => {
 
 
 
-// ✅ get initial data for driver by ( schoolName, driverEmail )
+// ✅🔒✉️ get initial data for driver by ( schoolName, driverEmail )
 exports.getDriverInitialBySchoolNameAndEmail = async (req, res) => {
     const { schoolName, driverEmail } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        const validEmail = await checkEmail(driverEmail, valid.user.email);
+        if (!valid.validToken || !validEmail) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -170,10 +191,20 @@ exports.getDriverInitialBySchoolNameAndEmail = async (req, res) => {
 
 
 
-// ✅ get initial data for parent by ( schoolName, parentEmail )
+// ✅🔒✉️ get initial data for parent by ( schoolName, parentEmail )
 exports.getParentInitialBySchoolNameAndEmail = async (req, res) => {
     const { schoolName, parentEmail } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        const validEmail = await checkEmail(parentEmail, valid.user.email);
+        if (!valid.validToken || !validEmail) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();

@@ -1,18 +1,20 @@
 const { db } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
-// Function to format date
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
-};
-
-// ✅ create a new parent card
+// ✅🔒✉️ create a new parent card
 exports.createParentCard = async (req, res) => {
     const { schoolName, parentEmail, parentName, studentId } = req.body;
 
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        const validEmail = await checkEmail(parentEmail, valid.user.email);
+        if (!valid.validToken || !validEmail) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -28,12 +30,12 @@ exports.createParentCard = async (req, res) => {
         const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
         let id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
 
-        const cardQuerySnapshot = await cardRef.where('card-Id', '==', id).get();
+        const cardQuerySnapshot = await cardRef.where('parent-email', '==', parentEmail).get();
         if (!cardQuerySnapshot.empty) {
-            id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
+            return res.status(400).json({ error: "Parent card already exists" });
         } // not sure
 
-        const time = new Date().toISOString();
+        const time = new Date();
         const formattedCreateDate = formatDate(time);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
@@ -56,11 +58,20 @@ exports.createParentCard = async (req, res) => {
 
 
 
-// ✅ create a new visitor card
+// ✅🔒✉️ create a new visitor card
 exports.createVisitorCard = async (req, res) => {
     const { schoolName, vistorName ,parentEmail, parentName, studentId } = req.body;
 
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        const validEmail = await checkEmail(parentEmail, valid.user.email);
+        if (!valid.validToken || !validEmail) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -82,9 +93,9 @@ exports.createVisitorCard = async (req, res) => {
         }
 
         const createTime = new Date();
-        const formattedCreateDate = formatDate(createTime.toISOString());
-        const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
-        const formattedExpireDate = formatDate(expireTime.toISOString());
+        const formattedCreateDate = formatDate(createTime);
+        const expireTime = new Date(createTime.getTime() - (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
+        const formattedExpireDate = formatDate(expireTime);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
         await cardRef.add({
@@ -107,11 +118,19 @@ exports.createVisitorCard = async (req, res) => {
 
 
 
-// ✅ get card by ( schoolName, cardType )
+// ✅🔒 get card by ( schoolName, cardType )
 exports.getCardBySchoolNameAndCardType = async (req, res) => {
     const { schoolName, cardType } = req.body;
 
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
 
@@ -151,11 +170,19 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
 
 
 
-// ✅ get card by ( schoolName, cardId )
+// ✅🔒 get card by ( schoolName, cardId )
 exports.getCardBySchoolNameAndCardId = async (req, res) => {
     const { schoolName, cardId } = req.body;
 
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
 
@@ -206,11 +233,19 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
 
 
 
-// ✅ delete expire card by ( schoolName )
+// ✅🔒 delete expire card by ( schoolName )
 exports.deleteExpireCardBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
 
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
 
@@ -225,7 +260,7 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         let expiredCards = [];
 
         let currentTime = new Date();
-        let formattedCurrentDate = formatDate(currentTime.toISOString());
+        let formattedCurrentDate = formatDate(currentTime);
 
         // เก็บ ID ของบัตรที่หมดอายุ
         cardQuerySnapshot.forEach(doc => {
@@ -247,9 +282,9 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         await Promise.all(deletePromises);
 
         if (expiredCards.length === 0) {
-            return res.status(404).json({ error: "No expired cards found" });
+            return res.status(404).json({ error: "No expired cards found"});
         } else {
-            return res.status(200).json({ message: "Expired cards deleted successfully" });
+            return res.status(200).json({ message: "Expired cards deleted successfully", expiredCards });
         }
     } catch (error) {
         console.error("Error checking expire date:", error);

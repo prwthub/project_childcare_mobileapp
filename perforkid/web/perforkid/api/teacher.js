@@ -1,9 +1,19 @@
 const { db } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
-// ✅ get teachers by ( schoolName )
+// ✅🔒 get teachers by ( schoolName )
 exports.getTeacherBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
+   
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -38,10 +48,19 @@ exports.getTeacherBySchoolName = async (req, res) => {
 
 
 
-// ✅ get teachers by ( schoolName, teacherEmail )
+// ✅🔒 get teachers by ( schoolName, teacherEmail )
 exports.getTeacherBySchoolNameAndTeacherEmail = async (req, res) => {
     const { schoolName, teacherEmail } = req.body;
+   
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -79,10 +98,19 @@ exports.getTeacherBySchoolNameAndTeacherEmail = async (req, res) => {
 
 
 
-// ✅ get teachers by ( schoolName, teacherId )
+// ✅🔒 get teachers by ( schoolName, teacherId )
 exports.getTeacherBySchoolNameAndTeacherId = async (req, res) => {
     const { schoolName, teacherId } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -120,12 +148,19 @@ exports.getTeacherBySchoolNameAndTeacherId = async (req, res) => {
 
 
 
-// ✅ get teachers by ( schoolName, classRoom )
+// ✅🔒 get teachers by ( schoolName, classRoom )
 exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
     const { schoolName, classRoom } = req.body;
-    // const [font, back] = classRoom.split("-");
-    // var newClassRoom = font + "/" + back;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -169,12 +204,19 @@ exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
 
 
 
-// ✅ get teachers by ( schoolName, teachingRoom )
+// ✅🔒 get teachers by ( schoolName, teachingRoom )
 exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
     const { schoolName, teachingRoom } = req.body;
-    // const [font, back] = teachingRoom.split("-");
-    // var newTeachingRoom = font + "/" + back;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();

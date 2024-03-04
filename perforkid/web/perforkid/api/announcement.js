@@ -1,16 +1,19 @@
 const { db } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
-// Function to format date
-const formatDate = (dateString) => {
-    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const formattedDate = dateString.toLocaleDateString('en-US', options);
-    return formattedDate;
-};
-
-// ✅ get announcement by ( schoolName )
+// ✅🔒 get announcement by ( schoolName )
 exports.getAnnouncementBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
+   
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -51,10 +54,19 @@ exports.getAnnouncementBySchoolName = async (req, res) => {
 
 
 
-// ✅ get announcement by ( schoolName, Id )
+// ✅🔒 get announcement by ( schoolName, Id )
 exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
     const { schoolName, id } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();

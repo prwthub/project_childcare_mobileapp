@@ -1,9 +1,19 @@
 const { db } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
-// ✅ get StudentCar by ( schoolName )
+// ✅🔒 get StudentCar by ( schoolName )
 exports.getStudentCarBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -59,10 +69,19 @@ exports.getStudentCarBySchoolName = async (req, res) => {
 
 
 
-// ✅ get StudentCar by ( schoolName, carNumber )
+// ✅🔒 get StudentCar by ( schoolName, carNumber )
 exports.getStudentCarBySchoolNameAndCarNumber = async (req, res) => {
     const { schoolName, carNumber } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -122,10 +141,19 @@ exports.getStudentCarBySchoolNameAndCarNumber = async (req, res) => {
 
 
 
-// ✅ get StudentCar by ( schoolName, studentRoom )
+// ✅🔒 get StudentCar by ( schoolName, studentRoom )
 exports.getStudentCarBySchoolNameAndRoom = async (req, res) => {
     const { schoolName, studentRoom } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -184,7 +212,16 @@ exports.getStudentCarBySchoolNameAndRoom = async (req, res) => {
 // get studentCar by ( schoolName, studentId )
 exports.getStudentCarBySchoolNameAndId = async (req, res) => {
     const { schoolName, studentId } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -226,12 +263,21 @@ exports.getStudentCarBySchoolNameAndId = async (req, res) => {
 
 
 
-// ✅ update studentCar status by ( schoolName, studentId, goStatus, backStatus )
+// ✅🔒 update studentCar status by ( schoolName, studentId, goStatus, backStatus )
 exports.updateStudentCarStatusBySchoolNameAndId = async (req, res) => {
     const { schoolName, studentId, goStatus, backStatus } = req.body;
     let allUpdate = false;
     let carUpdate = false;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -308,10 +354,19 @@ exports.updateStudentCarStatusBySchoolNameAndId = async (req, res) => {
 
 
 
-// ✅ get Car by ( schoolName, carNumber )
+// ✅🔒 get Car by ( schoolName, carNumber )
 exports.getCarBySchoolNameAndCarNumber = async (req, res) => {
     const { schoolName, carNumber } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();

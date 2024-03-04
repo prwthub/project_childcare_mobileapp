@@ -1,4 +1,5 @@
 const { db, admin } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
 // ✅ get School ( no req )
 exports.getSchool = async (req, res) => {
@@ -17,21 +18,22 @@ exports.getSchool = async (req, res) => {
     }
 };
 
-// ✅ get School by ( schoolName )
+
+
+// ✅🔒 get School by ( schoolName )
 exports.getSchoolBySchoolName = async (req, res) => {
     const { schoolName } = req.body; 
-
+    
     // Check for token in headers
     const token = req.headers.authorization;
     try {
-        // ใช้ Firebase Admin SDK เพื่อยืนยัน token
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        // หาก token ถูกยืนยันแล้ว คุณสามารถใช้ข้อมูลใน decodedToken ได้ตามต้องการ
-        // เช่น คุณสามารถใช้ decodedToken.uid เพื่อระบุผู้ใช้งานได้
-        console.log("Verified token:", decodedToken);
-        // ทำสิ่งที่คุณต้องการหลังจากยืนยัน token เรียบร้อยแล้ว
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
 
-        // Proceed with your logic
+        // get school by school name
         const schoolsRef = db.collection('school');
         const querySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
 

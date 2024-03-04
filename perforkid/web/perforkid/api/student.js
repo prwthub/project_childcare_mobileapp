@@ -1,9 +1,19 @@
 const { db } = require("../util/admin.js");
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 
-// ✅ get Student by ( schoolName )
+// ✅🔒 get Student by ( schoolName )
 exports.getStudentBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -59,12 +69,19 @@ exports.getStudentBySchoolName = async (req, res) => {
 
 
 
-// ✅ get Student by ( schoolName, studentRoom )
+// ✅🔒 get Student by ( schoolName, studentRoom )
 exports.getStudentBySchoolNameAndRoom = async (req, res) => {
     const { schoolName, studentRoom } = req.body;
-    // const [font, back] = studentRoom.split("-");
-    // var newStudentRoom = font + "/" + back;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+        
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -124,10 +141,19 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
 
 
 
-// get all Room by ( schoolName )
+// ✅🔒 get all Room by ( schoolName )
 exports.getRoomBySchoolName = async (req, res) => {
     const { schoolName } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+        
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -167,12 +193,19 @@ exports.getRoomBySchoolName = async (req, res) => {
 
 
 
-// ✅ get Room by ( schoolName, studentRoom )
+// ✅🔒 get Room by ( schoolName, studentRoom )
 exports.getRoomBySchoolNameAndRoom = async (req, res) => {
     const { schoolName, studentRoom } = req.body;
-    // const [font, back] = studentRoom.split("-");
-    // var newStudentRoom = font + "/" + back;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+        
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -210,7 +243,16 @@ exports.getRoomBySchoolNameAndRoom = async (req, res) => {
 exports.getScheduleBySchoolNameAndRoom = async (req, res) => {
     const { schoolName, studentRoom } = req.body;
     const [font, back] = studentRoom.split("/");
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
     try {
+        // check token
+        const valid = await checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+        
         const folderPath = "school/" + schoolName + "/" + "year" + font + "/" + "student_" + font + "-" + back + "/" + ".jpg";
         const storageRef = ref(storage, folderPath);
         const files = await listAll(storageRef);
