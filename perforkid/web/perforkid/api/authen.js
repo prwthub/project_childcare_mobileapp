@@ -47,8 +47,13 @@ exports.signIn = async (req, res) => {
 
 // ✅ sign up
 exports.signUp = async (req, res) => {
-    const { email, password, schoolName } = req.body;
+    const { schoolName, schoolCode, email, password, passwordConf } = req.body;
     try {
+        // check password and confirm password
+        if (password !== passwordConf) {
+            return res.status(400).json({ error: "Password and confirm password do not match" });
+        }
+
         // check password format
         if (password.length < 8) {
             return res.status(400).json({ error: "Password should be at least 8 characters" });
@@ -69,6 +74,12 @@ exports.signUp = async (req, res) => {
             return res.status(404).json({ error: "School not found" });
         }
 
+        // check school code
+        schoolData = schoolQuerySnapshot.docs[0].data();
+        if (schoolData['school-code'] !== schoolCode) {
+            return res.status(400).json({ error: "School code is incorrect" });
+        }
+
         // Get reference to the students subcollection
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const teachersRef = schoolDocRef.collection('teacher');
@@ -77,6 +88,7 @@ exports.signUp = async (req, res) => {
 
         let found = false;
         let role = '';
+        let username = 'username';
 
         // Query teachers by email
         if (!found) {
@@ -85,6 +97,7 @@ exports.signUp = async (req, res) => {
                 if (doc.data().email === email) {
                     found = true;
                     role = "teacher";
+                    username = doc.data()['name-surname'];
                 }
             });
         }
@@ -96,6 +109,7 @@ exports.signUp = async (req, res) => {
                 if (doc.data().email === email) {
                     found = true;
                     role = "driver";
+                    username = doc.data()['name-surname'];
                 }
             });
         }
@@ -121,9 +135,16 @@ exports.signUp = async (req, res) => {
                 snapshot.forEach(doc => {
                     const studentInfo = doc.data();
                     // Filtering based on parent's email
-                    if (studentInfo['father-email'] == email || studentInfo['mother-email'] == email) {
+                    if (studentInfo['father-email'] == email) {
                         found = true;
                         role = "parent";
+                        username = studentInfo['father-name'];
+                    } else if (studentInfo['mother-email'] == email) {
+                        found = true;
+                        role = "parent";
+                        username = studentInfo['mother-name'];
+                    } else {
+
                     }
                 });
             });
@@ -142,6 +163,7 @@ exports.signUp = async (req, res) => {
         // เพิ่มข้อมูลเพิ่มเติมของผู้ใช้ลงใน Firestore
         let date = new Date();
         await usersRef.doc(user.uid).set({
+            username : username,
             email,
             schoolName,
             role,
