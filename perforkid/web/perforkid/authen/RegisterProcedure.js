@@ -1,6 +1,6 @@
 import * as FirebaseAPI from "../firebaseConfig/FirebaseAPI.js";
 
-// Register Procudure. Import Firebase tools as usual
+
 const db = FirebaseAPI.getFirestore();
 const schoolsRef = FirebaseAPI.collection(db, 'school')
 const adminRef = FirebaseAPI.collection(db, 'admin')
@@ -8,7 +8,8 @@ const auth = FirebaseAPI.getAuth();
 
 const registerForm = document.getElementById('registerSubbed'); // Register button from AdminRegister.html
 
-registerForm.addEventListener('submit', async (e) => { // Wait for form Submit, then proceed. 
+
+registerForm.addEventListener('submit', async (e) => { 
     e.preventDefault(); 
     console.log("Register Button clicked");
     const email = document.getElementById('username_or_email').value;
@@ -23,11 +24,12 @@ registerForm.addEventListener('submit', async (e) => { // Wait for form Submit, 
         return;
     }
 
-    // Input boxes logic check. Name is very straightforward.
+    // check school name and code
     const q = FirebaseAPI.query(schoolsRef, FirebaseAPI.where("school-name", "==", schoolName), FirebaseAPI.where("school-admin-code", "==", schoolAdminCode));
     const querySnapshot = await FirebaseAPI.getDocs(q);
     console.log(querySnapshot);
 
+    // check email admin is already registered by super admin
     const emailq = FirebaseAPI.query(adminRef, FirebaseAPI.where("email", "==", email), FirebaseAPI.where("school_name", "==", schoolName));
     const emailqSnapshot = await FirebaseAPI.getDocs(emailq);
     console.log(emailqSnapshot);
@@ -42,6 +44,7 @@ registerForm.addEventListener('submit', async (e) => { // Wait for form Submit, 
         return;
     }
 
+    // if have data in admin collection then create user
     // Create User with Email and Password to Firebase Authentication
     try {
         const userCredential = await FirebaseAPI.createUserWithEmailAndPassword(auth, email, password);
@@ -51,7 +54,7 @@ registerForm.addEventListener('submit', async (e) => { // Wait for form Submit, 
         alert('Registration Successful!');
         window.location.href = '../AdminLanding.html'; // Redirects
 
-    } catch (error) { // Error Handling
+    } catch (error) { 
         console.error(error.message);
         alert('Registration Failed. Please try again.');
     }

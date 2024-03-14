@@ -62,9 +62,12 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     sessionStorage.setItem('currentUser', currentUserData);
 
     // If the login is successful, userCredential.user will contain the authenticated user details.
-    console.log('status : Login successful!', userCredential.user); 
+    console.log('status : Login successful!'); 
+
     // If the login is successful, show currentUser.
-    console.log('currentUser : ', currentUser.email, currentUser.school_name);
+    console.log('email : ', currentUser.email);
+    console.log('school : ', currentUser.school_name);
+    console.log('role : ', currentUser.role);
     console.log('logged in : ', currentUser.loggedin);
     
     alert('Login successful!');

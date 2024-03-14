@@ -62,18 +62,9 @@
 
 <body>
 
-    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
-    <script type="module">
-        // Initialize Firebase
-        import { firebaseConfig, app, storage, ref, listAll, getMetadata, getDownloadURL, getFirestore, collection, addDoc, uploadBytes }
-            from "./firebaseConfig/FirebaseAPI.js";
-        firebase.initializeApp(firebaseConfig);
-    </script>
-
     <div class=container>
+
         <div class="d-flex justify-content-center align-items-center mb-1 pb-1">
-            <i class="fas fa-cubes fa-2x me-1" style="color: #ff6219;"></i>
             <img src="./picture/Logo_1.png" alt="login form" class="img-fluid responsiveImagelogo"
                 style="border-radius: 1rem 0 0 1rem;" />
         </div>
@@ -84,20 +75,19 @@
                     <b>Register your account</b>
                 </h3>
 
-                <!-- <form id="registerSubbed"> -->
                 <input type="text" name="username_or_email" class="form-control" id="username_or_email"
                     class="form-control form-control-lg" required placeholder='email'>
             </div>
 
             <div class="input-group form-outline mb-3">
                 <input type="password" name="firstPwd" class="form-control" id="pwd"
-                    class="form-control form-control-lg" required placeholder='Password'>
+                    class="form-control form-control-lg" required placeholder='password'>
 
             </div>
 
             <div class="input-group form-outline mb-3">
                 <input type="password" name="confirmPwd" class="form-control" id="repwd"
-                    class="form-control form-control-lg" required placeholder='Re-enter Password'>
+                    class="form-control form-control-lg" required placeholder='re-enter password'>
                 <span class="input-group-text" onclick="password_show_hide();">
                     <i class="bi bi-eye-fill" id="show_eye2"></i>
                     <i class="bi bi-eye-slash-fill d-none" id="hide_eye2"></i>
@@ -112,7 +102,7 @@
 
             <div class="form-outline mb-3">
                 <input type="text" name="school_admin_code" class="form-control" id="school_admin_code"
-                    class="form-control form-control-lg" required placeholder='Enter School code (xxxxxxxx)'>
+                    class="form-control form-control-lg" required placeholder='enter school code (xxxxxxxx)'>
             </div>
 
             <div class="pt-1 mb-4">
@@ -122,15 +112,12 @@
             </div>
 
         </form>
-        <div class="pt-1 mb-4">
-            <center>
-                <br><br>
-                มีบัญชีแล้ว <a href="./AdminLanding.html">กลับไปหน้าเข้าสู่ระบบ</a>
-                <!-- <a href="./AdminRegister.html" class="btn btn-success">Register</a> -->
-            </center>
+
+        <div class="pt-1 mb-4" style="text-align: center;">
+            <br><br>
+            มีบัญชีแล้ว <a href="./AdminLanding.html">กลับไปหน้าเข้าสู่ระบบ</a>
         </div>
 
-    </div>
     </div>
 
 </body>

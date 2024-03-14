@@ -14,34 +14,13 @@
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
     crossorigin="anonymous"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
-  <script type="module">
-    // Initialize Firebase
-    import {
-      firebaseConfig,
-      app,
-      storage,
-      ref,
-      listAll,
-      getMetadata,
-      getDownloadURL,
-      getFirestore,
-      collection,
-      addDoc,
-      uploadBytes,
-      getDocs,
-      query,
-      where,
-    } from "./firebaseConfig/FirebaseAPI.js";
-    firebase.initializeApp(firebaseConfig);
-  </script>
-
   <script>
     function password_show_hide() {
       let x = document.getElementById("pwd");
+
       let show_eye = document.getElementById("show_eye"); //Icon
       let hide_eye = document.getElementById("hide_eye"); //Icon
+      
       hide_eye.classList.remove("d-none");
       // check data check type better than ==
       // password -> text
@@ -77,9 +56,9 @@
 </style>
 
 <body>
+
   <div class="container">
     <div class="d-flex justify-content-center align-items-center mb-1 pb-1">
-      <i class="fas fa-cubes fa-2x me-1" style="color: #ff6219"></i>
       <img src="./picture/Logo_1.png" alt="login form" class="img-fluid responsiveImagelogo"
         style="border-radius: 1rem 0 0 1rem" />
     </div>
@@ -102,23 +81,20 @@
       </span>
     </div>
 
-    <div class="pt-1 mb-4">
+    <div class="pt-1 mb-4 d-flex justify-content-center">
       <script type="module" src="./authen/LoginFirebaseAuthen.js"></script>
-      <center>
-        <button id="loginBtn" class="btn btn-dark btn-lg btn-block" type="button">
-          Login
-        </button>
-      </center>
+      <button id="loginBtn" class="btn btn-dark btn-lg btn-block" type="button">
+        Login
+      </button>
     </div>
 
-    <div class="pt-1 mb-4">
-      <center>
-        <br /><br />
+    <br /><br />
+    <div class="pt-1 mb-4" style="text-align: center;">
         ยังไม่มีบัญชี <a href="./AdminRegister.html">สร้างบัญชี</a>
-        <!-- <a href="./AdminRegister.html" class="btn btn-success">Register</a> -->
-      </center>
     </div>
+
   </div>
+
 </body>
 
 </html>
