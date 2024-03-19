@@ -42,4 +42,17 @@ async function fetchSchoolData() {
     }
 }
 
-fetchSchoolData();
+fetchSchoolData().then(() => {
+    const currentSchoolNameTH = document.getElementById("schoolTitleTh").textContent;
+    const currentSchoolNameEN = document.getElementById("schoolTitleEn").textContent;
+    document.getElementById("schoolTitleThEdit").setAttribute("placeholder", currentSchoolNameTH);
+    document.getElementById("schoolTitleEnEdit").setAttribute("placeholder", currentSchoolNameEN);
+
+    const currentSchoolDescriptionTH = document.getElementById("schoolDescriptionTh").textContent;
+    const currentSchoolDescriptionEN = document.getElementById("schoolDescriptionEn").textContent;
+    document.getElementById("schoolDescriptionThEdit").setAttribute("placeholder", currentSchoolDescriptionTH);
+    document.getElementById("schoolDescriptionEnEdit").setAttribute("placeholder", currentSchoolDescriptionEN);
+
+    const currentSchoolWebsite = document.getElementById("schoolWebsite").textContent;
+    document.getElementById("schoolWebsiteEdit").setAttribute("placeholder", currentSchoolWebsite);
+});

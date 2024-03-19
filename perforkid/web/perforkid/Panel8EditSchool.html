@@ -45,19 +45,19 @@
 
 <style>
     #schoolBanner img {
-        max-width: 1325px;
+        width: 1000px;
         height: auto;
-        border-style: solid; /* กำหนดลักษณะของเส้นขอบ */
-        border-width: 4px; /* กำหนดความหนาของเส้นขอบ */
-        border-color: black; /* กำหนดสีของเส้นขอบ */
+        border-style: solid; 
+        border-width: 4px; 
+        border-color: black; 
     }
 
     #schoolImage img {
-        max-height: 300px;
+        height: 250px;
         width: auto;
-        border-style: solid; /* กำหนดลักษณะของเส้นขอบ */
-        border-width: 4px; /* กำหนดความหนาของเส้นขอบ */
-        border-color: black; /* กำหนดสีของเส้นขอบ */
+        border-style: solid; 
+        border-width: 4px;
+        border-color: black;
     }
     
 
@@ -68,17 +68,16 @@
     #schoolDescriptionEn,
     #schoolWebsite {
         margin-top: 10px;
-        padding: 20px; /* ระยะห่างขอบ */
-        background-color: #DCD9DB; /* สีพื้นหลัง */
-        border-radius: 10px; /* รูปทรงของกล่อง */
+        padding: 20px; 
+        background-color: #DCD9DB;
+        border-radius: 10px; 
     }
 
     #detail {
         margin-top: 10px;
-        padding: 20px; /* ระยะห่างขอบ */
-        border-radius: 10px; /* รูปทรงของกล่อง */
+        padding: 20px; 
+        border-radius: 10px;
     }
-
 </style>
 
 <body>
@@ -111,7 +110,6 @@
                     import * as FirebaseAPI from "../../firebaseConfig/FirebaseAPI.js";
                     firebase.initializeApp(FirebaseAPI.firebaseConfig);
                     import currentUser from './module/user/currentUser.js';
-                    /* import * as SchoolDetailEditor from './module/manage/ManagerSchoolEdit.js'; */
 
                     const storedUser = sessionStorage.getItem('currentUser');
 
@@ -129,56 +127,15 @@
                     if (currentUser.loggedin == 'no') {
                         window.location.href = "./AdminLanding.html";
                     }
-
-                    /*
-                    SchoolDetailEditor.loadSchoolInfo();
-                    SchoolDetailEditor.setupImagePreview('bannerInputEdit', 'bannerPreviewEdit', 'schoolEditForm');
-                    SchoolDetailEditor.setupImagePreview('imageInputEdit', 'imagePreviewEdit', 'schoolEditForm');
-
-                    document.getElementById("StartEditBtn").addEventListener('click', function () {
-                        try {
-                            SchoolDetailEditor.editSchoolInfo();
-                        } catch (error) {
-                            console.error('Failed to start edit school information', error)
-                        }
-                    })
-
-                    document.getElementById("cancelAddBtn").addEventListener('click', function (e) {
-                        try {
-                            e.preventDefault();
-                            SchoolDetailEditor.cancelSchoolInfoChange();
-                            console.log("You clicked cancel changes!");
-                        } catch (error) {
-                            console.error('School edit form cancellation failed', error);
-                        }
-                    });
-
-                    document.getElementById("submitAddBtn").addEventListener('click', async function (e) {
-                        if (confirm("Are you sure you want to submit the form?")) {
-                            e.preventDefault();
-                            SchoolDetailEditor.submitSchoolInfo()
-                                .then(() => {
-                                    console.log("You clicked the async function");
-                                })
-                                .catch(error => {
-                                    console.log('Async function failed to execute, ', error);
-                                });
-                        } else {
-                            // Handle cancellation if needed
-                        }
-                    });
-                    */
                 </script>
 
                 <div class="divider"></div>
-                <!-- <script src="./module/user/userDataKeeper.js" type="module"></script> -->
 
                 <!-- Show current school's information-->
                 <div class="row" id="view" style="display: block">
                     <div class="col-12">
                         <div class="pt-3 ">
                             <div class="" id="schoolBanner"></div>
-                            <!-- <img id="schoolBanner" src="" alt=""> -->
                         </div>
 
                         <br><br>
@@ -186,14 +143,13 @@
                             <div class="row">
                                 <div class="col-3">
                                     <div class="" id="schoolImage"></div>
-                                    <!-- <img id="schoolImage" src="" alt=""> -->
                                 </div>
                                 <div class="col-9">
                                     <div class="row">
-                                        <div class="col-3" style="font-size: 24px;">
-                                            <div id="detail">school Name :</div>
-                                            <div id="detail">school Title Th :</div>
-                                            <div id="detail">school Title En :</div>
+                                        <div class="col-3" style="font-size: 22px; text-align: end;">
+                                            <div id="detail">School :</div>
+                                            <div id="detail">Title Th :</div>
+                                            <div id="detail">Title En :</div>
                                         </div>
                                         <div class="col-9" style="font-size: 24px;">
                                             <div id="schoolNameInitial"></div>
@@ -210,13 +166,13 @@
                         <br><br>
 
                         <div class="row" style="font-size: 24px;">
-                            schoolDescriptionTh :
+                            Description Th :
                             <div class="col-12" id="schoolDescriptionTh"></div>
                             <br>
-                            schoolDescriptionEn :
+                            Description En :
                             <div class="col-12" id="schoolDescriptionEn"></div>
                             <br>
-                            schoolWebsite :
+                            Website :
                             <div class="col-12" id="schoolWebsite"></div>
                         </div>
                         
@@ -227,19 +183,6 @@
                         
                     </div>
                 </div>
-
-                <form id="schoolEditForm2">
-                    <script type="module" src="module/manage/ManagerSchoolData.js"></script>
-                    <button type="button" onclick="hello()">press me</button>
-                </form>
-
-                <
-                <script>
-                    function hello() {
-                        console.log("Hello");
-                    }
-                </script>
-
 
                 <!-- ------------------------------------------ edit ------------------------------------------ -->
                 <div class="div" id="editOverlay" style="display: none">
@@ -252,9 +195,6 @@
                                     </label>
                                     <input type="file" class="form-control d-flex" id="bannerInputEdit"
                                         accept=".jpg, .jpeg, .png" multiple>
-                                    <!-- <div id="bannerPreviewEdit">
-                                        <img src="" alt="Banner Image">
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -269,9 +209,6 @@
                                     </label>
                                     <input type="file" class="form-control d-flex" id="imageInputEdit"
                                         accept=".jpg, .jpeg, .png" multiple>
-                                    <!-- <div id="imagePreviewEdit">
-                                        <img src="" alt="School Profile Image">
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -284,7 +221,7 @@
                                     <label class="m-1" for="schoolTitleTh">
                                         <h4>ชื่อโรงเรียน (ภาษาไทย)</h4>
                                     </label>
-                                    <input type="text" class="form-control-lg d-flex" id="schoolTitleThEdit" >
+                                    <input type="text" class="form-control-lg d-flex" id="schoolTitleThEdit" placeholder="...">
                                 </div>
                             </div>
                             <div class="col-6" style="padding-left: 5%;">
@@ -345,21 +282,11 @@
                             </button>
                         </div>
                     </form>
+                    <script type="module" src="module/manage/ManagerSchoolData.js"></script>
                 </div>
             </div>
-
-            <h3 id="schoolText"></h3>
-
-            <ul id="fileList"></ul>
-
-            <div id="announcementContainer"></div>
-
         </div>
-    </div>
     </div>
 </body>
 
 </html>
-
-
-<!-- here -->
