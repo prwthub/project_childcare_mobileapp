@@ -2,13 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase
 import {getStorage,ref,listAll,getMetadata,getDownloadURL,} from "https://www.gstatic.com/firebasejs/9.0.2/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
-  authDomain: "perforkid-application.firebaseapp.com",
-  projectId: "perforkid-application",
-  storageBucket: "perforkid-application.appspot.com",
-  messagingSenderId: "741346506533",
-  appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
-  measurementId: "G-TE2LC6M05D",
+    apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
+    authDomain: "perforkid-application.firebaseapp.com",
+    projectId: "perforkid-application",
+    storageBucket: "perforkid-application.appspot.com",
+    messagingSenderId: "741346506533",
+    appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
+    measurementId: "G-TE2LC6M05D",
 };
 
 const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
