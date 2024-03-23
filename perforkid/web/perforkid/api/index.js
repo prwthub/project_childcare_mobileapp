@@ -6,7 +6,8 @@ app.use(express.json());
 app.use(cors());
 
 const { signIn,
-        signUp } = require('./authen.js');
+        signUp,
+        signOut } = require('./authen.js');
 
 const { getSchool, 
         getSchoolBySchoolName } = require('./school.js');
@@ -54,7 +55,7 @@ const { listStorageFiles,
 // authen
 app.post('/authen/signIn', signIn);                                                                             // ✅ sign in and generate token
 app.post('/authen/signUp', signUp);                                                                             // ✅ sign up
-
+app.post('/authen/signOut', signOut);                                                                           // ✅ sign out and revoke token
 
 // school
 app.post('/school/getSchool', getSchool);                                                                       // ✅   get all school data

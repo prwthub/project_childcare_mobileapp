@@ -231,3 +231,22 @@ exports.signUp = async (req, res) => {
         return res.status(500).json({ error: "Failed to sign up user" });
     }
 };
+
+
+// sign out and revoke token
+exports.signOut = async (req, res) => {
+    const token = req.headers.authorization;
+    try {
+        // Get user id from token
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+
+        // Revoke token
+        await admin.auth().revokeRefreshTokens(uid);
+
+        return res.status(200).json({ message: "User signed out successfully", decodedToken });
+    } catch (error) {
+        console.error("Error signing out:", error);
+        return res.status(500).json({ error: "Failed to sign out" });
+    }
+};
