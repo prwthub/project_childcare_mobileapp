@@ -43,6 +43,9 @@ const { getStudentCarBySchoolName,
         updateStudentCarStatusBySchoolNameAndId,
         getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
 
+const { sendCarLocation,
+        getCarLocation } = require('./car.js');
+
 const { createParentCard,
         createVisitorCard,
         getCardBySchoolNameAndCardType,
@@ -104,6 +107,11 @@ app.post('/studentCar/getStudentCarBySchoolNameAndId', getStudentCarBySchoolName
 app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCarStatusBySchoolNameAndId);       // ✅🔒 update student car status by school name and id and status
 app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                                // ✅🔒 get car data by school name and car number
 // get car location (realtime database ???)                                                                     // ?? get car location by school name and car number                  
+
+
+// car location
+app.post('/car/sendCarLocation', sendCarLocation);                                                                    // ✅🔒 send car location to firebase realtime database
+app.post('/car/getCarLocation', getCarLocation);                                                                      // ✅🔒 get car location by schoolName and carNumber
 
 
 // card
