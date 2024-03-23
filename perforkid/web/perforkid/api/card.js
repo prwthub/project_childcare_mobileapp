@@ -3,7 +3,7 @@ const { formatDate, checkToken, checkEmail } = require("./function.js");
 
 // ✅🔒✉️ create a new parent card
 exports.createParentCard = async (req, res) => {
-    const { schoolName, parentEmail, parentName, studentId } = req.body;
+    const { schoolName, parentEmail, parentName, studentId, parentImage } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -26,14 +26,14 @@ exports.createParentCard = async (req, res) => {
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const cardRef = schoolDocRef.collection('card');
 
-        // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
-        const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
-        let id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
-
         const cardQuerySnapshot = await cardRef.where('parent-email', '==', parentEmail).get();
         if (!cardQuerySnapshot.empty) {
             return res.status(400).json({ error: "Parent card already exists" });
         } // not sure
+
+        // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
+        const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
+        let id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
 
         const time = new Date();
         const formattedCreateDate = formatDate(time);
@@ -47,6 +47,7 @@ exports.createParentCard = async (req, res) => {
             ["student-ID"]  : studentId,
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : "none",
+            ["parent-image"]: parentImage,
         });
 
         res.status(201).send("Parent card created successfully");
@@ -60,7 +61,7 @@ exports.createParentCard = async (req, res) => {
 
 // ✅🔒✉️ create a new visitor card
 exports.createVisitorCard = async (req, res) => {
-    const { schoolName, vistorName ,parentEmail, parentName, studentId } = req.body;
+    const { schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -83,30 +84,31 @@ exports.createVisitorCard = async (req, res) => {
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const cardRef = schoolDocRef.collection('card');
 
-        // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
-        const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
-        const id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
-
-        const cardQuerySnapshot = await cardRef.where('visitor-name', '==', vistorName).get();
+        const cardQuerySnapshot = await cardRef.where('visitor-name', '==', visitorName).get();
         if (!cardQuerySnapshot.empty) {
             return res.status(400).json({ error: "Visitor card already exists" });
         }
 
+        // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
+        const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
+        const id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
+
         const createTime = new Date();
         const formattedCreateDate = formatDate(createTime);
-        const expireTime = new Date(createTime.getTime() - (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
+        const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
         const formattedExpireDate = formatDate(expireTime);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
         await cardRef.add({
             ["card-ID"]     : id,
             ["card-type"]   : "visitor",
-            ["visitor-name"] : vistorName,
+            ["visitor-name"] : visitorName,
             ["parent-email"]: parentEmail,
             ["parent-name"] : parentName,
             ["student-ID"]  : studentId,
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : formattedExpireDate,
+            ["visitor-image"]: visitorImage,
         });
 
         res.status(201).send("Visitor card created successfully");
@@ -154,9 +156,10 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
 
         let cardData = [];
         cardQuerySnapshot.forEach(doc => {
+            const { "parent-image": parentImage, "visitor-image": visitorImage, ...rest } = doc.data(); // เอาเฉพาะฟิลด์ที่ไม่ใช่ "image"
             cardData.push({
                 id: doc.id,
-                ...doc.data()
+                ...rest
             });
         });
 
@@ -291,3 +294,59 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         return res.status(500).json({ error: "Something went wrong, please try again" });
     }
 };
+
+
+
+
+
+
+
+
+
+// // test upload image
+// exports.uploadImage = async (req, res) => {
+//     const { imageName, image } = req.body;    
+//     try {
+//         const imageRef = db.collection('images');
+//         const imageQuerySnapshot = await imageRef.get();
+
+//         const currentTime = new Date();
+//         const formattedCurrentDate = formatDate(currentTime);
+
+//         await imageRef.add({
+//             ["name"] : imageName,
+//             ["image"] : image,
+//             ["date"]  : formattedCurrentDate,
+//         });
+
+//         return res.status(201).json({ message: "Image uploaded successfully" });
+
+//     } catch (error) {
+//         console.error("Error uploading image:", error);
+//         return res.status(500).json({ error: "Something went wrong, please try again" });
+//     }
+// }
+
+
+// // test get image
+// exports.getImage = async (req, res) => {
+//     const { imageName } = req.body;
+//     try {
+//         const imageRef = db.collection('images');
+//         const imageQuerySnapshot = await imageRef.where('name', '==', imageName).get();
+
+//         if (imageQuerySnapshot.empty) {
+//             return res.status(404).json({ error: "Image not found" });
+//         }
+
+//         const imageData = imageQuerySnapshot.docs.map(doc => ({
+//             id: doc.id,
+//             ...doc.data()
+//         }));
+
+//         return res.status(200).json(imageData);
+//     } catch (error) {
+//         console.error("Error getting image:", error);
+//         return res.status(500).json({ error: "Something went wrong, please try again" });
+//     }
+// }

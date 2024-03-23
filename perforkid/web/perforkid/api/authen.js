@@ -1,19 +1,10 @@
-const { formatDate, checkToken, checkEmail } = require("./function.js");
-const { initializeApp } = require('firebase/app');
+const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
+const { initializeApp } = require('firebase/app');
+const { formatDate, checkToken, checkEmail } = require("./function.js");
 const { getAuth, 
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword } = require('firebase/auth');
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
-    authDomain: "perforkid-application.firebaseapp.com",
-    projectId: "perforkid-application",
-    storageBucket: "perforkid-application.appspot.com",
-    messagingSenderId: "741346506533",
-    appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
-    measurementId: "G-TE2LC6M05D",
-};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -27,16 +18,80 @@ exports.signIn = async (req, res) => {
         const user = userCredential.user;
 
         // Get user data from Firestore
-        const userData = (await db.collection('users').doc(user.uid).get()).data();
+        const userInfo = (await db.collection('users').doc(user.uid).get()).data();
 
-        if (!userData) {
+        if (!userInfo) {
             return res.status(404).json({ error: "User not found" });
         }
+
+        // Get user data in school
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', userInfo.schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        let userData = [];
+        if (userInfo.role === 'teacher') {
+            const teachersRef = schoolQuerySnapshot.docs[0].ref.collection('teacher');
+            const teacherQuerySnapshot = await teachersRef.where('email', '==', email).get();
+
+            if (teacherQuerySnapshot.empty) {
+                return res.status(404).json({ error: "Teacher not found" });
+            }
+
+            userData = teacherQuerySnapshot.docs[0].data();
+
+        } else if (userInfo.role === 'driver') {
+            const driversRef = schoolQuerySnapshot.docs[0].ref.collection('driver');
+            const driverQuerySnapshot = await driversRef.where('email', '==', email).get();
+
+            if (driverQuerySnapshot.empty) {
+                return res.status(404).json({ error: "Driver not found" });
+            }
+
+            userData = driverQuerySnapshot.docs[0].data();
+
+        } else if (userInfo.role === 'parent') {
+            let studentDataPromises = [];
+            const studentsRef = schoolQuerySnapshot.docs[0].ref.collection('student');
+            const studentsQuerySnapshot = await studentsRef.where('room', '==', 'all').get();
+            studentsQuerySnapshot.forEach(studentDoc => {
+                // Get reference to the student-list subcollection
+                const studentListRef = studentDoc.ref.collection('student-list');
+                const studentListPromise = studentListRef.get();
+                
+                // Push the promise into the array
+                // promise array will be used to wait for all promises to resolve before continuing
+                studentDataPromises.push(studentListPromise);
+            });
         
+            // Wait for all promises to resolve
+            const studentDataSnapshots = await Promise.all(studentDataPromises);
+        
+            studentDataSnapshots.forEach(snapshot => {
+                snapshot.forEach(doc => {
+                    const studentInfo = doc.data();
+                    // Filtering based on parent's email
+                    if (studentInfo['father-email'] == email) {
+                        userData.push(studentInfo);
+                    } else if (studentInfo['mother-email'] == email) {
+                        userData.push(studentInfo);
+                    } else {
+
+                    }
+                });
+            });
+
+        } else {
+            res.status(404).json({ error: "Role not found" });
+        }
+
         // Generate JWT token
         const token = await user.getIdToken();
 
-        return res.status(200).json({ userData, token });
+        return res.status(200).json({ userInfo, userData, token });
     } catch (error) {
         console.error("Error signing in:", error);
         return res.status(500).json({ error: "Failed to sign in" });

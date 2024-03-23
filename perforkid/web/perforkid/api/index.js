@@ -11,8 +11,7 @@ const { signIn,
 const { getSchool, 
         getSchoolBySchoolName } = require('./school.js');
 
-const { getRoleBySchoolNameAndEmail,
-        getTeacherInitialBySchoolNameAndEmail,
+const { getTeacherInitialBySchoolNameAndEmail,
         getDriverInitialBySchoolNameAndEmail,
         getParentInitialBySchoolNameAndEmail } = require('./initial.js');
 
@@ -63,7 +62,6 @@ app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);               
 
 
 // initial 
-app.post('/initial/getRoleBySchoolNameAndEmail', getRoleBySchoolNameAndEmail);                                  // ✅🔒✉️ get role by school name and email (เมื่อ sign in จะได้ role แล้ว ไม่ต้องใช้ API นี้)
 app.post('/initial/teacher/getTeacherInitialBySchoolNameAndEmail', getTeacherInitialBySchoolNameAndEmail);      // ✅🔒✉️ get teacher data by school name and teacher email
 app.post('/initial/driver/getDriverInitialBySchoolNameAndEmail', getDriverInitialBySchoolNameAndEmail);         // ✅🔒✉️ get driver data by school name and driver email
 app.post('/initial/parent/getParentInitialBySchoolNameAndEmail', getParentInitialBySchoolNameAndEmail);         // ✅🔒✉️ get student data by school name and parent email
@@ -119,17 +117,6 @@ app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);   
 app.post('/storage/listStorageFiles', listStorageFiles);                                                        // ✅ list all storage files by folder name
 app.post('/storage/downloadStorageFile', downloadStorageFile);                                                  // ?? download storage file by folder name and file name
 
-
-
-// Main Task 
-// - error message
-
-// Secondary Task
-// - createVisitorCard img (ยาก)
-
-
-// not confirm
-// - get room data (including schedule) schedule can it be used immediately ???
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

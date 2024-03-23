@@ -1,21 +1,14 @@
+const { firebaseConfig } = require("./config.js");
 const { initializeApp } = require('firebase/app');
 const { db, admin } = require("../util/admin.js");
 const { getAuth, 
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword } = require('firebase/auth');
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
-    authDomain: "perforkid-application.firebaseapp.com",
-    projectId: "perforkid-application",
-    storageBucket: "perforkid-application.appspot.com",
-    messagingSenderId: "741346506533",
-    appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
-    measurementId: "G-TE2LC6M05D",
-};
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+
 // Function to format date
 const formatDate = (dateString) => {
     const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
