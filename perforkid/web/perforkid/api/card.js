@@ -13,7 +13,7 @@ exports.createParentCard = async (req, res) => {
     try {
         // check token
         const valid = await functions.checkToken(token, schoolName);
-        const validEmail = await checkEmail(parentEmail, valid.user.email);
+        const validEmail = await functions.checkEmail(parentEmail, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -55,6 +55,7 @@ exports.createParentCard = async (req, res) => {
 
         return res.status(201).json({ message: "Parent card created successfully" });
     } catch (error) {
+        console.error("Error creating parent card:", error);
         return res.status(500).json({ error: "Error occurred while creating parent card." });
     }
 };
@@ -70,7 +71,7 @@ exports.createVisitorCard = async (req, res) => {
     try {
         // check token
         const valid = await functions.checkToken(token, schoolName);
-        const validEmail = await checkEmail(parentEmail, valid.user.email);
+        const validEmail = await functions.checkEmail(parentEmail, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
         }
