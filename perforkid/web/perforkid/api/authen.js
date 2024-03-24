@@ -1,13 +1,15 @@
 const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
 const { initializeApp } = require('firebase/app');
-const { formatDate, checkToken, checkEmail } = require("./function.js");
 const { getAuth, 
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword } = require('firebase/auth');
 
+const functions = require("./function.js");
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
 
 // ✅ sign in and generate token
 exports.signIn = async (req, res) => {
@@ -222,7 +224,7 @@ exports.signUp = async (req, res) => {
             email,
             schoolName,
             role,
-            createDate: formatDate(date),
+            createDate: functions.formatDate(date),
         });
 
         return res.status(200).json({ message: "User signed up successfully" });

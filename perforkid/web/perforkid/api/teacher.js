@@ -1,5 +1,8 @@
-const { db } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
+
+const functions = require("./function.js");
+
 
 // ✅🔒 get teachers by ( schoolName )
 exports.getTeacherBySchoolName = async (req, res) => {
@@ -9,7 +12,7 @@ exports.getTeacherBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -38,11 +41,11 @@ exports.getTeacherBySchoolName = async (req, res) => {
         if (teacherData.length === 0) {
             return res.status(404).json({ error: "No teachers found" });
         } else {
-            return res.status(200).json(teacherData);
+            return res.status(200).json({ teacherData: teacherData });
         }
     } catch (error) {
         console.error("Error getting teachers by school name:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting teachers by school name." });
     }
 };
 
@@ -56,7 +59,7 @@ exports.getTeacherBySchoolNameAndTeacherEmail = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -88,11 +91,11 @@ exports.getTeacherBySchoolNameAndTeacherEmail = async (req, res) => {
         if (teacherData.length === 0) {
             return res.status(404).json({ error: "No teachers found" });
         } else {
-            return res.status(200).json(teacherData);
+            return res.status(200).json({ teacherData: teacherData });
         }
     } catch (error) {
-        console.error("Error getting teachers by school and class-room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        console.error("Error getting teachers by school and email:", error);
+        return res.status(500).json({ error: "Error getting teachers by school name and email." });
     }
 };
 
@@ -106,7 +109,7 @@ exports.getTeacherBySchoolNameAndTeacherId = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -138,11 +141,11 @@ exports.getTeacherBySchoolNameAndTeacherId = async (req, res) => {
         if (teacherData.length === 0) {
             return res.status(404).json({ error: "No teachers found" });
         } else {
-            return res.status(200).json(teacherData);
+            return res.status(200).json({ teacherData: teacherData });
         }
     } catch (error) {
-        console.error("Error getting teachers by school and class-room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        console.error("Error getting teachers by school and id:", error);
+        return res.status(500).json({ error: "Error getting teachers by school name and id." });
     }
 };
 
@@ -156,7 +159,7 @@ exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -198,7 +201,7 @@ exports.getTeacherBySchoolNameAndClassRoom = async (req, res) => {
         }
     } catch (error) {
         console.error("Error getting teachers by school and class-room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting teachers by school name and classRoom." });
     }
 };
 
@@ -212,7 +215,7 @@ exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -255,7 +258,7 @@ exports.getTeacherBySchoolNameAndTeachingRoom = async (req, res) => {
                                             "teacherData": teacherData });
         }
     } catch (error) {
-        console.error("Error getting teachers by school and class-room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        console.error("Error getting teachers by school and teaching-room:", error);
+        return res.status(500).json({ error: "Error getting teachers by school name and teachingRoom." });
     }
 };

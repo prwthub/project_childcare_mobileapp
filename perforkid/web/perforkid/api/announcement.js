@@ -1,5 +1,8 @@
-const { db } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
+
+const functions = require("./function.js");
+
 
 // ✅🔒 get announcement by ( schoolName )
 exports.getAnnouncementBySchoolName = async (req, res) => {
@@ -9,7 +12,7 @@ exports.getAnnouncementBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -33,7 +36,7 @@ exports.getAnnouncementBySchoolName = async (req, res) => {
         const announcementData = announcementQuerySnapshot.docs.map(doc => {
             const data = doc.data();
             // Format date
-            const formattedDate = formatDate(data.date.toDate());
+            const formattedDate = functions.formatDate(data.date.toDate());
             return {
                 id: doc.id,
                 ...data,
@@ -44,11 +47,11 @@ exports.getAnnouncementBySchoolName = async (req, res) => {
         if (announcementData.length === 0) {
             return res.status(404).json({ error: "No announcements found" });
         } else {
-            return res.status(200).json(announcementData);
+            return res.status(200).json({ announcementData: announcementData });
         }
     } catch (error) {
         console.error("Error getting announcements by school name:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting announcements" });
     }
 };
 
@@ -62,7 +65,7 @@ exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -86,7 +89,7 @@ exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
         }
 
         // Format date before sending JSON response
-        const formattedDate = formatDate(announcementDoc.data().date.toDate());
+        const formattedDate = functions.formatDate(announcementDoc.data().date.toDate());
 
         // Modify the announcement data with formatted date
         const modifiedAnnouncementData = {
@@ -94,9 +97,9 @@ exports.getAnnouncementBySchoolNameAndId = async (req, res) => {
             date: formattedDate
         };
 
-        return res.status(200).json(modifiedAnnouncementData);
+        return res.status(200).json({ announcementData: modifiedAnnouncementData });
     } catch (error) {
         console.error("Error getting announcement by school name and announcement id:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting announcements" });
     }
 };

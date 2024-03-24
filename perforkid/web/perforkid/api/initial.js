@@ -1,5 +1,7 @@
+const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+
+const functions = require("./function.js");
 
 
 // ✅🔒✉️ get initial data for teacher by ( schoolName, email )
@@ -10,8 +12,8 @@ exports.getTeacherInitialBySchoolNameAndEmail = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
-        const validEmail = await checkEmail(email, valid.user.email);
+        const valid = await functions.checkToken(token, schoolName);
+        const validEmail = await functions.checkEmail(email, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -39,11 +41,11 @@ exports.getTeacherInitialBySchoolNameAndEmail = async (req, res) => {
         if (teacherData.length === 0) {
             return res.status(404).json({ error: "Teacher not found" });
         } else {
-            return res.status(200).json(teacherData);
+            return res.status(200).json({ teacherData: teacherData });
         }
     } catch (error) {
         console.error("Error retrieving teachers:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving teacher data." });
     }
 };
 
@@ -57,8 +59,8 @@ exports.getDriverInitialBySchoolNameAndEmail = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
-        const validEmail = await checkEmail(email, valid.user.email);
+        const valid = await functions.checkToken(token, schoolName);
+        const validEmail = await functions.checkEmail(email, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -86,11 +88,11 @@ exports.getDriverInitialBySchoolNameAndEmail = async (req, res) => {
         if (driverData.length === 0) {
             return res.status(404).json({ error: "Driver not found" });
         } else {
-            return res.status(200).json(driverData);
+            return res.status(200).json({ driverData: driverData });
         }
     } catch (error) {
         console.error("Error retrieving drivers:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving driver data." });
     }
 };
 
@@ -104,8 +106,8 @@ exports.getParentInitialBySchoolNameAndEmail = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
-        const validEmail = await checkEmail(email, valid.user.email);
+        const valid = await functions.checkToken(token, schoolName);
+        const validEmail = await functions.checkEmail(email, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -169,6 +171,7 @@ exports.getParentInitialBySchoolNameAndEmail = async (req, res) => {
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving students data." });
     }
 };
+

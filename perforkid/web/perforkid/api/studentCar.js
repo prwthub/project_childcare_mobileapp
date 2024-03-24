@@ -1,5 +1,8 @@
-const { db } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
+
+const functions = require("./function.js");
+
 
 // ✅🔒 get StudentCar by ( schoolName )
 exports.getStudentCarBySchoolName = async (req, res) => {
@@ -9,7 +12,7 @@ exports.getStudentCarBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -59,11 +62,11 @@ exports.getStudentCarBySchoolName = async (req, res) => {
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
-            return res.status(200).json(studentData);
+            return res.status(200).json({ studentData: studentData });
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving students data." });
     }    
 };
 
@@ -77,7 +80,7 @@ exports.getStudentCarBySchoolNameAndCarNumber = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -131,11 +134,11 @@ exports.getStudentCarBySchoolNameAndCarNumber = async (req, res) => {
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
-            return res.status(200).json(studentData);
+            return res.status(200).json({ studentData: studentData });
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving students data." });
     }   
 };
 
@@ -149,7 +152,7 @@ exports.getStudentCarBySchoolNameAndRoom = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -199,17 +202,17 @@ exports.getStudentCarBySchoolNameAndRoom = async (req, res) => {
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
-            return res.status(200).json(studentData);
+            return res.status(200).json({ studentData: studentData });
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving students data." });
     }   
 };
 
 
 
-// get studentCar by ( schoolName, studentId )
+// ✅🔒 get studentCar by ( schoolName, studentId )
 exports.getStudentCarBySchoolNameAndId = async (req, res) => {
     const { schoolName, studentId } = req.body;
     
@@ -217,7 +220,7 @@ exports.getStudentCarBySchoolNameAndId = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -253,11 +256,11 @@ exports.getStudentCarBySchoolNameAndId = async (req, res) => {
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
-            return res.status(200).json(studentData);
+            return res.status(200).json({ studentData: studentData });
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving students data." });
     }   
 };
 
@@ -273,7 +276,7 @@ exports.updateStudentCarStatusBySchoolNameAndId = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -348,7 +351,7 @@ exports.updateStudentCarStatusBySchoolNameAndId = async (req, res) => {
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error retrieving students data." });
     }   
 };
 
@@ -362,7 +365,7 @@ exports.getCarBySchoolNameAndCarNumber = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -391,9 +394,9 @@ exports.getCarBySchoolNameAndCarNumber = async (req, res) => {
             ...doc.data()
         }));
         console.log(carData);
-        return res.status(200).json(carData);
+        return res.status(200).json({ carData: carData });
     } catch (error) {
         console.error("Error getting car by school and car:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error retrieving car data." });
     }
 };

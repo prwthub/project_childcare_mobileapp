@@ -46,4 +46,34 @@ const checkEmail = async (emailReq, emailToken) => {
 }
 
 
-module.exports = { formatDate, checkToken, checkEmail };
+// Function calculate distance
+function calculateDistance(startLat, startLong, endLat, endLong) {
+    try {
+        // Convert degrees to radians
+        const toRadians = degrees => (degrees * Math.PI) / 180;
+
+        // Earth's radius in kilometers
+        const radius = 6371;
+
+        // Convert coordinates to radians
+        const lat1 = toRadians(startLat);
+        const lon1 = toRadians(startLong);
+        const lat2 = toRadians(endLat);
+        const lon2 = toRadians(endLong);
+
+        // Calculate distance using Haversine formula
+        const dlon = lon2 - lon1;
+        const dlat = lat2 - lat1;
+        const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = radius * c;
+
+        return distance;
+    } catch (error) {
+        console.error("Error calculating distance:", error);
+        throw new Error("Failed to calculate distance");
+    }
+}
+
+
+module.exports = { formatDate, checkToken, checkEmail, calculateDistance };

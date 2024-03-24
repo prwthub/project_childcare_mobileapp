@@ -5,3 +5,4 @@ npm install firebase-admin
 npm install nodemon
 
 npm install cors
+npm install axios

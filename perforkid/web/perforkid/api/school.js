@@ -1,5 +1,8 @@
+const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+
+const functions = require("./function.js");
+
 
 // ✅ get School ( no req )
 exports.getSchool = async (req, res) => {
@@ -11,10 +14,10 @@ exports.getSchool = async (req, res) => {
             ...doc.data(),
         }));
         console.log(data);
-        return res.status(200).json(data);
+        return res.status(200).json({ schoolData: data });
     } catch (error) {
         console.error("Error getting schools:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error getting schools." });
     }
 };
 
@@ -28,7 +31,7 @@ exports.getSchoolBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -47,13 +50,13 @@ exports.getSchoolBySchoolName = async (req, res) => {
         }));
 
         console.log(data);
-        return res.status(200).json(data);
+        return res.status(200).json({ schoolData: data });
     } catch (error) {
         console.error("Error getting school by name:", error);
         if (error.code === 'auth/argument-error') {
             return res.status(401).json({ error: "Invalid token" });
         } else {
-            return res.status(500).json({ error: "Internal server error" });
+            return res.status(500).json({ error: "Error getting school by name." });
         }
     }
 };

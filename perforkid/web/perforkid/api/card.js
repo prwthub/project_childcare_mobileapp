@@ -1,5 +1,8 @@
-const { db } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
+
+const functions = require("./function.js");
+
 
 // ✅🔒✉️ create a new parent card
 exports.createParentCard = async (req, res) => {
@@ -9,7 +12,7 @@ exports.createParentCard = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         const validEmail = await checkEmail(parentEmail, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
@@ -36,7 +39,7 @@ exports.createParentCard = async (req, res) => {
         let id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
 
         const time = new Date();
-        const formattedCreateDate = formatDate(time);
+        const formattedCreateDate = functions.formatDate(time);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
         await cardRef.add({
@@ -50,10 +53,9 @@ exports.createParentCard = async (req, res) => {
             ["parent-image"]: parentImage,
         });
 
-        res.status(201).send("Parent card created successfully");
+        return res.status(201).json({ message: "Parent card created successfully" });
     } catch (error) {
-        console.error("Error creating parent card: ", error);
-        res.status(500).send("An error occurred while creating parent card");
+        return res.status(500).json({ error: "Error occurred while creating parent card." });
     }
 };
 
@@ -67,7 +69,7 @@ exports.createVisitorCard = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         const validEmail = await checkEmail(parentEmail, valid.user.email);
         if (!valid.validToken || !validEmail) {
             return res.status(401).json({ error: "Unauthorized" });
@@ -94,9 +96,9 @@ exports.createVisitorCard = async (req, res) => {
         const id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
 
         const createTime = new Date();
-        const formattedCreateDate = formatDate(createTime);
+        const formattedCreateDate = functions.formatDate(createTime);
         const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
-        const formattedExpireDate = formatDate(expireTime);
+        const formattedExpireDate = functions.formatDate(expireTime);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
         await cardRef.add({
@@ -111,10 +113,9 @@ exports.createVisitorCard = async (req, res) => {
             ["visitor-image"]: visitorImage,
         });
 
-        res.status(201).send("Visitor card created successfully");
+        return res.status(201).json({ message: "Visitor card created successfully" });
     } catch (error) {
-        console.error("Error creating visitor card: ", error);
-        res.status(500).send("An error occurred while creating visitor card");
+        return res.status(500).json({ error: "Error occurred while creating visitor card." });
     }
 };
 
@@ -128,7 +129,7 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -163,11 +164,9 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
             });
         });
 
-        console.log(cardData);
-        return res.status(200).json(cardData);
+        return res.status(200).json({ cardData: cardData });
     } catch (error) {
-        console.error("Error getting all parent cards:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting card by type." });
     }
 };
 
@@ -181,7 +180,7 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -230,7 +229,7 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
         return res.status(200).json({ cardData, studentData });
     } catch (error) {
         console.error("Error getting card by cardId:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting card by cardId." });
     }
 };
 
@@ -244,7 +243,7 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -263,7 +262,7 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         let expiredCards = [];
 
         let currentTime = new Date();
-        let formattedCurrentDate = formatDate(currentTime);
+        let formattedCurrentDate = functions.formatDate(currentTime);
 
         // เก็บ ID ของบัตรที่หมดอายุ
         cardQuerySnapshot.forEach(doc => {
@@ -285,13 +284,13 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         await Promise.all(deletePromises);
 
         if (expiredCards.length === 0) {
-            return res.status(404).json({ error: "No expired cards found"});
+            return res.status(404).json({ message: "No expired cards found"});
         } else {
             return res.status(200).json({ message: "Expired cards deleted successfully", expiredCards });
         }
     } catch (error) {
         console.error("Error checking expire date:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error deleting expire card." });
     }
 };
 
@@ -311,7 +310,7 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
 //         const imageQuerySnapshot = await imageRef.get();
 
 //         const currentTime = new Date();
-//         const formattedCurrentDate = formatDate(currentTime);
+//         const formattedCurrentDate = functions.formatDate(currentTime);
 
 //         await imageRef.add({
 //             ["name"] : imageName,

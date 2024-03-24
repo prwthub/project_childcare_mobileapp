@@ -1,5 +1,8 @@
-const { db } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
+
+const functions = require("./function.js");
+
 
 // ✅🔒 get drivers by ( schoolName )
 exports.getDriverBySchoolName = async (req, res) => {
@@ -9,7 +12,7 @@ exports.getDriverBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -38,11 +41,11 @@ exports.getDriverBySchoolName = async (req, res) => {
         if (driverData.length === 0) {
             return res.status(404).json({ error: "No drivers found" });
         } else {
-            return res.status(200).json(driverData);
+            return res.status(200).json({ driverData: driverData });
         }
     } catch (error) {
         console.error("Error getting drivers by school name:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting drivers by school name." });
     }
 };
 
@@ -56,7 +59,7 @@ exports.getDriverBySchoolNameAndDriverEmail = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -89,11 +92,11 @@ exports.getDriverBySchoolNameAndDriverEmail = async (req, res) => {
         if (driverData.length === 0) {
             return res.status(404).json({ error: "No drivers found" });
         } else {
-            return res.status(200).json(driverData);
+            return res.status(200).json({ driverData: driverData });
         }
     } catch (error) {
         console.error("Error getting drivers by school name:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting drivers by school name and Email" });
     }
 };
 
@@ -107,7 +110,7 @@ exports.getDriverBySchoolNameAndDriverId = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -140,11 +143,11 @@ exports.getDriverBySchoolNameAndDriverId = async (req, res) => {
         if (driverData.length === 0) {
             return res.status(404).json({ error: "No drivers found" });
         } else {
-            return res.status(200).json(driverData);
+            return res.status(200).json({ driverData: driverData });
         }
     } catch (error) {
         console.error("Error getting drivers by school name:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting drivers by school name and Id" });
     }
 };
 
@@ -158,7 +161,7 @@ exports.getDriverBySchoolNameAndCarNumber = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -191,10 +194,10 @@ exports.getDriverBySchoolNameAndCarNumber = async (req, res) => {
         if (driverData.length === 0) {
             return res.status(404).json({ error: "No drivers found" });
         } else {
-            return res.status(200).json(driverData);
+            return res.status(200).json({ driverData: driverData });
         }
     } catch (error) {
-        console.error("Error getting drivers by school and class-room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        console.error("Error getting drivers by school and carNumber:", error);
+        return res.status(500).json({ error: "Error getting drivers by school and carNumber." });
     }
 };

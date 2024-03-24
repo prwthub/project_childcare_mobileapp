@@ -44,7 +44,9 @@ const { getStudentCarBySchoolName,
         getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
 
 const { sendCarLocation,
-        getCarLocation } = require('./car.js');
+        getCarLocation,
+        getLatAndLong,
+        calculateCarDistance } = require('./car.js');
 
 const { createParentCard,
         createVisitorCard,
@@ -110,8 +112,10 @@ app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);
 
 
 // car location
-app.post('/car/sendCarLocation', sendCarLocation);                                                                    // ✅🔒 send car location to firebase realtime database
-app.post('/car/getCarLocation', getCarLocation);                                                                      // ✅🔒 get car location by schoolName and carNumber
+app.post('/car/sendCarLocation', sendCarLocation);                                                              // ✅🔒 send car location to firebase realtime database
+app.post('/car/getCarLocation', getCarLocation);                                                                // ✅🔒 get car location by schoolName and carNumber
+app.post('/car/calculateCarDistance', calculateCarDistance);                                                    // ✅🔒 calculate car distance by start lat, start long, end 
+app.post('/car/getLatAndLong', getLatAndLong);                                                                  // ไม่ใช้ เพราะ มันใช้ google map api ที่ต้องใช้ key และเสียค่าใช้จ่าย
 
 
 // card

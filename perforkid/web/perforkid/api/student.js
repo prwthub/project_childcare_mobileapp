@@ -1,5 +1,8 @@
-const { db } = require("../util/admin.js");
-const { formatDate, checkToken, checkEmail } = require("./function.js");
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
+
+const functions = require("./function.js");
+
 
 // ✅🔒 get Student by ( schoolName )
 exports.getStudentBySchoolName = async (req, res) => {
@@ -9,7 +12,7 @@ exports.getStudentBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -59,11 +62,11 @@ exports.getStudentBySchoolName = async (req, res) => {
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
-            return res.status(200).json(studentData);
+            return res.status(200).json({ studentData: studentData });
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error getting students data." });
     }
 };
 
@@ -77,7 +80,7 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -131,11 +134,11 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
-            return res.status(200).json(studentData);
+            return res.status(200).json({ studentData: studentData });
         }
     } catch (error) {
         console.error("Error retrieving students:", error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ error: "Error getting students data." });
     }
 };
 
@@ -149,7 +152,7 @@ exports.getRoomBySchoolName = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -183,11 +186,11 @@ exports.getRoomBySchoolName = async (req, res) => {
         if (room.length === 0) {
             return res.status(404).json({ error: "No rooms found" });
         } else {
-            return res.status(200).json(room.sort());
+            return res.status(200).json({ roomData: room.sort() });
         }
     } catch (error) {
         console.error("Error getting room by school and room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting room data." });
     }
 };
 
@@ -201,7 +204,7 @@ exports.getRoomBySchoolNameAndRoom = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -230,10 +233,10 @@ exports.getRoomBySchoolNameAndRoom = async (req, res) => {
             ...doc.data()
         }));
         
-        return res.status(200).json(roomData);
+        return res.status(200).json({ roomData: roomData });
     } catch (error) {
         console.error("Error getting room by school and room:", error);
-        return res.status(500).json({ error: "Something went wrong, please try again" });
+        return res.status(500).json({ error: "Error getting room data." });
     }
 };
 
@@ -248,7 +251,7 @@ exports.getScheduleBySchoolNameAndRoom = async (req, res) => {
     const token = req.headers.authorization;
     try {
         // check token
-        const valid = await checkToken(token, schoolName);
+        const valid = await functions.checkToken(token, schoolName);
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
@@ -274,6 +277,6 @@ exports.getScheduleBySchoolNameAndRoom = async (req, res) => {
         res.send(Buffer.from(imageByteArray));
     } catch (error) {
         console.error("Error getting image:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Error getting schedule data." });
     }
 }

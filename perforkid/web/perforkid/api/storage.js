@@ -1,21 +1,11 @@
-const { db } = require("../util/admin.js");
-
-// Import Firebase modules
+const { firebaseConfig } = require("./config.js");
+const { db, admin } = require("../util/admin.js");
 const { initializeApp } = require("firebase/app");
 const { getStorage, ref, listAll, getMetadata, getDownloadURL } = require("firebase/storage");
 
-// Initialize Firebase app
-const firebaseConfig = {
-    apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
-    authDomain: "perforkid-application.firebaseapp.com",
-    projectId: "perforkid-application",
-    storageBucket: "perforkid-application.appspot.com",
-    messagingSenderId: "741346506533",
-    appId: "1:741346506533:web:69c26cf46509bb7d6d8ccc",
-    measurementId: "G-TE2LC6M05D"
-};
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
+
 
 // ✅ get Files by ( schoolName, folderName )
 exports.listStorageFiles = async (req, res) => {
@@ -37,10 +27,10 @@ exports.listStorageFiles = async (req, res) => {
         const fileNames = await Promise.all(fileNamesPromises);
 
         // Return file names
-        res.status(200).json(fileNames);
+        res.status(200).json({ files: fileNames });
     } catch (error) {
         console.error("Error listing files:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Error getting files." });
     }
 }
 
@@ -57,6 +47,6 @@ exports.downloadStorageFile = async (req, res) => {
         res.redirect(downloadURL);
     } catch (error) {
         console.error("Error downloading file:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Error downloading file." });
     }
 }
