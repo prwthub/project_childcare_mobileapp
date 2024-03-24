@@ -105,6 +105,154 @@ exports.calculateCarDistance = async (req, res) => {
 };
 
 
+// ✅🔒 check update status before using createStudentCarLocation Api
+exports.checkUpdateStatus = async (req, res) => {
+    const { schoolName, carNumber } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == carNumber
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', carNumber).get();
+        if (carsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Car not found" });
+        }
+
+        const carData = carsQuerySnapshot.docs[0].data();
+        if (carData.update) {
+            // update status to false
+            await carsQuerySnapshot.docs[0].ref.update({
+                update: false
+            });
+
+            return res.status(200).json({ message: "Location is not up to date" });
+        } else {
+            return res.status(200).json({ message: "Location is up to date" });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: "Error checking update status." });
+    }
+}
+
+
+// ✅🔒 create student car location
+exports.createStudentCarLocation = async (req, res) => {
+    const { schoolName, carNumber, studentCar} = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const locationRef = schoolDocRef.collection('location');
+
+        // find document that have filed car-number = carNumber and delete it
+        const querySnapshot = await locationRef.where('car-number', '==', carNumber).get();
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+                doc.ref.delete();
+            });
+        }
+
+        // Create a new document in location subcollection 
+        // that have field car-number = carNumber and new subcollection student-car in it
+        const locationDocRef = locationRef.doc();
+        await locationDocRef.set({
+            'car-number': carNumber
+        });
+
+        const studentCarRef = locationDocRef.collection('student-car');
+        studentCar.forEach(async (student) => {
+            await studentCarRef.add(student);
+        });
+
+        return res.status(200).json({ message: "Student car location created successfully" });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error creating student car location." });
+    }
+}
+
+
+// ✅🔒 get studentCar location
+exports.getStudentCarLocation = async (req, res) => {
+    const { schoolName, carNumber } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const locationRef = schoolDocRef.collection('location');
+
+        // Query cars-number == carNumber
+        const locationQuerySnapshot = await locationRef.where('car-number', '==', carNumber).get();
+        if (locationQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Car location not found" });
+        }
+
+        const locationData = locationQuerySnapshot.docs[0].data();
+        const studentCarRef = locationQuerySnapshot.docs[0].ref.collection('student-car');
+        const studentCarQuerySnapshot = await studentCarRef.get();
+
+        const studentCar = [];
+        studentCarQuerySnapshot.forEach((doc) => {
+            studentCar.push(doc.data());
+        });
+
+        return res.status(200).json({ studentCar: studentCar });
+    } catch (error) {
+        return res.status(500).json({ error: "Error getting student car location." });
+    }
+};    
+
+
 // ไม่ใช้ เพราะ มันใช้ google map api ที่ต้องใช้ key และเสียค่าใช้จ่าย
 exports.getLatAndLong = async (req, res) => { 
     const { address } = req.body;

@@ -191,6 +191,7 @@ function upload(file) {
 
                         studentDoc.ref.update({
                           "latest-van-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
+                          "update": true,
                         })
 
                         console.log("Data uploaded to Firestore successfully!");
