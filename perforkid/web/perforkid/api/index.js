@@ -49,7 +49,9 @@ const { sendCarLocation,
         checkUpdateStatus,
         createStudentCarLocation,
         getStudentCarLocation,
-        getLatAndLong } = require('./car.js');
+        getLatAndLong,
+        checkUpdateStatusAndGetStudentLocation,
+        calculateAddressStudentsDistance } = require('./car.js');
 
 const { createParentCard,
         createVisitorCard,
@@ -122,6 +124,8 @@ app.post('/car/checkUpdateStatus', checkUpdateStatus);                          
 app.post('/car/createStudentCarLocation', createStudentCarLocation);                                            // ✅🔒 create student car location by school name, car number, lat, long
 app.post('/car/getStudentCarLocation', getStudentCarLocation);                                                  // ✅🔒 get student car location by school name and car number
 app.post('/car/getLatAndLong', getLatAndLong);                                                                  // ไม่ใช้ เพราะ มันใช้ google map api ที่ต้องใช้ key และเสียค่าใช้จ่าย
+app.post('/car/checkUpdateStatusAndGetStudentLocation', checkUpdateStatusAndGetStudentLocation);                // ✅🔒 check update status and get student location by school name and car number
+app.post('/car/calculateAddressStudentsDistance', calculateAddressStudentsDistance);                             // ✅ calculate address students distance by school name and car number
 
 
 // card
