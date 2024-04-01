@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
+
 const app = express();
 
 app.use(express.json());
@@ -134,10 +137,40 @@ app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);   
 
 // storage
 app.post('/storage/listStorageFiles', listStorageFiles);                                                        // ✅ list all storage files by folder name
-app.post('/storage/downloadStorageFile', downloadStorageFile);                                                  // ?? download storage file by folder name and file name
-
+app.post('/storage/downloadStorageFile', downloadStorageFile);            
 
 const PORT = process.env.PORT || 3000;
+
+app.use('/api', express.static(path.join(__dirname, 'api')));
+app.use('/authen', express.static(path.join(__dirname, '..', 'authen')));
+app.use('/firebaseConfig', express.static(path.join(__dirname, '..', 'firebaseConfig')));
+app.use('/module', express.static(path.join(__dirname, '..', 'module')));
+app.use('/picture', express.static(path.join(__dirname, '..', 'picture')));
+app.use('/style', express.static(path.join(__dirname, '..', 'style')));
+app.use('/util', express.static(path.join(__dirname, '..', 'util')));
+
+app.get('/', (req, res) => { 
+        res.sendFile(path.join(__dirname, '..', 'AdminLanding.html'));
+ })
+
+app.get('/:page', (req, res) => {
+        
+        const { page } = req.params;
+        console.log("Navigating to", page)
+        const filePath = path.join(__dirname, '..', `${page}`);
+      
+        // Check if the requested HTML file exists
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+          if (err) {
+            // If the file doesn't exist, put 'html' to troubleshoot.
+            res.sendFile(filePath + '.html')
+          } else {
+            // If the file exists, serve it
+            res.sendFile(filePath);
+          }
+        });
+      });
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
