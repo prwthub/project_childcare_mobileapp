@@ -1,12 +1,13 @@
 import * as FirebaseAPI from "../firebaseConfig/FirebaseAPI.js";
 
-
 const db = FirebaseAPI.getFirestore();
 const schoolsRef = FirebaseAPI.collection(db, "school");
 const adminRef = FirebaseAPI.collection(db, "admin");
 const auth = FirebaseAPI.getAuth();
 
 const schoolRegisterForm = document.getElementById("schoolRegister");
+const schoolCode = generateSchoolCode(6);
+const schoolAdminCode = generateSchoolCode(8);
 
 // Function to generate random school code
 function generateSchoolCode(num) {
@@ -64,16 +65,27 @@ schoolRegisterForm.addEventListener("submit", async (e) => {
         // Add school to school collection
         const schoolData = {
             "school-name": schoolName,
-            "school-code": generateSchoolCode(6),
-            "school-admin-code": generateSchoolCode(8),
+            "school-code": schoolCode,
+            "school-admin-code": schoolAdminCode,
         };
         await FirebaseAPI.addDoc(schoolsRef, schoolData);
         console.log("School Added (firestore)");
 
         alert("ลงทะเบียนสำเร็จ");
+        
+        // Call SendEmail with information from the form
+        const response = await fetch('/school/sendEmail', { 
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ schoolName, email, schoolCode, schoolAdminCode })
+          });
+
         window.location.href = "../AdminLanding.html";
     } catch (error) {
         console.error(error.message);
         alert("Registration Failed. Please try again.");
     }
 });
+

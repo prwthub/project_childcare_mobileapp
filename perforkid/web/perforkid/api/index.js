@@ -13,7 +13,8 @@ const { signIn,
         signOut } = require('./authen.js');
 
 const { getSchool, 
-        getSchoolBySchoolName } = require('./school.js');
+        getSchoolBySchoolName,
+        sendEmail } = require('./school.js');
 
 const { getTeacherInitialBySchoolNameAndEmail,
         getDriverInitialBySchoolNameAndEmail,
@@ -72,7 +73,8 @@ app.post('/authen/signOut', signOut);                                           
 
 // school
 app.post('/school/getSchool', getSchool);                                                                       // ✅   get all school data
-app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                               // ✅🔒 get school data by school name
+app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);       
+app.post('/school/sendEmail', sendEmail)                                        // ✅🔒 get school data by school name
 
 
 // initial 
