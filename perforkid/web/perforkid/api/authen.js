@@ -235,7 +235,7 @@ exports.signUp = async (req, res) => {
 };
 
 
-// sign out and revoke token
+// ❌ sign out and revoke token
 // ! token แม้ว่าจะ revoke แล้ว แต่ก็ยังสามารถใช้งานได้
 // ! token มีอายุ 1 ชั่วโมง ต้องแก้ไขเพื่อให้ token ไม่มีวันหมดอายุ
 exports.signOut = async (req, res) => {

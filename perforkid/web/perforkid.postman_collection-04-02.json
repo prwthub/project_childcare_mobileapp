@@ -1,0 +1,1388 @@
+{
+	"info": {
+		"_postman_id": "474a415d-336a-40ed-977a-18d983b00584",
+		"name": "perforkid",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30166086"
+	},
+	"item": [
+		{
+			"name": "authen",
+			"item": [
+				{
+					"name": "✅ signIn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseBody1 = pm.response.json();\r",
+									"const email = responseBody1.userInfo.email;\r",
+									"const school = responseBody1.userInfo.schoolName;\r",
+									"const token = responseBody1.token;\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"email\", email)\r",
+									"pm.globals.set(\"school\", school)\r",
+									"pm.globals.set(\"token\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    // \"email\": \"test@gmail.com\",                   // super admin (cann't use)\n    // \"password\": \"test1234\"\n\n    // \"email\": \"natcha@example.com\",               // teacher (TEST)\n    // \"password\": \"12345678\"\n\n    // \"email\": \"vimolpat.t@outlook.com\",           // driver (TEST)\n    // \"password\": \"12345678\"\n\n    \"email\": \"wei-22@example.com\",               // parent (TEST)\n    \"password\": \"12345678\"\n\n    // \"email\": \"jacob-11@example.com\",             // parent (TEST)\n    // \"password\": \"12345678\"\n\n    // \"email\": \"chloe-11@example.com\",             // parent (TEST)\n    // \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/authen/signIn",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"authen",
+								"signIn"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ signUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"TEST\",\n    \"schoolCode\": \"123456\",\n    \"email\": \"jacob-11@example.com\",\n    \"password\": \"12345678\",\n    \"passwordConf\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/authen/signUp",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"authen",
+								"signUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "❌🔒 signOut",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/authen/signOut",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"authen",
+								"signOut"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "school",
+			"item": [
+				{
+					"name": "✅ getSchool",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/school/getSchool",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"school",
+								"getSchool"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getSchoolBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/school/getSchoolBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"school",
+								"getSchoolBySchoolName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ sendEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\":\"{{school}}\", \r\n    \"email\":\"perawit37@gmail.com\", \r\n    \"schoolCode\":\"123456\",  \r\n    \"schoolAdminCode\":\"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/school/sendEmail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"school",
+								"sendEmail"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "initial",
+			"item": [
+				{
+					"name": "✅🔒✉️ getTeacherInitialBySchoolNameAndEmail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/initial/teacher/getTeacherInitialBySchoolNameAndEmail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"initial",
+								"teacher",
+								"getTeacherInitialBySchoolNameAndEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒✉️ getDriverInitialBySchoolNameAndEmail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/initial/driver/getDriverInitialBySchoolNameAndEmail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"initial",
+								"driver",
+								"getDriverInitialBySchoolNameAndEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒✉️ getParentInitialBySchoolNameAndEmail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"email\": \"{{email}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/initial/parent/getParentInitialBySchoolNameAndEmail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"initial",
+								"parent",
+								"getParentInitialBySchoolNameAndEmail"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "announcement",
+			"item": [
+				{
+					"name": "✅🔒 getAnnouncementBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/announcement/getAnnouncementBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"announcement",
+								"getAnnouncementBySchoolName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getAnnouncementBySchoolNameAndId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"id\": \"3DHJ824K0uLj54GCCvIq\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/announcement/getAnnouncementBySchoolNameAndId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"announcement",
+								"getAnnouncementBySchoolNameAndId"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "teacher",
+			"item": [
+				{
+					"name": "✅🔒 getTeacherBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒  getTeacherBySchoolNameAndTeacherEmail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"teacherEmail\": \"{{email}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndTeacherEmail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolNameAndTeacherEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒  getTeacherBySchoolNameAndTeacherId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"teacherId\": \"14586\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndTeacherId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolNameAndTeacherId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getTeacherBySchoolNameAndClassRoom",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"classRoom\": \"1/1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndClassRoom",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolNameAndClassRoom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getTeacherBySchoolNameAndTeachingRoom",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"teachingRoom\": \"1/2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/teacher/getTeacherBySchoolNameAndTeachingRoom",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"teacher",
+								"getTeacherBySchoolNameAndTeachingRoom"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "driver",
+			"item": [
+				{
+					"name": "✅🔒 getDriverBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/driver/getDriverBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"driver",
+								"getDriverBySchoolName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getDriverBySchoolNameAndDriverEmail",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"driverEmail\": \"{{email}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/driver/getDriverBySchoolNameAndDriverEmail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"driver",
+								"getDriverBySchoolNameAndDriverEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getDriverBySchoolNameAndDriverId",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"driverId\": \"20001\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/driver/getDriverBySchoolNameAndDriverId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"driver",
+								"getDriverBySchoolNameAndDriverId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getDriverBySchoolNameAndCarNumber",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"carNumber\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/driver/getDriverBySchoolNameAndCarNumber",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"driver",
+								"getDriverBySchoolNameAndCarNumber"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[ student, room ]",
+			"item": [
+				{
+					"name": "student",
+					"item": [
+						{
+							"name": "✅🔒 getStudentBySchoolName",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/student/getStudentBySchoolName",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"student",
+										"getStudentBySchoolName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅🔒 getStudentBySchoolNameAndRoom",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentRoom\": \"1/1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/student/getStudentBySchoolNameAndRoom",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"student",
+										"getStudentBySchoolNameAndRoom"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "room",
+					"item": [
+						{
+							"name": "✅🔒 getRoomBySchoolName",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/room/getRoomBySchoolName",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"room",
+										"getRoomBySchoolName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅🔒 getRoomBySchoolNameAndRoom",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentRoom\": \"1/1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/room/getRoomBySchoolNameAndRoom",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"room",
+										"getRoomBySchoolNameAndRoom"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[ studentCar ]",
+			"item": [
+				{
+					"name": "studentCar",
+					"item": [
+						{
+							"name": "✅🔒 getStudentCarBySchoolName",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/getStudentCarBySchoolName",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"getStudentCarBySchoolName"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅🔒 getStudentCarBySchoolNameAndCarNumber",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"carNumber\": \"1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/getStudentCarBySchoolNameAndCarNumber",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"getStudentCarBySchoolNameAndCarNumber"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅🔒 getStudentCarBySchoolNameAndRoom",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentRoom\": \"1/1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/getStudentCarBySchoolNameAndRoom",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"getStudentCarBySchoolNameAndRoom"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅🔒 getStudentCarBySchoolNameAndId",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentId\": \"31501\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/getStudentCarBySchoolNameAndId",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"getStudentCarBySchoolNameAndId"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "✅🔒 updateStudentCarStatusBySchoolNameAndId",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"schoolName\": \"TEST\",\n    \"studentId\": \"31501\",\n    \"goStatus\": \"มากับรถตู้โรงเรียน/\",\n    \"backStatus\": \"กลับกับรถตู้โรงเรียน/\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/studentCar/updateStudentCarStatusBySchoolNameAndId",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"studentCar",
+										"updateStudentCarStatusBySchoolNameAndId"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "car",
+			"item": [
+				{
+					"name": "✅🔒 sendCarLocation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\",\r\n    \"lat\": 13.6530464,\r\n    \"long\": 100.4042056\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/car/sendCarLocation",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"car",
+								"sendCarLocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getCarLocation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/car/getCarLocation",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"car",
+								"getCarLocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 checkUpdateStatusAndGetStudentLocation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/car/checkUpdateStatusAndGetStudentLocation",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"car",
+								"checkUpdateStatusAndGetStudentLocation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ calculateAddressStudentsDistance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"1\",\r\n    \"carLocation\": {\r\n        \"carNumber\": \"1\",\r\n        \"lat\": 13.871646,\r\n        \"long\": 100.4633324,\r\n        \"schoolName\": \"TEST\",\r\n        \"time\": \"April 2, 2024 at 7:58:56 PM\"\r\n    },\r\n    \"addressStudents\": [\r\n        {\r\n            \"class-room\": \"3/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"199, 199/1 199/2 ถ. กาญจนาภิเษก ตำบล เสาธงหิน อำเภอบางใหญ่ นนทบุรี 11140\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"35101\",\r\n            \"index\": 5,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Naoki Tanaka\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.6530464,\r\n            \"long\": 100.4042056\r\n        },\r\n        {\r\n            \"class-room\": \"1/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"91/622 ตำบลไทรม้า อำเภอเมือง จังหวัดนนทบุรี 11000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"32101\",\r\n            \"index\": 2,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Johnson\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.871646,\r\n            \"long\": 100.4633324\r\n        },\r\n        {\r\n            \"class-room\": \"2/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1693 ถ. พหลโยธิน แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"33101\",\r\n            \"index\": 3,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Martin\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8171677,\r\n            \"long\": 100.5615817\r\n        },\r\n        {\r\n            \"class-room\": \"3/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"91/620 ตำบลไทรม้า อำเภอเมือง จังหวัดนนทบุรี 11000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"36101\",\r\n            \"index\": 6,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Hyun Park\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.871646,\r\n            \"long\": 100.4633324\r\n        },\r\n        {\r\n            \"class-room\": \"1/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"999/9 ถ. พระรามที่ 1 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร 10330\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"234-567-8901\",\r\n            \"student-ID\": \"31501\",\r\n            \"index\": \"1\",\r\n            \"father-phone\": \"123-456-7890\",\r\n            \"name-surname\": \"John Smith\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.7460367,\r\n            \"long\": 100.5383385\r\n        },\r\n        {\r\n            \"class-room\": \"2/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"91/625 ตำบลไทรม้า อำเภอเมือง จังหวัดนนทบุรี 11000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"34101\",\r\n            \"index\": 4,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Jack Wang\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.871646,\r\n            \"long\": 100.4633324\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/car/calculateAddressStudentsDistance",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"car",
+								"calculateAddressStudentsDistance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getCarLocationAndCalculateDistance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"1\",\r\n    \"addressStudents\": [\r\n        {\r\n            \"class-room\": \"3/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"199, 199/1 199/2 ถ. กาญจนาภิเษก ตำบล เสาธงหิน อำเภอบางใหญ่ นนทบุรี 11140\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"35101\",\r\n            \"index\": 5,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Naoki Tanaka\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.6530464,\r\n            \"long\": 100.4042056\r\n        },\r\n        {\r\n            \"class-room\": \"1/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"91/622 ตำบลไทรม้า อำเภอเมือง จังหวัดนนทบุรี 11000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"32101\",\r\n            \"index\": 2,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Johnson\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.871646,\r\n            \"long\": 100.4633324\r\n        },\r\n        {\r\n            \"class-room\": \"2/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1693 ถ. พหลโยธิน แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"33101\",\r\n            \"index\": 3,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Martin\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8171677,\r\n            \"long\": 100.5615817\r\n        },\r\n        {\r\n            \"class-room\": \"3/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"91/620 ตำบลไทรม้า อำเภอเมือง จังหวัดนนทบุรี 11000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"36101\",\r\n            \"index\": 6,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Hyun Park\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.871646,\r\n            \"long\": 100.4633324\r\n        },\r\n        {\r\n            \"class-room\": \"1/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"999/9 ถ. พระรามที่ 1 แขวงปทุมวัน เขตปทุมวัน กรุงเทพมหานคร 10330\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"234-567-8901\",\r\n            \"student-ID\": \"31501\",\r\n            \"index\": \"1\",\r\n            \"father-phone\": \"123-456-7890\",\r\n            \"name-surname\": \"John Smith\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.7460367,\r\n            \"long\": 100.5383385\r\n        },\r\n        {\r\n            \"class-room\": \"2/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"91/625 ตำบลไทรม้า อำเภอเมือง จังหวัดนนทบุรี 11000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"34101\",\r\n            \"index\": 4,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Jack Wang\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.871646,\r\n            \"long\": 100.4633324\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/car/getCarLocationAndCalculateDistance",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"car",
+								"getCarLocationAndCalculateDistance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "card",
+			"item": [
+				{
+					"name": "✅🔒✉️ createParentCard",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"parentEmail\": \"{{email}}\",\n    \"parentName\": \"{{email}}\",\n    \"studentId\": \"34107\",\n    \"parentImage\": \"{{imageBase64}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/card/createParentCard",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"card",
+								"createParentCard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒✉️ createVisitorCard",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"visitorName\": \"ทดสอบ visitor 4\",\n    \"parentEmail\": \"{{email}}\",\n    \"parentName\": \"{{email}}\",\n    \"studentId\": \"34107,35103\",\n    \"visitorImage\": \"{{imageBase64}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/card/createVisitorCard",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"card",
+								"createVisitorCard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getCardBySchoolNameAndCardType",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardType\": \"all\"           // all, parent, visitor\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/card/getCardBySchoolNameAndCardType",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"card",
+								"getCardBySchoolNameAndCardType"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 getCardBySchoolNameAndCardId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let imageBase64 = pm.response.json().cardData[0][\"parent-image\"]; // เลือกรูปแรกจาก array ที่ได้จาก response\r",
+									"let template = `<img src='data:image/jpeg;base64,${imageBase64}'/>`;\r",
+									"\r",
+									"pm.visualizer.set(template, {});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardId\": \"073611\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/card/getCardBySchoolNameAndCardId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"card",
+								"getCardBySchoolNameAndCardId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅🔒 deleteExpireCardBySchoolName",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schoolName\": \"{{school}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/card/deleteExpireCardBySchoolName",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"card",
+								"deleteExpireCardBySchoolName"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -37,25 +37,19 @@ const { getDriverBySchoolName,
 const { getStudentBySchoolName,
         getStudentBySchoolNameAndRoom,
         getRoomBySchoolName,
-        getRoomBySchoolNameAndRoom,
-        getScheduleBySchoolNameAndRoom } = require('./student.js');
+        getRoomBySchoolNameAndRoom } = require('./student.js');
 
 const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndCarNumber,
         getStudentCarBySchoolNameAndRoom,
         getStudentCarBySchoolNameAndId,
-        updateStudentCarStatusBySchoolNameAndId,
-        getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
+        updateStudentCarStatusBySchoolNameAndId } = require('./studentCar.js');
 
 const { sendCarLocation,
         getCarLocation,
-        calculateCarDistance,
-        checkUpdateStatus,
-        createStudentCarLocation,
-        getStudentCarLocation,
-        getLatAndLong,
         checkUpdateStatusAndGetStudentLocation,
-        calculateAddressStudentsDistance } = require('./car.js');
+        calculateAddressStudentsDistance,
+        getCarLocationAndCalculateDistance } = require('./car.js');
 
 const { createParentCard,
         createVisitorCard,
@@ -63,89 +57,185 @@ const { createParentCard,
         getCardBySchoolNameAndCardId,
         deleteExpireCardBySchoolName } = require('./card.js');
 
-const { listStorageFiles, 
-        downloadStorageFile } = require('./storage.js');
 
+// ? ===========================================================================================================================================================================
 // authen
+
 app.post('/authen/signIn', signIn);                                                                             // ✅ sign in and generate token
+
 app.post('/authen/signUp', signUp);                                                                             // ✅ sign up
-app.post('/authen/signOut', signOut);                                                                           // ✅ sign out and revoke token
 
+app.post('/authen/signOut', signOut);                                                                           // ❌🔒 sign out and revoke token
+// ! token แม้ว่าจะ revoke แล้ว แต่ก็ยังสามารถใช้งานได้
+// ! token มีอายุ 1 ชั่วโมง ต้องแก้ไขเพื่อให้ token ไม่มีวันหมดอายุ
+
+
+
+// ? ===========================================================================================================================================================================
 // school
-app.post('/school/getSchool', getSchool);                                                                       // ✅   get all school data
-app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);       
-app.post('/school/sendEmail', sendEmail)                                        // ✅🔒 get school data by school name
+
+app.post('/school/getSchool', getSchool);                                                                       // ✅   get all school data 
+// * จะนำไปใช้ใน dropdown เลือก school ตอนสมัคร
+
+app.post('/school/getSchoolBySchoolName', getSchoolBySchoolName);                                               // ✅🔒 get School by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของโรงเรียน
+
+app.post('/school/sendEmail', sendEmail);                                                                       // ✅ send email to school (web)
+// * ไม่ต้องมี token และนำไปใช้เมื่อต้องการส่ง email ไปยังโรงเรียน ใช้ในส่วนการทำงานของ web
 
 
+// ? ===========================================================================================================================================================================
 // initial 
-app.post('/initial/teacher/getTeacherInitialBySchoolNameAndEmail', getTeacherInitialBySchoolNameAndEmail);      // ✅🔒✉️ get teacher data by school name and teacher email
-app.post('/initial/driver/getDriverInitialBySchoolNameAndEmail', getDriverInitialBySchoolNameAndEmail);         // ✅🔒✉️ get driver data by school name and driver email
-app.post('/initial/parent/getParentInitialBySchoolNameAndEmail', getParentInitialBySchoolNameAndEmail);         // ✅🔒✉️ get student data by school name and parent email
+
+app.post('/initial/teacher/getTeacherInitialBySchoolNameAndEmail', getTeacherInitialBySchoolNameAndEmail);      // ✅🔒✉️ get teacher data by ( schoolName, email )
+// * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการดูข้อมูลของครู (ทำเผื่อไว้)
+
+app.post('/initial/driver/getDriverInitialBySchoolNameAndEmail', getDriverInitialBySchoolNameAndEmail);         // ✅🔒✉️ get driver data by ( schoolName, email )
+// * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการดูข้อมูลของครู (ทำเผื่อไว้)
+
+app.post('/initial/parent/getParentInitialBySchoolNameAndEmail', getParentInitialBySchoolNameAndEmail);         // ✅🔒✉️ get student data by ( schoolName, email )
+// * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการดูข้อมูลของครู (ทำเผื่อไว้)
 
 
+
+// ? ===========================================================================================================================================================================
 // announcement
-app.post('/announcement/getAnnouncementBySchoolName', getAnnouncementBySchoolName);                             // ✅🔒 get all announcement data by school name
-app.post('/announcement/getAnnouncementBySchoolNameAndId', getAnnouncementBySchoolNameAndId);                   // ✅🔒 get announcement data by school name and firestore-id
+
+app.post('/announcement/getAnnouncementBySchoolName', getAnnouncementBySchoolName);                             // ✅🔒 get all announcement data by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของประกาศของโรงเรียน
+
+app.post('/announcement/getAnnouncementBySchoolNameAndId', getAnnouncementBySchoolNameAndId);                   // ✅🔒 get announcement data by ( schoolName, Id )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของประกาศของโรงเรียน แบบระบุไอดี
 
 
+
+// ? ===========================================================================================================================================================================
 // teacher
-app.post('/teacher/getTeacherBySchoolName', getTeacherBySchoolName);                                            // ✅🔒 get all teacher data by school name
-app.post('/teacher/getTeacherBySchoolNameAndTeacherEmail', getTeacherBySchoolNameAndTeacherEmail);              // ✅🔒 get teacher data by school name and teacher email
-app.post('/teacher/getTeacherBySchoolNameAndTeacherId', getTeacherBySchoolNameAndTeacherId);                    // ✅🔒 get teacher data by school name and teacher id
-app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);                    // ✅🔒 get all teacher data by school name and class room 
-app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);              // ✅🔒 get all teacher data by school name and teaching room 
+
+app.post('/teacher/getTeacherBySchoolName', getTeacherBySchoolName);                                            // ✅🔒 get all teacher data by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของครูทุกคนในโรงเรียน
+
+app.post('/teacher/getTeacherBySchoolNameAndTeacherEmail', getTeacherBySchoolNameAndTeacherEmail);              // ✅🔒 get teacher data by ( schoolName, teacherEmail )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของครู โดยระบุ email
+
+app.post('/teacher/getTeacherBySchoolNameAndTeacherId', getTeacherBySchoolNameAndTeacherId);                    // ✅🔒 get teacher data by ( schoolName, teacherId )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของครู โดยระบุ id
+
+app.post('/teacher/getTeacherBySchoolNameAndClassRoom', getTeacherBySchoolNameAndClassRoom);                    // ✅🔒 get all teacher data by ( schoolName, classRoom )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของครูทุกคนในโรงเรียน ที่ประจำชั้นห้องนี้
+
+app.post('/teacher/getTeacherBySchoolNameAndTeachingRoom', getTeacherBySchoolNameAndTeachingRoom);              // ✅🔒 get all teacher data by ( schoolName, teachingRoom )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของครูทุกคนในโรงเรียน ที่สอนห้องนี้
 
 
+
+// ? ===========================================================================================================================================================================
 // driver
-app.post('/driver/getDriverBySchoolName', getDriverBySchoolName);                                               // ✅🔒 get all driver data by school name
-app.post('/driver/getDriverBySchoolNameAndDriverEmail', getDriverBySchoolNameAndDriverEmail);                   // ✅🔒 get driver data by school name and driver email
-app.post('/driver/getDriverBySchoolNameAndDriverId', getDriverBySchoolNameAndDriverId);                         // ✅🔒 get driver data by school name and driver id
-app.post('/driver/getDriverBySchoolNameAndCarNumber', getDriverBySchoolNameAndCarNumber);                       // ✅🔒 get driver data by school name and car number
+
+app.post('/driver/getDriverBySchoolName', getDriverBySchoolName);                                               // ✅🔒 get all driver data by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของคนขับรถทุกคนในโรงเรียน
+
+app.post('/driver/getDriverBySchoolNameAndDriverEmail', getDriverBySchoolNameAndDriverEmail);                   // ✅🔒 get driver data by ( schoolName, driverEmail )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของคนขับรถ โดยระบุ email
+
+app.post('/driver/getDriverBySchoolNameAndDriverId', getDriverBySchoolNameAndDriverId);                         // ✅🔒 get driver data by ( schoolName, driverId )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของคนขับรถ โดยระบุ id
+
+app.post('/driver/getDriverBySchoolNameAndCarNumber', getDriverBySchoolNameAndCarNumber);                       // ✅🔒 get driver data by ( schoolName, carNumber )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของคนขับรถ โดยระบุ carNumber
 
 
+
+// ? ===========================================================================================================================================================================
 // student , room
-app.post('/student/getStudentBySchoolName', getStudentBySchoolName);                                            // ✅🔒 get all student data by school name
-app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);                              // ✅🔒 get all student data by school name and room
-app.post('/room/getRoomBySchoolName', getRoomBySchoolName);                                                     // ✅🔒 get all room name by school name
-app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                                       // ✅🔒 get room data by school name and room
-app.post('/schedule/getScheduleBySchoolNameAndRoom', getScheduleBySchoolNameAndRoom);                           // ?? get schedule (storage) data by school name and room
+
+app.post('/student/getStudentBySchoolName', getStudentBySchoolName);                                            // ✅🔒 get all student data by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนทุกคนในโรงเรียน
+
+app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);                              // ✅🔒 get all student data by ( schoolName, studentRoom )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนทุกคนในโรงเรียน โดยระบุห้อง
+
+app.post('/room/getRoomBySchoolName', getRoomBySchoolName);                                                     // ✅🔒 get all room name by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของห้องเรียนทั้งหมดในโรงเรียน
+
+app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                                       // ✅🔒 get room data by ( schoolName, studentRoom )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของห้องเรียนในโรงเรียน โดยระบุห้อง
 
 
+
+// ? ===========================================================================================================================================================================
 // studentCar , car
-app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);                                   // ✅🔒 get all student car data by school name
-app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);           // ✅🔒 get all student car data by school name and car number
-app.post('/studentCar/getStudentCarBySchoolNameAndRoom', getStudentCarBySchoolNameAndRoom);                     // ✅🔒 get all student car data by school name and room
-app.post('/studentCar/getStudentCarBySchoolNameAndId', getStudentCarBySchoolNameAndId);                         // ✅🔒 get student car data by school name and id
-app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCarStatusBySchoolNameAndId);       // ✅🔒 update student car status by school name and id and status
-app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                                // ✅🔒 get car data by school name and car number
-// get car location (realtime database ???)                                                                     // ?? get car location by school name and car number                  
+
+app.post('/studentCar/getStudentCarBySchoolName', getStudentCarBySchoolName);                                   // ✅🔒 get all student car data by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนที่ขึ้นรถรับส่งทุกคนในโรงเรียน
+
+app.post('/studentCar/getStudentCarBySchoolNameAndCarNumber', getStudentCarBySchoolNameAndCarNumber);           // ✅🔒 get all student car data by ( schoolName, carNumber )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนที่ขึ้นรถรับส่งทุกคนในโรงเรียน โดยระบุเบอร์รถ
+
+app.post('/studentCar/getStudentCarBySchoolNameAndRoom', getStudentCarBySchoolNameAndRoom);                     // ✅🔒 get all student car data by ( schoolName, studentRoom )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนที่ขึ้นรถรับส่งทุกคนในโรงเรียน โดยระบุห้องเรียน
+
+app.post('/studentCar/getStudentCarBySchoolNameAndId', getStudentCarBySchoolNameAndId);                         // ✅🔒 get student car data by ( schoolName, studentId )
+// * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนที่ขึ้นรถรับส่ง โดยระบุ id
+
+app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCarStatusBySchoolNameAndId);       // ✅🔒 update student car status by ( schoolName, studentId, goStatus, backStatus )              
+// * ต้องมี token และนำไปใช้เมื่อต้องการจะอัพเดท status ของนักเรียนที่ขึ้นรถรับส่ง โดยระบุ id และ status ที่ต้องการอัพเดท
+// * goStatus มี ไปกับรถรับส่ง, ไปกับผู้ปกครอง, ไม่มาเรียน
+// * backStatus มี กลับกับรถรับส่ง, กลับกับผู้ปกครอง, ไม่มาเรียน
 
 
+
+// ? ===========================================================================================================================================================================
 // car location
-app.post('/car/sendCarLocation', sendCarLocation);                                                              // ✅🔒 send car location to firebase realtime database
-app.post('/car/getCarLocation', getCarLocation);                                                                // ✅🔒 get car location by schoolName and carNumber
-app.post('/car/calculateCarDistance', calculateCarDistance);                                                    // ✅🔒 calculate car distance by start lat, start long, end 
-app.post('/car/checkUpdateStatus', checkUpdateStatus);                                                          // ✅🔒 check update status by school name and car number before call create car location
-app.post('/car/createStudentCarLocation', createStudentCarLocation);                                            // ✅🔒 create student car location by school name, car number, lat, long
-app.post('/car/getStudentCarLocation', getStudentCarLocation);                                                  // ✅🔒 get student car location by school name and car number
-app.post('/car/getLatAndLong', getLatAndLong);                                                                  // ไม่ใช้ เพราะ มันใช้ google map api ที่ต้องใช้ key และเสียค่าใช้จ่าย
-app.post('/car/checkUpdateStatusAndGetStudentLocation', checkUpdateStatusAndGetStudentLocation);                // ✅🔒 check update status and get student location by school name and car number
-app.post('/car/calculateAddressStudentsDistance', calculateAddressStudentsDistance);                             // ✅ calculate address students distance by school name and car number
+
+app.post('/car/sendCarLocation', sendCarLocation);                                                              // ✅🔒 send car location to realtime database ( schoolName, carNumber, lat, long )
+// * ต้องมี token และนำไปใช้เมื่อต้องการส่งตำแหน่งรถไปยัง firebase realtime database 
+
+app.post('/car/getCarLocation', getCarLocation);                                                                // ✅🔒 get car location by ( schoolName, carNumber )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูตำแหน่งรถ 
+
+app.post('/car/checkUpdateStatusAndGetStudentLocation', checkUpdateStatusAndGetStudentLocation);                // ✅🔒 check update status and get student location by ( schoolName, carNumber )
+// * check update = true  -> get new address -> get lat,long -> save,get student location 
+// * check update = false ->				                         ->   get student location	  
+// * ต้องมี token และนำไปใช้เมื่อเข้าสู่หน้ารถรับส่ง โดยจะทำการเช็คก่อนว่า address ของนักเรียนมีการเปลี่ยนแปลงหรือไม่
+// *  ถ้ามีจะทำการดึง lat,long ของ address ใหม่ เก็บไว้ใน firestore และนำไปใช้ต่อ
+
+app.post('/car/calculateAddressStudentsDistance', calculateAddressStudentsDistance);                            // ✅ calculate address students distance by (  schoolName, carNumber, carLocation, addressStudents )
+// * ไม่ต้องมี token และนำไปใช้เมื่อต้องการคำนวนระยะห่างระหว่างรถรับส่งและที่อยู่ของนักเรียนแต่ละคน
+// * โดยระบุ schoolName, carNumber, carLocation (ได้จาก getCarLocation), addressStudents (ได้จาก checkUpdate...)
+
+app.post('/car/getCarLocationAndCalculateDistance', getCarLocationAndCalculateDistance);                        // ✅ get car location and calculate distance by ( schoolName, carNumber, addressStudents )
+// * ไม่ต้องมี token และนำไปใช้เมื่อต้องการดึงตำแหน่งรถ และคำนวนระยะห่างระหว่างรถกับที่อยู่ของนักเรียนทุกคน
+// * โดยระบุ schoolName, carNumber, addressStudents (ได้จาก checkUpdate...)
+// * (ทำมาเผื่อ การเรียกใช้ api getLocation และ calDis 2 เส้นนั้นยุ่งยาก)
 
 
+
+// ? ===========================================================================================================================================================================
 // card
-app.post('/card/createParentCard', createParentCard);                                                           // ✅🔒✉️ create parent card
-app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card
-app.post('/card/getCardBySchoolNameAndCardType', getCardBySchoolNameAndCardType);                               // ✅🔒 get all card data by school name and card type
-app.post('/card/getCardBySchoolNameAndCardId', getCardBySchoolNameAndCardId);                                   // ✅🔒 get card data by school name and card id
-app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);                                   // ✅🔒 delete expire card by school name
+
+app.post('/card/createParentCard', createParentCard);                                                           // ✅🔒✉️ create parent card ( schoolName, parentEmail, parentName, studentId, parentImage )
+// * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้ปกครอง
+// * รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
+
+app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card ( schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage )
+// * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้มาติดต่อแทน
+// * รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
+
+app.post('/card/getCardBySchoolNameAndCardType', getCardBySchoolNameAndCardType);                               // ✅🔒 get all card data by ( schoolName, cardType )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรทั้งหมดในโรงเรียน โดยระบุประเภทบัตร (all, parent, visitor)
+
+app.post('/card/getCardBySchoolNameAndCardId', getCardBySchoolNameAndCardId);                                   // ✅🔒 get card data by ( schoolName, cardId )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตร โดยระบุ id
+
+app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);                                   // ✅🔒 delete expire card by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการลบบัตรของผู้มาติดต่อแทนที่หมดอายุ
 
 
-// storage
-app.post('/storage/listStorageFiles', listStorageFiles);                                                        // ✅ list all storage files by folder name
-app.post('/storage/downloadStorageFile', downloadStorageFile);            
 
 const PORT = process.env.PORT || 3000;
+
+
 
 app.use('/api', express.static(path.join(__dirname, 'api')));
 app.use('/authen', express.static(path.join(__dirname, '..', 'authen')));
