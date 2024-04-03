@@ -1,3 +1,4 @@
+const { EmailClient } = require("@azure/communication-email");
 const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
 
