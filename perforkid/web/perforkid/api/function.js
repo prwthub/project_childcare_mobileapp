@@ -7,6 +7,8 @@ const { getAuth,
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 
 // Function to format date
@@ -21,7 +23,21 @@ const formatDate = (dateString) => {
 const checkToken = async (token, schoolName) => {
     let validToken = false;
 
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    // * old code
+    // const decodedToken = await admin.auth().verifyIdToken(token);
+    // const userId = decodedToken.uid; 
+    // const userDoc = await db.collection('users').doc(userId).get();
+    // const user = userDoc.data();
+
+    // if (user.schoolName === schoolName) {
+    //     validToken = true;
+    // }
+
+    // return { validToken, user };
+
+
+    // * new code
+    const decodedToken = jwt.decode(token);
     const userId = decodedToken.uid; 
     const userDoc = await db.collection('users').doc(userId).get();
     const user = userDoc.data();

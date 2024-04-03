@@ -9,6 +9,8 @@ const functions = require("./function.js");
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 
 // ✅ sign in and generate token
@@ -90,10 +92,21 @@ exports.signIn = async (req, res) => {
             res.status(404).json({ error: "Role not found" });
         }
 
-        // Generate JWT token
-        const token = await user.getIdToken();
+        // * Generate JWT token (old code)
+        // const token = await user.getIdToken();
 
-        return res.status(200).json({ userInfo, userData, token });
+        // * Generate JWT token (new code)
+        const token = await admin.auth().createCustomToken(user.uid);
+
+        if (userInfo.firstLogin) {
+            userInfo.update({ firstLogin: false });
+            return res.status(200).json({ message: "First login",
+                                            userInfo, userData, token });
+        } else {
+            return res.status(200).json({ message: "User signed in successfully",
+                                            userInfo, userData, token });
+        }
+
     } catch (error) {
         console.error("Error signing in:", error);
         return res.status(500).json({ error: "Failed to sign in" });
@@ -224,6 +237,7 @@ exports.signUp = async (req, res) => {
             email,
             schoolName,
             role,
+            firstLogin: true,
             createDate: functions.formatDate(date),
         });
 
@@ -237,7 +251,6 @@ exports.signUp = async (req, res) => {
 
 // ❌ sign out and revoke token
 // ! token แม้ว่าจะ revoke แล้ว แต่ก็ยังสามารถใช้งานได้
-// ! token มีอายุ 1 ชั่วโมง ต้องแก้ไขเพื่อให้ token ไม่มีวันหมดอายุ
 exports.signOut = async (req, res) => {
     const token = req.headers.authorization;
     try {
@@ -252,5 +265,87 @@ exports.signOut = async (req, res) => {
     } catch (error) {
         console.error("Error signing out:", error);
         return res.status(500).json({ error: "Failed to sign out" });
+    }
+};
+
+
+
+// ✅🔒 create first pin
+exports.createFirstPin = async (req, res) => {
+    const { pin } = req.body;
+    
+    const token = req.headers.authorization;
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const userId = decodedToken.uid; 
+        const userDoc = await db.collection('users').doc(userId).get();
+        const user = userDoc.data();
+
+        // เข้ารหัส PIN ก่อนที่จะบันทึกลงในฐานข้อมูล
+        const hashedPin = crypto.createHash('sha256').update(pin).digest('hex');
+
+        // บันทึก PIN ที่เข้ารหัสลงในฐานข้อมูล
+        await userDoc.ref.update({ pin: hashedPin });
+
+        // ส่งคำตอบกลับว่าสำเร็จ
+        return res.status(200).json({ message: "PIN created successfully" });
+
+    } catch (error) {
+        console.error("Error create pin:", error);
+        return res.status(500).json({ error: "Failed to create pin" });
+    }
+};
+
+
+
+// ✅🔒 sign in with pin and generate new token
+exports.signInWithPin = async (req, res) => {
+    const { pin } = req.body;
+
+    const token = req.headers.authorization;
+    try {
+
+        // * generate token (try code)
+        // const user = await admin.auth().getUser(pin);
+        // const token = await admin.auth().createCustomToken(pin);
+        // console.log(user);
+        // console.log(token);
+        // return res.status(200).json({ user, token });
+
+
+        // * decode token (try code)
+        // const decodedToken = jwt.decode(token);
+        // const userId = decodedToken.uid; 
+        // const userDoc = await db.collection('users').doc(userId).get();
+        // const userData = userDoc.data();
+
+        // const user = await admin.auth().getUser(userId);
+        // const newToken = await admin.auth().createCustomToken(userId);
+        // return res.status(200).json({ decodedToken, userId, userData, pin, user, newToken});
+
+
+        // * real code
+        const decodedToken = jwt.decode(token);
+        const userId = decodedToken.uid; 
+        const userDoc = await db.collection('users').doc(userId).get();
+        const userData = userDoc.data();
+
+        const hashedPin = crypto.createHash('sha256').update(pin).digest('hex');
+
+        if (userData.pin !== hashedPin) {
+            return res.status(400).json({ error: "Incorrect PIN" });
+        } else {
+            // Get user data from Firebase Authentication
+            const user = await admin.auth().getUser(userId);
+
+            // Generate JWT token
+            const newToken = await admin.auth().createCustomToken(userId);
+
+            return res.status(200).json({ message: "PIN is correct", token: newToken });
+        }
+        
+    } catch (error) {
+        console.error("Error signing in with pin:", error);
+        res.status(500).json({ error: "Failed to sign in with pin" });
     }
 };
