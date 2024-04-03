@@ -99,7 +99,7 @@ exports.signIn = async (req, res) => {
         const token = await admin.auth().createCustomToken(user.uid);
 
         if (userInfo.firstLogin) {
-            userInfo.update({ firstLogin: false });
+            await db.collection('users').doc(user.uid).update({ firstLogin: false });
             return res.status(200).json({ message: "First login",
                                             userInfo, userData, token });
         } else {
@@ -276,10 +276,10 @@ exports.createFirstPin = async (req, res) => {
     
     const token = req.headers.authorization;
     try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
+        const decodedToken = jwt.decode(token);
         const userId = decodedToken.uid; 
         const userDoc = await db.collection('users').doc(userId).get();
-        const user = userDoc.data();
+        const userData = userDoc.data();
 
         // เข้ารหัส PIN ก่อนที่จะบันทึกลงในฐานข้อมูล
         const hashedPin = crypto.createHash('sha256').update(pin).digest('hex');

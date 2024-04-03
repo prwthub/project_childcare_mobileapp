@@ -37,31 +37,6 @@ exports.sendCarLocation = async (req, res) => {
 }
 
 
-// ✅🔒 get car location by ( schoolName, carNumber )
-exports.getCarLocation = async (req, res) => {
-    const { schoolName, carNumber } = req.body;
-
-    // Check for token in headers
-    const token = req.headers.authorization;
-    try {
-        // check token
-        const valid = await functions.checkToken(token, schoolName);
-        if (!valid.validToken) {
-            return res.status(401).json({ error: "Unauthorized" });
-        }
-
-        const carRef = ref(rdb, `car/${schoolName}/${carNumber}`);
-        const carSnapshot = await get(carRef);
-        if (carSnapshot.exists()) {
-            return res.status(200).json({ carLocation: carSnapshot.val() });
-        } else {
-            return res.status(404).json({ error: "Car location not found" });
-        }
-    } catch (error) {
-        return res.status(500).json({ error: "Error getting car location." });
-    }
-}
-
 
 // * check update = true  -> get new address -> get lat,long -> save,get student location -> cal distance (another api)
 
@@ -203,42 +178,6 @@ exports.checkUpdateStatusAndGetStudentLocation = async (req, res) => {
         }
     } catch (error) {
         return res.status(500).json({ error: "Error checking update status." });
-    }
-}
-
-
-
-// ✅ calculate address student and car by ( schoolName, carNumber, carLocation, addressStudents)
-exports.calculateAddressStudentsDistance = async (req, res) => {
-    const { schoolName, carNumber, carLocation, addressStudents } = req.body;
-
-    try {
-        for (let i=0; i<addressStudents.length; i++) {
-            distance = functions.calculateDistance(carLocation.lat, carLocation.long, addressStudents[i].lat, addressStudents[i].long);
-            
-            console.log(distance);
-            console.log(addressStudents[i].lat);
-            console.log(addressStudents[i].long);
-            console.log(carLocation.lat);
-            console.log(carLocation.long);
-
-            
-            
-            if (distance < 0.05) {
-                addressStudents[i].distance = distance;
-                addressStudents[i].arrived = true;
-            } else {
-                addressStudents[i].distance = distance;
-                addressStudents[i].arrived = false;
-            }
-        }
-
-        return res.status(200).json({ schoolName: schoolName, 
-                                        carNumber: carNumber, 
-                                        addressStudents: addressStudents });
-
-    } catch (error) {
-        return res.status(500).json({ error: "Error calculating distance." });
     }
 }
 

@@ -71,7 +71,7 @@ schoolRegisterForm.addEventListener("submit", async (e) => {
         await FirebaseAPI.addDoc(schoolsRef, schoolData);
         console.log("School Added (firestore)");
 
-        alert("ลงทะเบียนสำเร็จ");
+        alert("ลงทะเบียนสำเร็จ ระบบทำการส่งรหัสโรงเรียนและรหัสผู้ดูแลโรงเรียนไปที่อีเมลของคุณแล้ว");
         
         // Call SendEmail with information from the form
         const response = await fetch('/school/sendEmail', { 

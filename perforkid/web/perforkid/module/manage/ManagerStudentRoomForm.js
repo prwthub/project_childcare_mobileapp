@@ -384,7 +384,7 @@ async function uploadTable(file, roomNumber) {
           schedule: schedule
         }
       );
-      alert("--==Firestore update operation of schedule finished and successful==--")
+      alert("อัปโหลดไฟล์สำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
   }
 }
 

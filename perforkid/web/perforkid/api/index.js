@@ -48,9 +48,7 @@ const { getStudentCarBySchoolName,
         updateStudentCarStatusBySchoolNameAndId } = require('./studentCar.js');
 
 const { sendCarLocation,
-        getCarLocation,
         checkUpdateStatusAndGetStudentLocation,
-        calculateAddressStudentsDistance,
         getCarLocationAndCalculateDistance } = require('./car.js');
 
 const { createParentCard,
@@ -72,6 +70,7 @@ app.post('/authen/signOut', signOut);                                           
 
 app.post('/authen/createFirstPin', createFirstPin);                                                             // ✅🔒 create first pin
 // * ต้องมี token และนำไปใช้เมื่อต้องการสร้าง pin ครั้งแรก (เมื่อ login ครั้งแรก)
+// ! เมื่อ login จะมี message บอกว่า login ครั้งแรก ให้สร้าง pin ครั้งแรก
 
 app.post('/authen/signInWithPin', signInWithPin);                                                               // ✅🔒 sign in with pin and generate new token
 // * ต้องมี token และนำไปใช้เมื่อเข้าสู่ระบบอีกครั้ง เหมือนแอปธนาคาร ที่ต้องใส่ pin ทุกครั้ง
@@ -188,8 +187,8 @@ app.post('/studentCar/getStudentCarBySchoolNameAndId', getStudentCarBySchoolName
 
 app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCarStatusBySchoolNameAndId);       // ✅🔒 update student car status by ( schoolName, studentId, goStatus, backStatus )              
 // * ต้องมี token และนำไปใช้เมื่อต้องการจะอัพเดท status ของนักเรียนที่ขึ้นรถรับส่ง โดยระบุ id และ status ที่ต้องการอัพเดท
-// * goStatus มี ไปกับรถรับส่ง, ไปกับผู้ปกครอง, ไม่มาเรียน
-// * backStatus มี กลับกับรถรับส่ง, กลับกับผู้ปกครอง, ไม่มาเรียน
+// ! goStatus มี ไปกับรถรับส่ง, ไปกับผู้ปกครอง, ไม่มาเรียน
+// ! backStatus มี กลับกับรถรับส่ง, กลับกับผู้ปกครอง, ไม่มาเรียน
 
 
 
@@ -199,23 +198,19 @@ app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCar
 app.post('/car/sendCarLocation', sendCarLocation);                                                              // ✅🔒 send car location to realtime database ( schoolName, carNumber, lat, long )
 // * ต้องมี token และนำไปใช้เมื่อต้องการส่งตำแหน่งรถไปยัง firebase realtime database 
 
-app.post('/car/getCarLocation', getCarLocation);                                                                // ✅🔒 get car location by ( schoolName, carNumber )
-// * ต้องมี token และนำไปใช้เมื่อต้องการดูตำแหน่งรถ 
-
 app.post('/car/checkUpdateStatusAndGetStudentLocation', checkUpdateStatusAndGetStudentLocation);                // ✅🔒 check update status and get student location by ( schoolName, carNumber )
 // * check update = true  -> get new address -> get lat,long -> save,get student location 
 // * check update = false ->				                         ->   get student location	  
 // * ต้องมี token และนำไปใช้เมื่อเข้าสู่หน้ารถรับส่ง โดยจะทำการเช็คก่อนว่า address ของนักเรียนมีการเปลี่ยนแปลงหรือไม่
 // *  ถ้ามีจะทำการดึง lat,long ของ address ใหม่ เก็บไว้ใน firestore และนำไปใช้ต่อ
 
-app.post('/car/calculateAddressStudentsDistance', calculateAddressStudentsDistance);                            // ✅ calculate address students distance by (  schoolName, carNumber, carLocation, addressStudents )
-// * ไม่ต้องมี token และนำไปใช้เมื่อต้องการคำนวนระยะห่างระหว่างรถรับส่งและที่อยู่ของนักเรียนแต่ละคน
-// * โดยระบุ schoolName, carNumber, carLocation (ได้จาก getCarLocation), addressStudents (ได้จาก checkUpdate...)
-
 app.post('/car/getCarLocationAndCalculateDistance', getCarLocationAndCalculateDistance);                        // ✅ get car location and calculate distance by ( schoolName, carNumber, addressStudents )
 // * ไม่ต้องมี token และนำไปใช้เมื่อต้องการดึงตำแหน่งรถ และคำนวนระยะห่างระหว่างรถกับที่อยู่ของนักเรียนทุกคน
 // * โดยระบุ schoolName, carNumber, addressStudents (ได้จาก checkUpdate...)
-// * (ทำมาเผื่อ การเรียกใช้ api getLocation และ calDis 2 เส้นนั้นยุ่งยาก)
+
+
+// ! parent ใช้ getCarLocationAndCalculateDistance
+// ! driver ใช้ checkUpdateStatusAndGetStudentLocation -> sendCarLocation, getCarLocationAndCalculateDistance
 
 
 
@@ -228,7 +223,7 @@ app.post('/card/createParentCard', createParentCard);                           
 
 app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card ( schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้มาติดต่อแทน
-// * รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
+// ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
 app.post('/card/getCardBySchoolNameAndCardType', getCardBySchoolNameAndCardType);                               // ✅🔒 get all card data by ( schoolName, cardType )
 // * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรทั้งหมดในโรงเรียน โดยระบุประเภทบัตร (all, parent, visitor)

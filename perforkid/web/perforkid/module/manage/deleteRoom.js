@@ -111,6 +111,16 @@ async function deleteRoom() {
                 `school/${currentUser.school_name}/form_student/year${front}/form_student_${front}-${back}.xlsx`
               );
 
+              const storageRef2 = ref(
+                storage,
+                `school/${currentUser.school_name}/form_student_table/year${front}/student_${front}-${back}.jpg`
+              );
+
+              const storageRef3 = ref(
+                storage,
+                `school/${currentUser.school_name}/form_student_table/year${front}/student_${front}-${back}.png`
+              );
+
               // Check if the file exists before trying to delete it
               getDownloadURL(storageRef)
                 .then((url) => {
@@ -127,6 +137,60 @@ async function deleteRoom() {
                 .catch((error) => {
                   // File does not exist, do nothing or handle accordingly
                   console.error("Error getting download URL: ", error);
+
+                  // Handle the case where the file doesn't exist, for example:
+                  if (error.code === "storage/object-not-found") {
+                    console.log(
+                      "File does not exist. Skip deletion or handle accordingly."
+                    );
+                  } else {
+                    // Handle other errors as needed
+                    console.error("Unexpected error: ", error);
+                  }
+                });
+
+              getDownloadURL(storageRef2)
+                .then((url) => {
+                  // File exists, so proceed with deletion
+                  deleteObject(storageRef2)
+                    .then(() => {
+                      console.log("File table deleted successfully");
+                      // window.location.href = "../../Panel4Student.html";
+                    })
+                    .catch((error) => {
+                      console.error("Error table deleting file: ", error);
+                    });
+                })
+                .catch((error) => {
+                  // File does not exist, do nothing or handle accordingly
+                  console.error("Error table getting download URL: ", error);
+
+                  // Handle the case where the file doesn't exist, for example:
+                  if (error.code === "storage/object-not-found") {
+                    console.log(
+                      "File does not exist. Skip deletion or handle accordingly."
+                    );
+                  } else {
+                    // Handle other errors as needed
+                    console.error("Unexpected error: ", error);
+                  }
+                });
+
+              getDownloadURL(storageRef3)
+                .then((url) => {
+                  // File exists, so proceed with deletion
+                  deleteObject(storageRef3)
+                    .then(() => {
+                      console.log("File table deleted successfully");
+                      // window.location.href = "../../Panel4Student.html";
+                    })
+                    .catch((error) => {
+                      console.error("Error table deleting file: ", error);
+                    });
+                })
+                .catch((error) => {
+                  // File does not exist, do nothing or handle accordingly
+                  console.error("Error table getting download URL: ", error);
 
                   // Handle the case where the file doesn't exist, for example:
                   if (error.code === "storage/object-not-found") {
