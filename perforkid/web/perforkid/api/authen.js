@@ -100,10 +100,10 @@ exports.signIn = async (req, res) => {
 
         if (userInfo.firstLogin) {
             await db.collection('users').doc(user.uid).update({ firstLogin: false });
-            return res.status(200).json({ message: "First login",
+            return res.status(200).json({ firstLogin: true,
                                             userInfo, userData, token });
         } else {
-            return res.status(200).json({ message: "User signed in successfully",
+            return res.status(200).json({ firstLogin: false,
                                             userInfo, userData, token });
         }
 
