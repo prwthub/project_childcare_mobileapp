@@ -88,6 +88,23 @@ exports.signIn = async (req, res) => {
                 });
             });
 
+            const carsRef = schoolQuerySnapshot.docs[0].ref.collection('car');
+    
+            // Query cars-number == all
+            const carsQueryAllSnapshot = await carsRef.where('car-number', '==', 'all').get();
+
+            const studentCarRef = carsQueryAllSnapshot.docs[0].ref;
+            const studentCarQuerySnapshot = await studentCarRef.collection('student-car').get();
+            userData.forEach(student => {
+                studentCarQuerySnapshot.forEach(doc => {
+                    if (doc.data()["student-ID"] == student["student-ID"]) {
+                        student["car-number"] = doc.data()["car-number"];
+                        student["go-status"] = doc.data()["go-status"];
+                        student["back-status"] = doc.data()["back-status"];
+                    }
+                });
+            });
+
         } else {
             res.status(404).json({ error: "Role not found" });
         }

@@ -12,7 +12,10 @@ exports.getSchool = async (req, res) => {
         const snapshot = await schoolsRef.get();
         const data = snapshot.docs.map(doc => ({
             id: doc.id,
-            ...doc.data(),
+            schoolName: doc.data()['school-name'],
+            schoolTitleTh: doc.data()['school-title-th'],
+            schoolTitleEn: doc.data()['school-title-en'],
+            // ...doc.data(),
         }));
         console.log(data);
         return res.status(200).json({ schoolData: data });

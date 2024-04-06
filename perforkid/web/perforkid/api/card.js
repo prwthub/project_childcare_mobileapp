@@ -2,6 +2,7 @@ const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
 
 const functions = require("./function.js");
+const jwt = require('jsonwebtoken');
 
 
 // ✅🔒✉️ create a new parent card
@@ -34,6 +35,24 @@ exports.createParentCard = async (req, res) => {
             return res.status(400).json({ error: "Parent card already exists" });
         } // not sure
 
+        
+        // ดึงข้อมูลนักเรียน
+        const studentRef = schoolDocRef.collection('student');
+        const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
+
+        const studentListRef = studentQuerySnapshot.docs[0].ref;
+        const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
+
+        let studentName = [];
+        let studentData = studentId.split(',');
+        studentData.forEach(id => {
+            studentListQuerySnapshot.forEach(doc => {
+                if (doc.data()['student-ID'] == id) {
+                    studentName.push(doc.data()['name-surname']);
+                }
+            });
+        });
+
         // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
         const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
         let id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
@@ -47,13 +66,15 @@ exports.createParentCard = async (req, res) => {
             ["card-type"]   : "parent",
             ["parent-email"]: parentEmail,
             ["parent-name"] : parentName,
-            ["student-ID"]  : studentId,
+            ["student-ID"]  : studentData,
+            ["student-name"]: studentName,
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : "none",
             ["parent-image"]: parentImage,
         });
 
-        return res.status(201).json({ message: "Parent card created successfully" });
+        return res.status(201).json({ cardId: id,
+                                        message: "Parent card created successfully" });
     } catch (error) {
         console.error("Error creating parent card:", error);
         return res.status(500).json({ error: "Error occurred while creating parent card." });
@@ -92,6 +113,23 @@ exports.createVisitorCard = async (req, res) => {
             return res.status(400).json({ error: "Visitor card already exists" });
         }
 
+        // ดึงข้อมูลนักเรียน
+        const studentRef = schoolDocRef.collection('student');
+        const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
+
+        const studentListRef = studentQuerySnapshot.docs[0].ref;
+        const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
+
+        let studentName = [];
+        let studentData = studentId.split(',');
+        studentData.forEach(id => {
+            studentListQuerySnapshot.forEach(doc => {
+                if (doc.data()['student-ID'] == id) {
+                    studentName.push(doc.data()['name-surname']);
+                }
+            });
+        });
+
         // สร้าง ID โดยใช้เวลาปัจจุบันและเพิ่มเลขสุ่ม
         const randomNumber = Date.now().toString() + Math.floor(Math.random() * 1000);
         const id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
@@ -108,15 +146,60 @@ exports.createVisitorCard = async (req, res) => {
             ["visitor-name"] : visitorName,
             ["parent-email"]: parentEmail,
             ["parent-name"] : parentName,
-            ["student-ID"]  : studentId,
+            ["student-ID"]  : studentData,
+            ["student-name"]: studentName,
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : formattedExpireDate,
             ["visitor-image"]: visitorImage,
         });
 
-        return res.status(201).json({ message: "Visitor card created successfully" });
+        return res.status(201).json({ cardId: id,
+                                        message: "Visitor card created successfully" });
     } catch (error) {
         return res.status(500).json({ error: "Error occurred while creating visitor card." });
+    }
+};
+
+
+
+// ✅🔒 get visitor card by ( schoolName, email )
+exports.getVisitorCardBySchoolNameAndEmail = async (req, res) => {
+    const { schoolName, email } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+        
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const cardRef = schoolDocRef.collection('card');
+        const cardQuerySnapshot = await cardRef.where('parent-email', '==', email).where('card-type', '==', 'visitor').get();
+
+        if (cardQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Visitor card not found" });
+        }
+
+        const cardData = cardQuerySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        return res.status(200).json({ cardData: cardData });
+    }
+    catch (error) {
+        console.error("Error getting visitor card:", error);
+        return res.status(500).json({ error: "Error getting visitor card." });
     }
 };
 
@@ -158,16 +241,83 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
 
         let cardData = [];
         cardQuerySnapshot.forEach(doc => {
-            const { "parent-image": parentImage, "visitor-image": visitorImage, ...rest } = doc.data(); // เอาเฉพาะฟิลด์ที่ไม่ใช่ "image"
+            // const { "parent-image": parentImage, "visitor-image": visitorImage, ...rest } = doc.data(); // เอาเฉพาะฟิลด์ที่ไม่ใช่ "image"
             cardData.push({
                 id: doc.id,
-                ...rest
+                ...doc.data(),
+                // ...rest
             });
         });
 
         return res.status(200).json({ cardData: cardData });
     } catch (error) {
         return res.status(500).json({ error: "Error getting card by type." });
+    }
+};
+
+
+
+// ✅🔒 get card by ( schoolName )
+exports.getCardBySchoolNameAndToken = async (req, res) => {
+    const { schoolName } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const email = valid.user.email;
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const cardRef = schoolDocRef.collection('card');
+        const cardQuerySnapshot = await cardRef.where('parent-email', '==', email).where('card-type', '==', 'parent').get();
+
+
+        if (cardQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Card not found" });
+        }
+
+        const cardData = cardQuerySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        // const studentId = cardData[0]["student-ID"];
+
+        // const studentRef = schoolDocRef.collection('student');
+        // const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
+        
+        // const studentListRef = studentQuerySnapshot.docs[0].ref;
+        // const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
+
+        // let studentData = [];
+        // studentListQuerySnapshot.forEach(doc => {
+        //     studentId.forEach(id => {
+        //         if (doc.data()['student-ID'] == id) {
+        //             studentData.push({
+        //                 id: doc.id,
+        //                 ...doc.data()
+        //             });
+        //         }
+        //     });
+        // });
+
+        // return res.status(200).json({ cardData, studentData });
+
+        return res.status(200).json({ cardData: cardData });
+    } catch (error) {
+        console.error("Error getting card by cardId:", error);
+        return res.status(500).json({ error: "Error getting card." });
     }
 };
 
@@ -207,27 +357,29 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
             ...doc.data()
         }));
 
-        const studentId = cardData[0]["student-ID"].split(',');
+        // const studentId = cardData[0]["student-ID"];
 
-        const studentRef = schoolDocRef.collection('student');
-        const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
+        // const studentRef = schoolDocRef.collection('student');
+        // const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
         
-        const studentListRef = studentQuerySnapshot.docs[0].ref;
-        const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
+        // const studentListRef = studentQuerySnapshot.docs[0].ref;
+        // const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
 
-        let studentData = [];
-        studentListQuerySnapshot.forEach(doc => {
-            studentId.forEach(id => {
-                if (doc.data()['student-ID'] == id) {
-                    studentData.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                }
-            });
-        });
+        // let studentData = [];
+        // studentListQuerySnapshot.forEach(doc => {
+        //     studentId.forEach(id => {
+        //         if (doc.data()['student-ID'] == id) {
+        //             studentData.push({
+        //                 id: doc.id,
+        //                 ...doc.data()
+        //             });
+        //         }
+        //     });
+        // });
 
-        return res.status(200).json({ cardData, studentData });
+        // return res.status(200).json({ cardData, studentData });
+
+        return res.status(200).json({ cardData: cardData });
     } catch (error) {
         console.error("Error getting card by cardId:", error);
         return res.status(500).json({ error: "Error getting card by cardId." });
