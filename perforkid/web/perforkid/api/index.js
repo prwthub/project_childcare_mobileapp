@@ -281,3 +281,23 @@ app.get('/:page', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { webGetTeacherBySchoolName,
+        webGetDriverBySchoolName } = require('./web.js');
+
+app.post('/web/teacher/getTeacherBySchoolName', webGetTeacherBySchoolName);                                     // ✅ get teachers by ( schoolName )
+
+app.post('/web/driver/getDriverBySchoolName', webGetDriverBySchoolName); 
