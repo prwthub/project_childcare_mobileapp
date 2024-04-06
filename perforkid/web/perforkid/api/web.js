@@ -39,7 +39,7 @@ exports.webGetTeacherBySchoolName = async (req, res) => {
         console.error("Error getting teachers by school name:", error);
         return res.status(500).json({ error: "Error getting teachers by school name." });
     }
-};
+}; 
 
 
 
