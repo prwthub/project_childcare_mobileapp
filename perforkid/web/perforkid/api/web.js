@@ -25,7 +25,7 @@ exports.webGetTeacherBySchoolName = async (req, res) => {
         const teachersQuerySnapshot = await teachersRef.get();
 
         // Map through teachers and return the data
-        const teacherData = teachersQuerySnapshot.docs.map(doc => ({
+        let teacherData = teachersQuerySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
@@ -33,13 +33,17 @@ exports.webGetTeacherBySchoolName = async (req, res) => {
         if (teacherData.length === 0) {
             return res.status(404).json({ error: "No teachers found" });
         } else {
+            // Sort the teacherData array by teacher-ID
+            teacherData.sort((a, b) => a["teacher-ID"].localeCompare(b["teacher-ID"]));
+
             return res.status(200).json({ teacherData: teacherData });
         }
     } catch (error) {
         console.error("Error getting teachers by school name:", error);
         return res.status(500).json({ error: "Error getting teachers by school name." });
     }
-}; 
+};
+
 
 
 
@@ -64,7 +68,7 @@ exports.webGetDriverBySchoolName = async (req, res) => {
         const driversQuerySnapshot = await driversRef.get();
 
         // Map through drivers and return the data
-        const driverData = driversQuerySnapshot.docs.map(doc => ({
+        let driverData = driversQuerySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
@@ -72,6 +76,9 @@ exports.webGetDriverBySchoolName = async (req, res) => {
         if (driverData.length === 0) {
             return res.status(404).json({ error: "No drivers found" });
         } else {
+            // Sort the driverData array by driver-ID
+            driverData.sort((a, b) => a["driver-ID"].localeCompare(b["driver-ID"]));
+
             return res.status(200).json({ driverData: driverData });
         }
     } catch (error) {
