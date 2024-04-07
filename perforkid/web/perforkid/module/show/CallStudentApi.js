@@ -34,13 +34,21 @@ async function fetchStudent() {
     );
 
     let data = await response.json();
+    if (response.status === 404) {
+        console.log("No student found");
+        return [];
+    }
 
     console.log(data.studentData);
     return data.studentData;
 }
 
 async function generateStudentTable() {
-    
+    let schoolData = await fetchStudent();
+    if (schoolData.length === 0) {
+        return;
+    }
+
     var itemsData = [];
     const storageRef = ref(storage, `school/${currentUser.school_name}/images-student`);
     try {
@@ -71,7 +79,7 @@ async function generateStudentTable() {
         </tr>
     `;
     
-    let schoolData = await fetchStudent();
+    
     for (const school of schoolData) {
         const foundImage = itemsData.includes(`${school["student-ID"]}.png`);
         if (foundImage) {
