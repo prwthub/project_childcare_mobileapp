@@ -16,9 +16,9 @@ const storage = getStorage(app);
 
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-async function fetchTeacher() {
+async function fetchDriver() {
     let response = await fetch(
-        "https://perforkid.azurewebsites.net/web/teacher/getTeacherBySchoolName",
+        "https://perforkid.azurewebsites.net/web/driver/getDriverBySchoolName",
         {
             method: "POST",
             headers: {
@@ -30,14 +30,14 @@ async function fetchTeacher() {
 
     let data = await response.json();
 
-    console.log(data.teacherData);
-    return data.teacherData;
+    console.log(data.driverData);
+    return data.driverData;
 }
 
-async function generateTeacherTable() {
+async function generateDriverTable() {
     
     var itemsData = [];
-    const storageRef = ref(storage, `school/${currentUser.school_name}/images-teacher`);
+    const storageRef = ref(storage, `school/${currentUser.school_name}/images-driver`);
     try {
         var { items } = await listAll(storageRef);
         for (const itemRef of items) {
@@ -51,11 +51,9 @@ async function generateTeacherTable() {
     let tableHtml = `
     <table>
         <tr>
-            <th>teacher-ID</th>
+            <th>driver-ID</th>
             <th>name-surname</th>
-            <th>class-room</th>
-            <th>teaching-room</th>
-            <th>subject</th>
+            <th>car-number</th>
             <th>phone</th>
             <th>email</th>
             <th>address</th>
@@ -64,31 +62,29 @@ async function generateTeacherTable() {
         </tr>
     `;
     
-    let schoolData = await fetchTeacher();
+    let schoolData = await fetchDriver();
     for (const school of schoolData) {
-        const foundImage = itemsData.includes(`${school["teacher-ID"]}.png`);
+        const foundImage = itemsData.includes(`${school["driver-ID"]}.png`);
         if (foundImage) {
-            const teacherImageRef = ref(storage, `school/${currentUser.school_name}/images-teacher/${school["teacher-ID"]}.png`);
+            const driverImageRef = ref(storage, `school/${currentUser.school_name}/images-driver/${school["driver-ID"]}.png`);
             try {
-                const imageUrl = await getDownloadURL(teacherImageRef);
-                console.log(`${school["teacher-ID"]} teacherImage exists`);
+                const imageUrl = await getDownloadURL(driverImageRef);
+                console.log(`${school["driver-ID"]} driverImage exists`);
                 tableHtml += `
                 <tr>
-                    <td>${school["teacher-ID"]}</td>
+                    <td>${school["driver-ID"]}</td>
                     <td>${school["name-surname"]}</td>
-                    <td>${school["class-room"]}</td>
-                    <td>${school["teaching-room"]}</td>
-                    <td>${school["subject"]}</td>
+                    <td>${school["car-number"]}</td>
                     <td>${school["phone"]}</td>
                     <td>${school["email"]}</td>
                     <td>${school["address"]}</td>
                     <td style="text-align: center;">
-                        <img id="previewImg-${school["teacher-ID"]}" src="${imageUrl}" style="height:100px">
+                        <img id="previewImg-${school["driver-ID"]}" src="${imageUrl}" style="height:100px">
                         <div>
-                            <button id="delFile-${school["teacher-ID"]}"> Delete </button>
+                            <button id="delFile-${school["driver-ID"]}"> Delete </button>
                         </div>
                     </td>
-                    <td><input id="fileInput-${school["teacher-ID"]}" type="file" accept="image/*"></td>
+                    <td><input id="fileInput-${school["driver-ID"]}" type="file" accept="image/*"></td>
                 </tr>`;
             } catch (error) {
                 console.error('Error getting download URL:', error);
@@ -96,21 +92,19 @@ async function generateTeacherTable() {
         } else {
             tableHtml += `
             <tr>
-                <td>${school["teacher-ID"]}</td>
+                <td>${school["driver-ID"]}</td>
                 <td>${school["name-surname"]}</td>
-                <td>${school["class-room"]}</td>
-                <td>${school["teaching-room"]}</td>
-                <td>${school["subject"]}</td>
+                <td>${school["car-number"]}</td>
                 <td>${school["phone"]}</td>
                 <td>${school["email"]}</td>
                 <td>${school["address"]}</td>
                 <td style="text-align: center;">
-                    <img id="previewImg-${school["teacher-ID"]}" src="../../picture/user.jpg" style="height:100px">
+                    <img id="previewImg-${school["driver-ID"]}" src="../../picture/user.jpg" style="height:100px">
                     <div>
-                        <button id="delFile-${school["teacher-ID"]}" style="display:none;"> Delete </button>
+                        <button id="delFile-${school["driver-ID"]}" style="display:none;"> Delete </button>
                     </div>
                 </td>
-                <td><input id="fileInput-${school["teacher-ID"]}" type="file" accept="image/*"></td>
+                <td><input id="fileInput-${school["driver-ID"]}" type="file" accept="image/*"></td>
             </tr>`;
         }    
     }
@@ -119,27 +113,27 @@ async function generateTeacherTable() {
 
     // เพิ่ม event listener ให้กับ input element ในแต่ละ row
     schoolData.forEach((school) => {
-        const fileInput = document.getElementById(`fileInput-${school["teacher-ID"]}`);
+        const fileInput = document.getElementById(`fileInput-${school["driver-ID"]}`);
         if (fileInput) {
             fileInput.addEventListener("change", function () {
-                handleImageUpload(this, school["teacher-ID"]);
+                handleImageUpload(this, school["driver-ID"]);
             });
         }
         
-        const delButtonPng = document.getElementById(`delFile-${school["teacher-ID"]}`);
+        const delButtonPng = document.getElementById(`delFile-${school["driver-ID"]}`);
         if (delButtonPng) { 
             delButtonPng.addEventListener("click", function () {
-                let fileName = `${school["teacher-ID"]}.png`;
+                let fileName = `${school["driver-ID"]}.png`;
                 handleDeleteImage(fileName);
             });
         } 
     });
 }
 
-async function handleImageUpload(input, teacherID) {
+async function handleImageUpload(input, driverID) {
     const file = input.files[0];
-    if (!file.name.startsWith(teacherID)) {
-        alert("File name does not match teacher-ID");
+    if (!file.name.startsWith(driverID)) {
+        alert("File name does not match driver-ID");
         return;
     }
 
@@ -153,30 +147,30 @@ async function handleImageUpload(input, teacherID) {
 
     // เมื่อไฟล์อ่านเสร็จสิ้นแล้ว
     reader.onload = function (e) {
-        const previewImg = document.getElementById(`previewImg-${teacherID}`);
+        const previewImg = document.getElementById(`previewImg-${driverID}`);
         previewImg.src = e.target.result;
 
-        const delButton = document.getElementById(`delFile-${teacherID}`);
+        const delButton = document.getElementById(`delFile-${driverID}`);
         delButton.style.display = "inline";
     };
     reader.readAsDataURL(file);
 
-    const storageRef = ref(storage, `school/${currentUser.school_name}/images-teacher/${file.name}`);
+    const storageRef = ref(storage, `school/${currentUser.school_name}/images-driver/${file.name}`);
     await uploadBytes(storageRef, file);
     console.log("Image uploaded successfully");
 }
 
 
-async function handleDeleteImage(teacherID) {
-    console.log(`Delete image ${teacherID} . . .`);
-    const imageRef = ref(storage, `school/${currentUser.school_name}/images-teacher/${teacherID}`);
+async function handleDeleteImage(driverID) {
+    console.log(`Delete image ${driverID} . . .`);
+    const imageRef = ref(storage, `school/${currentUser.school_name}/images-driver/${driverID}`);
 
     try {
         await deleteObject(imageRef);
-        console.log(`Image ${teacherID} deleted successfully`);
+        console.log(`Image ${driverID} deleted successfully`);
         alert("Image deleted successfully");
 
-        let [id, ext] = teacherID.split(".")
+        let [id, ext] = driverID.split(".")
         const previewImg = document.getElementById(`previewImg-${id}`);
         if (previewImg) {
             previewImg.src = "../../picture/user.jpg";
@@ -189,5 +183,5 @@ async function handleDeleteImage(teacherID) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    generateTeacherTable();
+    generateDriverTable();
 });
