@@ -65,6 +65,7 @@
                                 }
                             }
                         </script>
+                        <script src="./module/show/CallStudentCarApi.js" type="module" vanNum=${vanNum}></script>
                         <script src="./module/manage/deleteVan.js" type="module" van="${vanNum}">
                             console.log(van)
                         </script>
@@ -168,6 +169,29 @@
                     </div>
                 </div>
 
+                <div>
+                    <style>
+                      table {
+                        border-collapse: collapse;
+                        width: 100%;
+                      }
+                      th, td {
+                        border: 1px solid black;
+                        padding: 8px;
+                        text-align: left;
+                      }
+                      th {
+                        background-color: #f2f2f2;
+                      }
+                      .scrollable-table {
+                        overflow-x: auto;
+                        overflow-y: auto;
+                      }
+                    </style>
+                  
+                    <div class="scrollable-table" id="schoolTable"></div>
+                </div>
+                
                 <!-- here -->
                 <script>
                     const paramsVan = new URLSearchParams(window.location.search);
