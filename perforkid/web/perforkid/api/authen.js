@@ -45,7 +45,9 @@ exports.signIn = async (req, res) => {
                 return res.status(404).json({ error: "Teacher not found" });
             }
 
-            userData = teacherQuerySnapshot.docs[0].data();
+            // userData = teacherQuerySnapshot.docs[0].data();
+            const data = teacherQuerySnapshot.docs[0].data();
+            userData.push(data);
 
         } else if (userInfo.role === 'driver') {
             const driversRef = schoolQuerySnapshot.docs[0].ref.collection('driver');
@@ -55,7 +57,9 @@ exports.signIn = async (req, res) => {
                 return res.status(404).json({ error: "Driver not found" });
             }
 
-            userData = driverQuerySnapshot.docs[0].data();
+            // userData = driverQuerySnapshot.docs[0].data();
+            const data = driverQuerySnapshot.docs[0].data();
+            userData.push(data);
 
         } else if (userInfo.role === 'parent') {
             let studentDataPromises = [];
