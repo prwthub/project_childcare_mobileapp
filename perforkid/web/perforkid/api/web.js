@@ -1,6 +1,10 @@
 const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
+const { initializeApp } = require("firebase/app");
+const { getStorage, ref, listAll, getMetadata, getDownloadURL } = require("firebase/storage");
 
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 const functions = require("./function.js");
 
 
@@ -219,4 +223,47 @@ exports.webGetStudentCarBySchoolNameAndCarNumber = async (req, res) => {
         console.error("Error retrieving students:", error);
         return res.status(500).json({ error: "Error retrieving students data." });
     }   
+};
+
+
+
+// ✅ get image by ( schoolName, type, id )
+exports.getImageBySchoolNameAndTypeAndId = async (req, res) => {
+    const { schoolName, type, id } = req.body;
+
+    try {
+        const filePath = "school/" + schoolName + "/" + "images-" + type + "/";
+        const fileRef = ref(storage, filePath);
+        const { items } = await listAll(fileRef);
+        const fileNames = items.map(item => {
+            const location = item._location;
+            const fileName = location.path_.split('/').pop();
+            return fileName;
+        });
+        console.log("File names:", fileNames);
+
+        let imageName = id + ".png";
+        if (!fileNames.includes(imageName)) {
+            const userIconPath = "formImage/userIcon.png";
+
+            const userIconRef = ref(storage, userIconPath);
+
+            const downloadURL = await getDownloadURL(userIconRef);
+
+            return res.status(200).json({ found: false,
+                                            image: downloadURL });
+        } else {
+            const imagePath = "school/" + schoolName + "/" + "images-" + type + "/" + id + ".png";
+
+            const imageRef = ref(storage, imagePath);
+
+            const downloadURL = await getDownloadURL(imageRef);
+
+            return res.status(200).json({ found: true,
+                                            image: downloadURL });
+        }
+    } catch (error) {
+        console.error("Error retrieving image:", error);
+        return res.status(500).json({ error: "Error retrieving image." });
+    }
 };

@@ -36,7 +36,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    // \"email\": \"somchai@teacher.com\",          // teacher (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // \"email\": \"melisa.su@driver.com\",         // driver (KMUTNB)\n    // \"password\": \"12345678\"\n\n\n    // มีลูกแค่ 1 คน\n    \"email\": \"chloe-11@example.com\",         // parent 1/1 (KMUTNB)\n    \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คน ในห้องเดียวกัน คนแรก ขึ้นรถตู้ คนสองไม่ขึ้น\n    // \"email\": \"david-11@example.com\",         // parent 1/1 (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คนในห้องเดียวกัน ไม่ขึ้นรถตู้ทั้งสองคน\n    // \"email\": \"andrew-12@example.com\",        // parent 1/2 (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คน คนละห้องกัน ขึ้นรถตู้คันเดียวกัน\n    // \"email\": \"henri-21@example.com\",         // parent 2/1 (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คน คนละห้องกัน ขึ้นรถตู้ คนละคันกัน\n    // \"email\": \"wei-22@example.com\",           // parent 2/2 (KMUTNB)\n    // \"password\": \"12345678\"\n}",
+							"raw": "{\n    // \"email\": \"somchai@teacher.com\",          // teacher (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // \"email\": \"melisa.su@driver.com\",         // driver (KMUTNB)\n    // \"password\": \"12345678\"\n\n\n    // มีลูกแค่ 1 คน\n    // \"email\": \"chloe-11@example.com\",         // parent 1/1 (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คน ในห้องเดียวกัน คนแรก ขึ้นรถตู้ คนสองไม่ขึ้น\n    \"email\": \"david-11@example.com\",         // parent 1/1 (KMUTNB)\n    \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คนในห้องเดียวกัน ไม่ขึ้นรถตู้ทั้งสองคน\n    // \"email\": \"andrew-12@example.com\",        // parent 1/2 (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คน คนละห้องกัน ขึ้นรถตู้คันเดียวกัน\n    // \"email\": \"henri-21@example.com\",         // parent 2/1 (KMUTNB)\n    // \"password\": \"12345678\"\n\n    // มีลูกมากกว่า 1 คน คนละห้องกัน ขึ้นรถตู้ คนละคันกัน\n    // \"email\": \"wei-22@example.com\",           // parent 2/2 (KMUTNB)\n    // \"password\": \"12345678\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -999,7 +999,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentRoom\": \"2/1\"\n}",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentRoom\": \"1/1\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1032,7 +1032,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentId\": \"32105\"\n}",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentId\": \"31501\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1105,7 +1105,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"3\",\r\n    \"lat\": 13.6530464,\r\n    \"long\": 100.4042056\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\",\r\n    \"lat\": 13.404000,\r\n    \"long\": 100.404000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1138,7 +1138,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"3\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1171,7 +1171,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"1\",\r\n    \"addressStudents\": [\r\n        {\r\n            \"class-room\": \"3/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"55 1 ตำบลบางเลน อำเภอบางใหญ่ นนทบุรี 11140\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"35101\",\r\n            \"index\": 5,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Naoki Tanaka\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8699052,\r\n            \"long\": 100.4375516\r\n        },\r\n        {\r\n            \"class-room\": \"1/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"833 ถ.เพชรเกษม ตำบลสนามจันทร์ อำเภอเมืองนครปฐม นครปฐม 73000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"32101\",\r\n            \"index\": 2,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Johnson\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8041958,\r\n            \"long\": 100.0328564\r\n        },\r\n        {\r\n            \"class-room\": \"1/1\",\r\n            \"address\": \"99, 21 หมู่ที่ 2 ถ. บรมราชชนนี ตำบล บางเตย อำเภอสามพราน นครปฐม 73210\",\r\n            \"back-status\": \"ไม่มาเรียน\",\r\n            \"go-status\": \"ไม่มาเรียน\",\r\n            \"mother-phone\": \"234-567-8901\",\r\n            \"student-ID\": \"31501\",\r\n            \"index\": \"1\",\r\n            \"father-phone\": \"123-456-7890\",\r\n            \"name-surname\": \"John Smith\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.7859085,\r\n            \"long\": 100.2790007\r\n        },\r\n        {\r\n            \"class-room\": \"2/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1693 ถ. พหลโยธิน แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"33101\",\r\n            \"index\": 3,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Martin\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8171677,\r\n            \"long\": 100.5615817\r\n        },\r\n        {\r\n            \"class-room\": \"3/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"126 ถ. ประชาอุทิศ แขวงบางมด เขตทุ่งครุ กรุงเทพมหานคร 10140\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"36101\",\r\n            \"index\": 6,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Hyun Park\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.6500138,\r\n            \"long\": 100.4943362\r\n        },\r\n        {\r\n            \"class-room\": \"2/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1027 ถนน เพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"34101\",\r\n            \"index\": 4,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Jack Wang\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.7445893,\r\n            \"long\": 100.5445541\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\" : \"1\",\r\n    \"addressStudents\": [\r\n        {\r\n            \"class-room\": \"2/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1693 ถ. พหลโยธิน แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"34111\",\r\n            \"index\": \"7\",\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"another henri child\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8171677,\r\n            \"long\": 100.5615817\r\n        },\r\n        {\r\n            \"class-room\": \"2/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1027 ถนน เพลินจิต แขวงลุมพินี เขตปทุมวัน กรุงเทพมหานคร 10330\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"34101\",\r\n            \"index\": 4,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Jack Wang\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.7445893,\r\n            \"long\": 100.5445541\r\n        },\r\n        {\r\n            \"class-room\": \"1/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"833 ถ.เพชรเกษม ตำบลสนามจันทร์ อำเภอเมืองนครปฐม นครปฐม 73000\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"32101\",\r\n            \"index\": 2,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Johnson\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8041958,\r\n            \"long\": 100.0328564\r\n        },\r\n        {\r\n            \"class-room\": \"2/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"1693 ถ. พหลโยธิน แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"33101\",\r\n            \"index\": 3,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"William Martin\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8171677,\r\n            \"long\": 100.5615817\r\n        },\r\n        {\r\n            \"class-room\": \"3/2\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"126 ถ. ประชาอุทิศ แขวงบางมด เขตทุ่งครุ กรุงเทพมหานคร 10140\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"36101\",\r\n            \"index\": 6,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Hyun Park\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.6500138,\r\n            \"long\": 100.4943362\r\n        },\r\n        {\r\n            \"class-room\": \"3/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"55 1 ตำบลบางเลน อำเภอบางใหญ่ นนทบุรี 11140\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"345-678-9012\",\r\n            \"student-ID\": \"35101\",\r\n            \"index\": 5,\r\n            \"father-phone\": \"234-567-8901\",\r\n            \"name-surname\": \"Naoki Tanaka\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.8699052,\r\n            \"long\": 100.4375516\r\n        },\r\n        {\r\n            \"class-room\": \"1/1\",\r\n            \"back-status\": \"กลับกับรถตู้โรงเรียน\",\r\n            \"address\": \"99, 21 หมู่ที่ 2 ถ. บรมราชชนนี ตำบล บางเตย อำเภอสามพราน นครปฐม 73210\",\r\n            \"go-status\": \"มากับรถตู้โรงเรียน\",\r\n            \"mother-phone\": \"234-567-8901\",\r\n            \"student-ID\": \"31501\",\r\n            \"index\": \"1\",\r\n            \"father-phone\": \"123-456-7890\",\r\n            \"name-surname\": \"John Smith\",\r\n            \"car-number\": \"1\",\r\n            \"lat\": 13.7859085,\r\n            \"long\": 100.2790007\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1308,7 +1308,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardType\": \"visitor\"           // all, parent, visitor\n}",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardType\": \"all\"           // all, parent, visitor\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1558,6 +1558,33 @@
 								"web",
 								"studentCar",
 								"getStudentCarBySchoolNameAndCarNumber"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "✅ getImageBySchoolNameAndTypeAndId",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"type\": \"student\",\r\n    \"id\": \"31501\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/image/getImageBySchoolNameAndTypeAndId",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"image",
+								"getImageBySchoolNameAndTypeAndId"
 							]
 						}
 					},

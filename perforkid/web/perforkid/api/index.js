@@ -298,7 +298,8 @@ app.listen(PORT, () => {
 const { webGetTeacherBySchoolName,
         webGetDriverBySchoolName,
         webGetStudentBySchoolNameAndStudentRoom,
-        webGetStudentCarBySchoolNameAndCarNumber } = require('./web.js');
+        webGetStudentCarBySchoolNameAndCarNumber,
+        getImageBySchoolNameAndTypeAndId } = require('./web.js');
 
 app.post('/web/teacher/getTeacherBySchoolName', webGetTeacherBySchoolName);
 
@@ -307,3 +308,5 @@ app.post('/web/driver/getDriverBySchoolName', webGetDriverBySchoolName);
 app.post('/web/student/getStudentBySchoolNameAndStudentRoom', webGetStudentBySchoolNameAndStudentRoom);
 
 app.post('/web/studentCar/getStudentCarBySchoolNameAndCarNumber', webGetStudentCarBySchoolNameAndCarNumber);
+
+app.post('/image/getImageBySchoolNameAndTypeAndId', getImageBySchoolNameAndTypeAndId);
