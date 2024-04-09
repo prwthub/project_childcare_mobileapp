@@ -161,10 +161,9 @@ exports.createVisitorCard = async (req, res) => {
 };
 
 
-
-// ✅🔒 get visitor card by ( schoolName, email )
-exports.getVisitorCardBySchoolNameAndEmail = async (req, res) => {
-    const { schoolName, email } = req.body;
+// ✅🔒 get card by ( schoolName, cardType )
+exports.getCardBySchoolNameAndCardTypeAndToken = async (req, res) => {
+    const { schoolName, cardType } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -174,7 +173,8 @@ exports.getVisitorCardBySchoolNameAndEmail = async (req, res) => {
         if (!valid.validToken) {
             return res.status(401).json({ error: "Unauthorized" });
         }
-        
+
+        const email = valid.user.email;
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
 
@@ -184,22 +184,36 @@ exports.getVisitorCardBySchoolNameAndEmail = async (req, res) => {
 
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const cardRef = schoolDocRef.collection('card');
-        const cardQuerySnapshot = await cardRef.where('parent-email', '==', email).where('card-type', '==', 'visitor').get();
+        let cardQuerySnapshot; 
 
-        if (cardQuerySnapshot.empty) {
-            return res.status(404).json({ error: "Visitor card not found" });
+        if (cardType === "parent") {
+            cardQuerySnapshot = await cardRef.where('parent-email', '==', email).where('card-type', '==', 'parent').get();
+        } else if (cardType === "visitor") {
+            cardQuerySnapshot = await cardRef.where('parent-email', '==', email).where('card-type', '==', 'visitor').get();
+        } else if (cardType === "all") {
+            cardQuerySnapshot = await cardRef.where('parent-email', '==', email).get();
+        } else {
+            return res.status(400).json({ error: "Invalid card type" });
         }
 
-        const cardData = cardQuerySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        if (cardQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Card not found" });
+        }
+
+        let cardData = [];
+        cardQuerySnapshot.forEach(doc => {
+            // const { "parent-image": parentImage, "visitor-image": visitorImage, ...rest } = doc.data(); // เอาเฉพาะฟิลด์ที่ไม่ใช่ "image"
+            cardData.push({
+                id: doc.id,
+                ...doc.data(),
+                // ...rest
+            });
+        });
 
         return res.status(200).json({ cardData: cardData });
-    }
-    catch (error) {
-        console.error("Error getting visitor card:", error);
-        return res.status(500).json({ error: "Error getting visitor card." });
+    } catch (error) {
+        console.error("Error getting card by cardId:", error);
+        return res.status(500).json({ error: "Error getting card." });
     }
 };
 
@@ -239,6 +253,10 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
             return res.status(400).json({ error: "Invalid card type" });
         }
 
+        if (cardQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Card not found" });
+        }
+
         let cardData = [];
         cardQuerySnapshot.forEach(doc => {
             // const { "parent-image": parentImage, "visitor-image": visitorImage, ...rest } = doc.data(); // เอาเฉพาะฟิลด์ที่ไม่ใช่ "image"
@@ -257,9 +275,9 @@ exports.getCardBySchoolNameAndCardType = async (req, res) => {
 
 
 
-// ✅🔒 get card by ( schoolName )
-exports.getCardBySchoolNameAndToken = async (req, res) => {
-    const { schoolName } = req.body;
+// ✅🔒 get card by ( schoolName, cardType, studentName )
+exports.getCardBySchoolNameAndCardTypeAndStudentName = async (req, res) => {
+    const { schoolName, cardType, studentName } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -270,7 +288,6 @@ exports.getCardBySchoolNameAndToken = async (req, res) => {
             return res.status(401).json({ error: "Unauthorized" });
         }
 
-        const email = valid.user.email;
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
 
@@ -280,44 +297,35 @@ exports.getCardBySchoolNameAndToken = async (req, res) => {
 
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const cardRef = schoolDocRef.collection('card');
-        const cardQuerySnapshot = await cardRef.where('parent-email', '==', email).where('card-type', '==', 'parent').get();
+        let cardQuerySnapshot; 
 
+        if (cardType === "parent") {
+            cardQuerySnapshot = await cardRef.where('card-type', '==', 'parent').where('student-name', 'array-contains', studentName).get();
+        } else if (cardType === "visitor") {
+            cardQuerySnapshot = await cardRef.where('card-type', '==', 'visitor').where('student-name', 'array-contains', studentName).get();
+        } else if (cardType === "all") {
+            cardQuerySnapshot = await cardRef.where('student-name', 'array-contains', studentName).get();
+        } else {
+            return res.status(400).json({ error: "Invalid card type" });
+        }
 
         if (cardQuerySnapshot.empty) {
             return res.status(404).json({ error: "Card not found" });
         }
 
-        const cardData = cardQuerySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-
-        // const studentId = cardData[0]["student-ID"];
-
-        // const studentRef = schoolDocRef.collection('student');
-        // const studentQuerySnapshot = await studentRef.where('room', '==', 'all').get();
-        
-        // const studentListRef = studentQuerySnapshot.docs[0].ref;
-        // const studentListQuerySnapshot = await studentListRef.collection('student-list').get();
-
-        // let studentData = [];
-        // studentListQuerySnapshot.forEach(doc => {
-        //     studentId.forEach(id => {
-        //         if (doc.data()['student-ID'] == id) {
-        //             studentData.push({
-        //                 id: doc.id,
-        //                 ...doc.data()
-        //             });
-        //         }
-        //     });
-        // });
-
-        // return res.status(200).json({ cardData, studentData });
+        let cardData = [];
+        cardQuerySnapshot.forEach(doc => {
+            // const { "parent-image": parentImage, "visitor-image": visitorImage, ...rest } = doc.data(); // เอาเฉพาะฟิลด์ที่ไม่ใช่ "image"
+            cardData.push({
+                id: doc.id,
+                ...doc.data(),
+                // ...rest
+            });
+        });
 
         return res.status(200).json({ cardData: cardData });
     } catch (error) {
-        console.error("Error getting card by cardId:", error);
-        return res.status(500).json({ error: "Error getting card." });
+        return res.status(500).json({ error: "Error getting card by type and student name." });
     }
 };
 
@@ -446,59 +454,3 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         return res.status(500).json({ error: "Error deleting expire card." });
     }
 };
-
-
-
-
-
-
-
-
-
-// // test upload image
-// exports.uploadImage = async (req, res) => {
-//     const { imageName, image } = req.body;    
-//     try {
-//         const imageRef = db.collection('images');
-//         const imageQuerySnapshot = await imageRef.get();
-
-//         const currentTime = new Date();
-//         const formattedCurrentDate = functions.formatDate(currentTime);
-
-//         await imageRef.add({
-//             ["name"] : imageName,
-//             ["image"] : image,
-//             ["date"]  : formattedCurrentDate,
-//         });
-
-//         return res.status(201).json({ message: "Image uploaded successfully" });
-
-//     } catch (error) {
-//         console.error("Error uploading image:", error);
-//         return res.status(500).json({ error: "Something went wrong, please try again" });
-//     }
-// }
-
-
-// // test get image
-// exports.getImage = async (req, res) => {
-//     const { imageName } = req.body;
-//     try {
-//         const imageRef = db.collection('images');
-//         const imageQuerySnapshot = await imageRef.where('name', '==', imageName).get();
-
-//         if (imageQuerySnapshot.empty) {
-//             return res.status(404).json({ error: "Image not found" });
-//         }
-
-//         const imageData = imageQuerySnapshot.docs.map(doc => ({
-//             id: doc.id,
-//             ...doc.data()
-//         }));
-
-//         return res.status(200).json(imageData);
-//     } catch (error) {
-//         console.error("Error getting image:", error);
-//         return res.status(500).json({ error: "Something went wrong, please try again" });
-//     }
-// }

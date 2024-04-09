@@ -53,9 +53,9 @@ const { sendCarLocation,
 
 const { createParentCard,
         createVisitorCard,
-        getVisitorCardBySchoolNameAndEmail,
+        getCardBySchoolNameAndCardTypeAndToken,
         getCardBySchoolNameAndCardType,
-        getCardBySchoolNameAndToken,
+        getCardBySchoolNameAndCardTypeAndStudentName,
         getCardBySchoolNameAndCardId,
         deleteExpireCardBySchoolName } = require('./card.js');
 
@@ -221,20 +221,20 @@ app.post('/car/getCarLocationAndCalculateDistance', getCarLocationAndCalculateDi
 
 app.post('/card/createParentCard', createParentCard);                                                           // ✅🔒✉️ create parent card ( schoolName, parentEmail, parentName, studentId, parentImage )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้ปกครอง
-// * รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
+// ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
 app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card ( schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้มาติดต่อแทน
 // ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
-app.post('/card/getVisitorCardBySchoolNameAndEmail', getVisitorCardBySchoolNameAndEmail);                       // ✅🔒 get visitor card by ( schoolName, visitorEmail )
-// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรของผู้มาติดต่อแทน โดยระบุ email ของผู้ปกครองที่สร้างบัตร
+app.post('/card/getCardBySchoolNameAndCardTypeAndToken', getCardBySchoolNameAndCardTypeAndToken);               // ✅🔒 get all card data by ( schoolName, cardType ) and token
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรทั้งหมดที่สร้างโดยเจ้าของ token และระบุประเภทบัตร (all, parent, visitor)
 
 app.post('/card/getCardBySchoolNameAndCardType', getCardBySchoolNameAndCardType);                               // ✅🔒 get all card data by ( schoolName, cardType )
 // * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรทั้งหมดในโรงเรียน โดยระบุประเภทบัตร (all, parent, visitor)
 
-app.post('/card/getCardBySchoolNameAndToken', getCardBySchoolNameAndToken);                                     // ✅🔒 get all card data by ( schoolName )
-// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรของเจ้าของ token
+app.post('/card/getCardBySchoolNameAndCardTypeAndStudentName', getCardBySchoolNameAndCardTypeAndStudentName);   // ✅🔒 get all card data by ( schoolName, cardType, studentName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตรทั้งหมดในโรงเรียน โดยระบุประเภทบัตร (all, parent, visitor) และชื่อนักเรียน
 
 app.post('/card/getCardBySchoolNameAndCardId', getCardBySchoolNameAndCardId);                                   // ✅🔒 get card data by ( schoolName, cardId )
 // * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของบัตร โดยระบุ id
