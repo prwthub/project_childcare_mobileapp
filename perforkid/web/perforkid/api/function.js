@@ -92,4 +92,11 @@ function calculateDistance(startLat, startLong, endLat, endLong) {
 }
 
 
-module.exports = { formatDate, checkToken, checkEmail, calculateDistance };
+// Function return api key
+function getGoogleApiKey() {
+    return "AIzaSyCRBT7g0Ac1gTUFyT1nEeQOYSk1SsjfA_8";
+}
+
+
+
+module.exports = { formatDate, checkToken, checkEmail, calculateDistance, getGoogleApiKey};

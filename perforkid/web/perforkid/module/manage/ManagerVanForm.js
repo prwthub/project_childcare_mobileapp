@@ -262,8 +262,8 @@ function upload(file) {
                           // ใช้ objectsAreEqual ในโค้ดของคุณ
                           studentListSnapshot.forEach((listDoc) => {
                             let data = listDoc.data();
-
-                            if (refsToDelete.some(item => objectsAreEqual(item, data))) {
+                          
+                            if (refsToDelete.some(item => item["student-ID"] == data["student-ID"])) {
                               listDoc.ref.delete()
                                 .then(() => {
                                   console.log('Deleted:', data);

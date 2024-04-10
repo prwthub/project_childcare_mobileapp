@@ -47,10 +47,6 @@ const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndId,
         updateStudentCarStatusBySchoolNameAndId } = require('./studentCar.js');
 
-const { sendCarLocation,
-        checkUpdateStatusAndGetStudentLocation,
-        getCarLocationAndCalculateDistance } = require('./car.js');
-
 const { createParentCard,
         createVisitorCard,
         getCardBySchoolNameAndCardTypeAndToken,
@@ -58,6 +54,19 @@ const { createParentCard,
         getCardBySchoolNameAndCardTypeAndStudentName,
         getCardBySchoolNameAndCardId,
         deleteExpireCardBySchoolName } = require('./card.js');
+
+const { getAndCheckStudentAddress,
+        setStudentQueue,
+        getDirectionAndDistance,
+        endOfTrip,
+        getCarLocation,
+        checkQueue } = require('./location.js');
+
+const { webGetTeacherBySchoolName,
+        webGetDriverBySchoolName,
+        webGetStudentBySchoolNameAndStudentRoom,
+        webGetStudentCarBySchoolNameAndCarNumber,
+        getImageBySchoolNameAndTypeAndId } = require('./web.js');
 
 
 // ? ===========================================================================================================================================================================
@@ -94,7 +103,7 @@ app.post('/school/sendEmail', sendEmail);                                       
 
 
 // ? ===========================================================================================================================================================================
-// initial 
+// initial (ไม่ได้ใช้ ทำไว้เผื่อ)
 
 app.post('/initial/teacher/getTeacherInitialBySchoolNameAndEmail', getTeacherInitialBySchoolNameAndEmail);      // ✅🔒✉️ get teacher data by ( schoolName, email )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการดูข้อมูลของครู (ทำเผื่อไว้)
@@ -195,28 +204,6 @@ app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCar
 
 
 // ? ===========================================================================================================================================================================
-// car location
-
-app.post('/car/sendCarLocation', sendCarLocation);                                                              // ✅🔒 send car location to realtime database ( schoolName, carNumber, lat, long )
-// * ต้องมี token และนำไปใช้เมื่อต้องการส่งตำแหน่งรถไปยัง firebase realtime database 
-
-app.post('/car/checkUpdateStatusAndGetStudentLocation', checkUpdateStatusAndGetStudentLocation);                // ✅🔒 check update status and get student location by ( schoolName, carNumber )
-// * check update = true  -> get new address -> get lat,long -> save,get student location 
-// * check update = false ->				                         ->   get student location	  
-// * ต้องมี token และนำไปใช้เมื่อเข้าสู่หน้ารถรับส่ง โดยจะทำการเช็คก่อนว่า address ของนักเรียนมีการเปลี่ยนแปลงหรือไม่
-// *  ถ้ามีจะทำการดึง lat,long ของ address ใหม่ เก็บไว้ใน firestore และนำไปใช้ต่อ
-
-app.post('/car/getCarLocationAndCalculateDistance', getCarLocationAndCalculateDistance);                        // ✅ get car location and calculate distance by ( schoolName, carNumber, addressStudents )
-// * ไม่ต้องมี token และนำไปใช้เมื่อต้องการดึงตำแหน่งรถ และคำนวนระยะห่างระหว่างรถกับที่อยู่ของนักเรียนทุกคน
-// * โดยระบุ schoolName, carNumber, addressStudents (ได้จาก checkUpdate...)
-
-
-// ! parent ใช้ checkUpdateStatusAndGetStudentLocation ->      getCarLocationAndCalculateDistance
-// ! driver ใช้ checkUpdateStatusAndGetStudentLocation -> sendCarLocation, getCarLocationAndCalculateDistance
-
-
-
-// ? ===========================================================================================================================================================================
 // card
 
 app.post('/card/createParentCard', createParentCard);                                                           // ✅🔒✉️ create parent card ( schoolName, parentEmail, parentName, studentId, parentImage )
@@ -241,6 +228,47 @@ app.post('/card/getCardBySchoolNameAndCardId', getCardBySchoolNameAndCardId);   
 
 app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);                                   // ✅🔒 delete expire card by ( schoolName )
 // * ต้องมี token และนำไปใช้เมื่อต้องการลบบัตรของผู้มาติดต่อแทนที่หมดอายุ
+
+
+
+// ? ===========================================================================================================================================================================
+// location
+
+app.post('/location/getAndCheckStudentAddress', getAndCheckStudentAddress);                                     // ✅🔒 get and check student address by ( schoolName, carNumber, goOrBack )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูและตรวจสอบที่อยู่ของนักเรียน โดยระบุเบอร์รถ และ ขาไปหรือกลับ
+
+app.post('/location/setStudentQueue', setStudentQueue);                                                         // ✅   set student queue by ( schoolName, carNumber, goOrBack, studentId )   
+// * นำไปเซ็ด queue ของนักเรียน โดยระบุเบอร์รถ และ ขาไปหรือกลับ และ id ของนักเรียน
+
+app.post('/location/getDirectionAndDistance', getDirectionAndDistance);                                         // ✅   get direction and distance by ( schoolName, carNumber, originLat, originLng, goOrBack )
+// * นำไปเช็คเส้นทางและระยะทาง โดยระบุเบอร์รถ และ ตำแหน่งเริ่มต้น และ ขาไปหรือกลับ
+
+app.post('/location/endOfTrip', endOfTrip);                                                                     // ✅   end of trip by ( schoolName, carNumber, goOrBack )
+// * นำไปใช้เสื่อเสร็จสิ้นการเดินทาง โดยระบุเบอร์รถ และ ขาไปหรือกลับ
+
+app.post('/location/getCarLocation', getCarLocation);                                                           // ✅   get car location by ( schoolName, carNumber )
+// * นำไปดึงตำแหน่งของรถ โดยระบุเบอร์รถ
+
+app.post('/location/checkQueue', checkQueue);
+
+
+// ! driver ใช้ getAndCheckStudentAddress -> (setStudentQueue) -> getDirectionAndDistance -> (endOfTrip)
+// ! parent ใช้ getCarLocation
+
+
+
+// ? ===========================================================================================================================================================================
+// web
+
+app.post('/web/teacher/getTeacherBySchoolName', webGetTeacherBySchoolName);
+
+app.post('/web/driver/getDriverBySchoolName', webGetDriverBySchoolName);
+
+app.post('/web/student/getStudentBySchoolNameAndStudentRoom', webGetStudentBySchoolNameAndStudentRoom);
+
+app.post('/web/studentCar/getStudentCarBySchoolNameAndCarNumber', webGetStudentCarBySchoolNameAndCarNumber);
+
+app.post('/image/getImageBySchoolNameAndTypeAndId', getImageBySchoolNameAndTypeAndId);
 
 
 
@@ -281,32 +309,3 @@ app.get('/:page', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const { webGetTeacherBySchoolName,
-        webGetDriverBySchoolName,
-        webGetStudentBySchoolNameAndStudentRoom,
-        webGetStudentCarBySchoolNameAndCarNumber,
-        getImageBySchoolNameAndTypeAndId } = require('./web.js');
-
-app.post('/web/teacher/getTeacherBySchoolName', webGetTeacherBySchoolName);
-
-app.post('/web/driver/getDriverBySchoolName', webGetDriverBySchoolName);
-
-app.post('/web/student/getStudentBySchoolNameAndStudentRoom', webGetStudentBySchoolNameAndStudentRoom);
-
-app.post('/web/studentCar/getStudentCarBySchoolNameAndCarNumber', webGetStudentCarBySchoolNameAndCarNumber);
-
-app.post('/image/getImageBySchoolNameAndTypeAndId', getImageBySchoolNameAndTypeAndId);
