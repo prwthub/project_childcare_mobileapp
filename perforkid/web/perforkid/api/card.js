@@ -85,7 +85,7 @@ exports.createParentCard = async (req, res) => {
 
 // ✅🔒✉️ create a new visitor card
 exports.createVisitorCard = async (req, res) => {
-    const { schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage } = req.body;
+    const { schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage, description } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -151,6 +151,7 @@ exports.createVisitorCard = async (req, res) => {
             ["create-date"] : formattedCreateDate, // ใช้วันที่ที่ถูกแปลงแล้ว
             ["expire-date"] : formattedExpireDate,
             ["visitor-image"]: visitorImage,
+            ["description"] : description,
         });
 
         return res.status(201).json({ cardId: id,

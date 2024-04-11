@@ -210,7 +210,7 @@ app.post('/card/createParentCard', createParentCard);                           
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้ปกครอง
 // ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
-app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card ( schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage )
+app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card ( schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage, description )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้มาติดต่อแทน
 // ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
