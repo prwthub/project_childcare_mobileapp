@@ -234,16 +234,16 @@ app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);   
 // ? ===========================================================================================================================================================================
 // location
 
-app.post('/location/getAndCheckStudentAddress', getAndCheckStudentAddress);                                     // ✅🔒 get and check student address by ( schoolName, carNumber, goOrBack )
+app.post('/location/getAndCheckStudentAddress', getAndCheckStudentAddress);                                     // ✅🔒 get and check student address by ( schoolName, carNumber )
 // * ต้องมี token และนำไปใช้เมื่อต้องการดูและตรวจสอบที่อยู่ของนักเรียน โดยระบุเบอร์รถ และ ขาไปหรือกลับ
 
 app.post('/location/setStudentQueue', setStudentQueue);                                                         // ✅   set student queue by ( schoolName, carNumber, goOrBack, studentId )   
 // * นำไปเซ็ด queue ของนักเรียน โดยระบุเบอร์รถ และ ขาไปหรือกลับ และ id ของนักเรียน
 
-app.post('/location/getDirectionAndDistance', getDirectionAndDistance);                                         // ✅   get direction and distance by ( schoolName, carNumber, originLat, originLng, goOrBack )
+app.post('/location/getDirectionAndDistance', getDirectionAndDistance);                                         // ✅   get direction and distance by ( schoolName, carNumber, originLat, originLng )
 // * นำไปเช็คเส้นทางและระยะทาง โดยระบุเบอร์รถ และ ตำแหน่งเริ่มต้น และ ขาไปหรือกลับ
 
-app.post('/location/endOfTrip', endOfTrip);                                                                     // ✅   end of trip by ( schoolName, carNumber, goOrBack )
+app.post('/location/endOfTrip', endOfTrip);                                                                     // ✅   end of trip by ( schoolName, carNumber )
 // * นำไปใช้เสื่อเสร็จสิ้นการเดินทาง โดยระบุเบอร์รถ และ ขาไปหรือกลับ
 
 app.post('/location/getCarLocation', getCarLocation);                                                           // ✅   get car location by ( schoolName, carNumber )

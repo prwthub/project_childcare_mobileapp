@@ -12,7 +12,7 @@ const rdb = getDatabase(app, "https://perforkid-application-default-rtdb.asia-so
 
 // ✅🔒
 exports.getAndCheckStudentAddress = async (req, res) => {
-    const { schoolName, carNumber, goOrBack } = req.body;
+    const { schoolName, carNumber } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -75,6 +75,16 @@ exports.getAndCheckStudentAddress = async (req, res) => {
 
         }
 
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+
+        let goOrBack;
+        if (currentHour >= 0 && currentHour < 12) {
+            goOrBack = "go";
+        } else {
+            goOrBack = "back";
+        }
+
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
             goOrBack: goOrBack,
             studentData: addressStudents,
@@ -113,7 +123,7 @@ exports.setStudentQueue = async (req, res) => {
 
         const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
         const studentCarQuerySnapshot = await studentCarRef.get();
-        
+
         let studentData = [];
         let check = false;
         if (goOrBack === "go") {
@@ -234,10 +244,20 @@ exports.setStudentQueue = async (req, res) => {
 
 // ✅
 exports.getDirectionAndDistance = async (req, res) => {
-    const { schoolName, carNumber, originLat, originLng, goOrBack } = req.body;
+    const { schoolName, carNumber, originLat, originLng } = req.body;
     const apiKey = functions.getGoogleApiKey();
     
     try {
+
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+
+        let goOrBack;
+        if (currentHour >= 0 && currentHour < 12) {
+            goOrBack = "go";
+        } else {
+            goOrBack = "back";
+        }
 
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
         const studentData = snapshot.val().studentData;
@@ -323,7 +343,7 @@ exports.getDirectionAndDistance = async (req, res) => {
                 let [value, unit] = distance.split(" ");
                 if (unit === "km") {
                     if (parseFloat(value) <= 200) {
-                        destinationAddress[0].goArrive = true;
+                        destinationAddress[0].backArrive = true;
                     }
                 }
    
@@ -351,7 +371,7 @@ exports.getDirectionAndDistance = async (req, res) => {
 
 // ✅
 exports.endOfTrip = async (req, res) => {
-    const { schoolName, carNumber, goOrBack } = req.body;
+    const { schoolName, carNumber } = req.body;
 
     try {
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
@@ -392,12 +412,14 @@ exports.getCarLocation = async (req, res) => {
 
 exports.checkQueue = async (req, res) => {
     const { schoolName, carNumber } = req.body;
+    
     try {
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
         if (!snapshot.exists()) {
             return res.status(404).json({ error: "End of trip." });
         }
         
+        const goOrBack = snapshot.val().goOrBack;
         const studentData = snapshot.val().studentData;
 
         studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
@@ -426,7 +448,8 @@ exports.checkQueue = async (req, res) => {
             checkStatus.push(result);
         });
 
-        return res.status(200).json({ studentData: checkResult,
+        return res.status(200).json({ goOrBack: goOrBack,
+                                        studentData: checkResult,
                                         studentStatus: checkStatus });
 
     } catch (error) {

@@ -575,7 +575,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"classRoom\": \"1/2\"\n}",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"classRoom\": \"1/1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1065,7 +1065,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentId\": \"31501\",\n    \"goStatus\": \"มากับรถตู้โรงเรียน\",\n    \"backStatus\": \"กลับกับรถตู้โรงเรียน\"\n}",
+									"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"studentId\": \"32101\",\n    \"goStatus\": \"มากับรถตู้โรงเรียน\",\n    \"backStatus\": \"กลับกับรถตู้โรงเรียน\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1138,7 +1138,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"visitorName\": \"ทดสอบ visitor 3\",\n    \"parentEmail\": \"{{email}}\",\n    \"parentName\": \"{{email}}\",\n    \"studentId\": \"31510\",\n    \"visitorImage\": \"{{imageBase64}}\"\n}",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"visitorName\": \"ทดสอบ visitor 6\",\n    \"parentEmail\": \"{{email}}\",\n    \"parentName\": \"{{email}}\",\n    \"studentId\": \"31510\",\n    \"visitorImage\": \"{{imageBase64}}\",\n    \"description\": \"desc\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1204,7 +1204,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardType\": \"parent\"           // all, parent, visitor\n}",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardType\": \"visitor\"           // all, parent, visitor\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1286,7 +1286,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardId\": \"812459\"\n}",
+							"raw": "{\n    \"schoolName\": \"{{school}}\",\n    \"cardId\": \"491616\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1357,7 +1357,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\",\r\n    \"goOrBack\": \"go\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1384,7 +1384,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\",\r\n    \"goOrBack\": \"go\",\r\n    \"studentId\": \"31501\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\",\r\n    \"goOrBack\": \"back\",\r\n    \"studentId\": \"31501\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1411,7 +1411,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\", \r\n    \"carNumber\": \"1\", \r\n    \"originLat\": 13.72917, \r\n    \"originLng\": 100.52389,\r\n    \"goOrBack\": \"go\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\", \r\n    \"carNumber\": \"1\", \r\n    \"originLat\": 13.72917, \r\n    \"originLng\": 100.52389\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1438,7 +1438,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\", \r\n    \"carNumber\": \"3\", \r\n    \"goOrBack\": \"go\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\", \r\n    \"carNumber\": \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1465,7 +1465,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\", \r\n    \"carNumber\": \"3\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\", \r\n    \"carNumber\": \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1492,7 +1492,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"3\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"carNumber\": \"1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1639,7 +1639,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"type\": \"student\",\r\n    \"id\": \"31501\"\r\n}",
+							"raw": "{\r\n    \"schoolName\": \"{{school}}\",\r\n    \"type\": \"driver\",\r\n    \"id\": \"20001\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
