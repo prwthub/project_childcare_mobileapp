@@ -53,7 +53,8 @@ const { createParentCard,
         getCardBySchoolNameAndCardType,
         getCardBySchoolNameAndCardTypeAndStudentName,
         getCardBySchoolNameAndCardId,
-        deleteExpireCardBySchoolName } = require('./card.js');
+        deleteExpireCardBySchoolName,
+        deleteExpireCard } = require('./card.js');
 
 const { getAndCheckStudentAddress,
         setStudentQueue,
@@ -228,6 +229,8 @@ app.post('/card/getCardBySchoolNameAndCardId', getCardBySchoolNameAndCardId);   
 
 app.post('/card/deleteExpireCardBySchoolName', deleteExpireCardBySchoolName);                                   // ✅🔒 delete expire card by ( schoolName )
 // * ต้องมี token และนำไปใช้เมื่อต้องการลบบัตรของผู้มาติดต่อแทนที่หมดอายุ
+
+app.post('/card/deleteExpireCard', deleteExpireCard);                                                           // ✅ delete expire card
 
 
 

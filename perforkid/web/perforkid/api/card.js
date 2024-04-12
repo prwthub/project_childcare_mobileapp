@@ -136,7 +136,11 @@ exports.createVisitorCard = async (req, res) => {
 
         const createTime = new Date();
         const formattedCreateDate = functions.formatDate(createTime);
-        const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
+
+        // const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
+        // const formattedExpireDate = functions.formatDate(expireTime);
+        const expireTime = new Date();
+        expireTime.setHours(23, 59, 59, 999); // เซ็ตเวลาเป็นเที่ยงคืนของวัน
         const formattedExpireDate = functions.formatDate(expireTime);
 
         // สร้างเอกสารใหม่ใน Firestore collection "card" ที่อยู่ใน school
@@ -455,3 +459,51 @@ exports.deleteExpireCardBySchoolName = async (req, res) => {
         return res.status(500).json({ error: "Error deleting expire card." });
     }
 };
+
+
+
+// ✅ delete expire card 
+exports.deleteExpireCard = async (req, res) => {
+    try {
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.get();
+
+        let summary = [];
+
+        for (const doc of schoolQuerySnapshot.docs) {
+            const schoolName = doc.data()["school-name"];
+            const schoolDocRef = doc.ref;
+            const cardRef = schoolDocRef.collection('card');
+            const cardQuerySnapshot = await cardRef.get();
+
+            let expiredCards = [];
+            const currentTime = new Date();
+            const formattedCurrentDate = functions.formatDate(currentTime);
+
+            cardQuerySnapshot.forEach(cardDoc => {
+                const card = cardDoc.data();
+                const expireDate = card["expire-date"];
+                if (expireDate < formattedCurrentDate && expireDate !== "none") {
+                    expiredCards.push(cardDoc.id);
+                }
+            });
+
+            summary.push({ schoolName, expiredCards });
+
+            // ลบบัตรที่หมดอายุออกจาก Firestore collection
+            if (expiredCards.length !== 0) {
+                const deletePromises = expiredCards.map(async cardId => {
+                    const cardDocRef = cardRef.doc(cardId);
+                    await cardDocRef.delete();
+                });
+                await Promise.all(deletePromises);
+            }
+        }
+
+        return res.status(200).json({ message: "Expired cards deleted successfully", summary });
+    } catch (error) {
+        console.error("Error checking expire date:", error);
+        return res.status(500).json({ error: "Error deleting expire card." });
+    }
+};
+
