@@ -166,6 +166,55 @@ exports.createVisitorCard = async (req, res) => {
 };
 
 
+
+// ✅🔒 upload image by ( schoolName )
+exports.uploadParentImageBySchoolNameAndToken = async (req, res) => {
+    const { schoolName, parentImage } = req.body;
+
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+        
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const cardRef = schoolDocRef.collection('card');
+
+        const cardQuerySnapshot = await cardRef.where('parent-email', '==', valid.user.email).where('card-type', '==', 'parent').get();
+        if (cardQuerySnapshot.empty) {
+            return res.status(400).json({ error: "Parent card not found" });
+        } 
+
+        let cardData = [];
+        cardQuerySnapshot.forEach(doc => {
+            const data = doc.data();
+            data["parent-image"] = parentImage;
+            doc.ref.update(data);
+            cardData.push(data);
+        });
+
+        return res.status(200).json({ message: "Image uploaded successfully",
+                                        cardData: cardData });
+
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        return res.status(500).json({ error: "Error uploading image." });
+    }
+};
+
+
+
 // ✅🔒 get card by ( schoolName, cardType )
 exports.getCardBySchoolNameAndCardTypeAndToken = async (req, res) => {
     const { schoolName, cardType } = req.body;

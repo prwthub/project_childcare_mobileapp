@@ -50,6 +50,7 @@ const { getStudentCarBySchoolName,
 
 const { createParentCard,
         createVisitorCard,
+        uploadParentImageBySchoolNameAndToken,
         getCardBySchoolNameAndCardTypeAndToken,
         getCardBySchoolNameAndCardType,
         getCardBySchoolNameAndCardTypeAndStudentName,
@@ -213,10 +214,13 @@ app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCar
 
 app.post('/card/createParentCard', createParentCard);                                                           // ✅🔒✉️ create parent card ( schoolName, parentEmail, parentName, studentId, parentImage )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้ปกครอง
-// ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
 app.post('/card/createVisitorCard', createVisitorCard);                                                         // ✅🔒✉️ create visitor card ( schoolName, visitorName ,parentEmail, parentName, studentId, visitorImage, description )
 // * ต้องมี token และ email ของ user token ต้องเป็น email เดียวกันกับ req ใช้เมื่อต้องการสร้างบัตรสำหรับผู้มาติดต่อแทน
+// ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
+
+app.post('/card/uploadParentImageBySchoolNameAndToken', uploadParentImageBySchoolNameAndToken);                 // ✅🔒 upload image by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการอัพโหลดรูปภาพของผู้ปกครอง
 // ! รูปจำเป็นต้องมีการแปลงเป็น base64 ก่อน 
 
 app.post('/card/getCardBySchoolNameAndCardTypeAndToken', getCardBySchoolNameAndCardTypeAndToken);               // ✅🔒 get all card data by ( schoolName, cardType ) and token

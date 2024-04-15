@@ -5,12 +5,14 @@ const { getAuth,
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword } = require('firebase/auth');
 
+const axios = require('axios');
 const functions = require("./function.js");
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const e = require("express");
 
 
 // ✅ sign in and generate token
@@ -37,6 +39,9 @@ exports.signIn = async (req, res) => {
         }
 
         let userData = [];
+        let studentIds = "";
+        let cardStatus = "";
+
         if (userInfo.role === 'teacher') {
             const teachersRef = schoolQuerySnapshot.docs[0].ref.collection('teacher');
             const teacherQuerySnapshot = await teachersRef.where('email', '==', email).get();
@@ -49,6 +54,8 @@ exports.signIn = async (req, res) => {
             const data = teacherQuerySnapshot.docs[0].data();
             userData.push(data);
 
+            cardStatus = "Teacher does not have card";
+
         } else if (userInfo.role === 'driver') {
             const driversRef = schoolQuerySnapshot.docs[0].ref.collection('driver');
             const driverQuerySnapshot = await driversRef.where('email', '==', email).get();
@@ -60,6 +67,8 @@ exports.signIn = async (req, res) => {
             // userData = driverQuerySnapshot.docs[0].data();
             const data = driverQuerySnapshot.docs[0].data();
             userData.push(data);
+
+            cardStatus = "Driver does not have card";
 
         } else if (userInfo.role === 'parent') {
             let studentDataPromises = [];
@@ -84,8 +93,10 @@ exports.signIn = async (req, res) => {
                     // Filtering based on parent's email
                     if (studentInfo['father-email'] == email) {
                         userData.push(studentInfo);
+                        studentIds += studentInfo['student-ID'] + ",";
                     } else if (studentInfo['mother-email'] == email) {
                         userData.push(studentInfo);
+                        studentIds += studentInfo['student-ID'] + ",";
                     } else {
 
                     }
@@ -120,12 +131,53 @@ exports.signIn = async (req, res) => {
         const token = await admin.auth().createCustomToken(user.uid);
 
         if (userInfo.firstLogin) {
+
+            if (userInfo.role === 'parent') {
+                studentIds = studentIds.slice(0, -1);
+                const response = await axios.post('https://perforkid.azurewebsites.net/card/createParentCard', {
+                    schoolName: userInfo.schoolName,
+                    parentEmail: email,
+                    parentName: userInfo.username,
+                    studentId: studentIds,
+                    parentImage: null
+                }, {
+                    headers: {
+                        authorization: token
+                    }
+                });
+    
+                if (response.status == 201) {
+                    cardStatus = "Card created successfully";
+                } else {
+                    cardStatus = "Failed to create card";
+                }
+            }
+
             await db.collection('users').doc(user.uid).update({ firstLogin: false });
             return res.status(200).json({ firstLogin: true,
-                                            userInfo, userData, token });
+                                            cardStatus, userInfo, userData, token });
         } else {
+
+            if (userInfo.role === 'parent') {
+                studentIds = studentIds.slice(0, -1);
+                const response = await axios.post('https://perforkid.azurewebsites.net/card/getCardBySchoolNameAndCardTypeAndToken', {
+                    schoolName: userInfo.schoolName,
+                    cardType: "parent",
+                }, {
+                    headers: {
+                        authorization: token
+                    }
+                });
+    
+                if (response.status == 200) {
+                    cardStatus = "user has card";
+                } else {
+                    cardStatus = "user does not have card";
+                }
+            }
+
             return res.status(200).json({ firstLogin: false,
-                                            userInfo, userData, token });
+                                            cardStatus, userInfo, userData, token });
         }
 
     } catch (error) {
