@@ -266,6 +266,95 @@ exports.getStudentCarBySchoolNameAndId = async (req, res) => {
 
 
 
+// ✅🔒 get studentCar by ( schoolName )
+exports.getStudentCarBySchoolNameAndToken = async (req, res) => {
+    const { schoolName } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const email = valid.user.email;
+        
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const studentsRef = schoolDocRef.collection('student');
+
+        // Query students by room (all)
+        const studentsQuerySnapshot = await studentsRef.where('room', '==', 'all').get();
+
+        // Array to store promises of student data retrieval
+        const studentDataPromises = [];
+
+        // Iterate through each student document
+        studentsQuerySnapshot.forEach(studentDoc => {
+            // Get reference to the student-list subcollection
+            const studentListRef = studentDoc.ref.collection('student-list');
+            const studentListPromise = studentListRef.get();
+            
+            // Push the promise into the array
+            studentDataPromises.push(studentListPromise);
+        });
+
+        // Wait for all promises to resolve
+        const studentDataSnapshots = await Promise.all(studentDataPromises);
+
+        // Map the results
+        studentId = [];
+        studentDataSnapshots.forEach(snapshot => {
+            snapshot.forEach(doc => {
+                if (doc.data()["father-email"] == email || doc.data()["mother-email"] == email) {
+                    studentId.push(doc.data()["student-ID"]);
+                }
+            });
+        });
+
+        // return res.status(200).json({ studentId: studentId });
+
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == all
+        const carsQueryAllSnapshot = await carsRef.where('car-number', '==', 'all').get();
+
+        const studentCarRef = carsQueryAllSnapshot.docs[0].ref;
+        const studentCarQuerySnapshot = await studentCarRef.collection('student-car').get();
+
+        let studentData = [];
+        studentCarQuerySnapshot.forEach(doc => {
+            if (studentId.includes(doc.data()["student-ID"])) { 
+                studentData.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+            }
+        });
+
+        if (studentData.length === 0) {
+            return res.status(404).json({ error: "No students found" });
+        } else {
+            return res.status(200).json({ studentData: studentData });
+        }
+    } catch (error) {
+        console.error("Error retrieving students:", error);
+        return res.status(500).json({ error: "Error retrieving students data." });
+    }   
+};
+
+
+
 // ✅🔒 update studentCar status by ( schoolName, studentId, goStatus, backStatus )
 exports.updateStudentCarStatusBySchoolNameAndId = async (req, res) => {
     const { schoolName, studentId, goStatus, backStatus } = req.body;

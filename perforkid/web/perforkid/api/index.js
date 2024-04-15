@@ -45,6 +45,7 @@ const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndCarNumber,
         getStudentCarBySchoolNameAndRoom,
         getStudentCarBySchoolNameAndId,
+        getStudentCarBySchoolNameAndToken,
         updateStudentCarStatusBySchoolNameAndId } = require('./studentCar.js');
 
 const { createParentCard,
@@ -196,6 +197,9 @@ app.post('/studentCar/getStudentCarBySchoolNameAndRoom', getStudentCarBySchoolNa
 
 app.post('/studentCar/getStudentCarBySchoolNameAndId', getStudentCarBySchoolNameAndId);                         // ✅🔒 get student car data by ( schoolName, studentId )
 // * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนที่ขึ้นรถรับส่ง โดยระบุ id
+
+app.post('/studentCar/getStudentCarBySchoolNameAndToken', getStudentCarBySchoolNameAndToken);                   // ✅🔒 get student car data by ( schoolName, token )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของนักเรียนที่ขึ้นรถรับส่ง โดยเจ้าของ token
 
 app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCarStatusBySchoolNameAndId);       // ✅🔒 update student car status by ( schoolName, studentId, goStatus, backStatus )              
 // * ต้องมี token และนำไปใช้เมื่อต้องการจะอัพเดท status ของนักเรียนที่ขึ้นรถรับส่ง โดยระบุ id และ status ที่ต้องการอัพเดท
