@@ -12,7 +12,9 @@ const rdb = getDatabase(app, "https://perforkid-application-default-rtdb.asia-so
 
 // ✅🔒
 exports.getAndCheckStudentAddress = async (req, res) => {
-    const { schoolName, carNumber } = req.body;
+    // api ตัวนี้จะถูกใช้เมื่อรถตู้จะออกเดินทาง
+    // ต้องเพิ่ม lat lng ของรถตู้ด้วย และ return lat lng ของรถตู้และที่อยู่
+    const { schoolName, carNumber, originLat, originLng } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -55,15 +57,50 @@ exports.getAndCheckStudentAddress = async (req, res) => {
             const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
             const studentCarQuerySnapshot = await studentCarRef.get();
 
-            studentCarQuerySnapshot.forEach((doc) => {
+            // studentCarQuerySnapshot.forEach(async (doc) => {
+            //     let data = doc.data();
+            //     data.goQueue = 0;
+            //     data.goArrive = false;
+            //     data.backQueue = 0;
+            //     data.backArrive = false;
+
+            //     const address = data.address;
+            //     const { lat, lng } = await functions.getGeocode(address);
+            //     data.destinationLat = lat;
+            //     data.destinationLng = lng;
+
+            //     doc.ref.update(data);
+
+            //     addressStudents.push(data);
+            // });
+
+            for (const doc of studentCarQuerySnapshot.docs) {
                 let data = doc.data();
-                data.goQueue = 0;
-                data.goArrive = false;
-                data.backQueue = 0;
-                data.backArrive = false;
-                doc.ref.update(data);
+
+                let index = isNaN(data.index) ? data.index : parseInt(data.index);
+
+                if (!isNaN(index)) {
+                    data.goQueue = index;
+                    data.goArrive = false;
+                    data.backQueue = index;
+                    data.backArrive = false;
+                } else {
+                    console.error("Invalid index:", data.index);
+                    data.goQueue = 0;
+                    data.goArrive = false;
+                    data.backQueue = 0;
+                    data.backArrive = false;   
+                }
+            
+                const address = data.address;
+                const { lat, lng } = await functions.getGeocode(address);
+                data.destinationLat = lat;
+                data.destinationLng = lng;
+            
+                await doc.ref.update(data);
+            
                 addressStudents.push(data);
-            });
+            }
 
         } else {
             const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
@@ -87,10 +124,14 @@ exports.getAndCheckStudentAddress = async (req, res) => {
 
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
             goOrBack: goOrBack,
+            originLat: originLat,
+            originLng: originLng,
             studentData: addressStudents,
         });
 
-        return res.status(200).json({ studentData: addressStudents });
+        return res.status(200).json({ originLat: originLat, 
+                                        originLng: originLng, 
+                                        studentData: addressStudents });
     } catch (error) {
         return res.status(500).json({ error: "Error checking update status." });
     }
@@ -100,6 +141,10 @@ exports.getAndCheckStudentAddress = async (req, res) => {
 
 // ✅
 exports.setStudentQueue = async (req, res) => {
+    // set queue ของนักเรียน โดยต้องระบุ id ของนักเรียน และ ขาไปหรือขากลับ
+    // โดยไม่จำเป็นต้องระบุเลขคิว
+    // มี 2 วิธี   1. ถ้า set ให้นักเรียนที่ไม่มีคิว จะได้คิวล่าสุด 
+    //          2. ถ้า set ให้นักเรียนที่มีคิวอยู่แล้ว คิวจะกลายเป็น 0 แล้วนักเรียนที่เดิมคิวอยู่หลัง จะล่นคิวลงมา 1 คิว
     const { schoolName, carNumber, goOrBack, studentId } = req.body;
 
     try {
@@ -244,6 +289,8 @@ exports.setStudentQueue = async (req, res) => {
 
 // ✅
 exports.getDirectionAndDistance = async (req, res) => {
+    // เรียกใช้ api นี้เมื่อเดินทาง
+    // โดยจะ return originLat, originLng, studentData(นักเรียนคิวที่กำลังไปส่ง ตามคิว), distance, duration, direction (ที่ได้จาก google map api)
     const { schoolName, carNumber, originLat, originLng } = req.body;
     const apiKey = functions.getGoogleApiKey();
     
@@ -261,6 +308,8 @@ exports.getDirectionAndDistance = async (req, res) => {
 
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
         const studentData = snapshot.val().studentData;
+        const originLat = snapshot.val().originLat;
+        const originLng = snapshot.val().originLng;
 
         if (goOrBack === "go") {
             let destinationAddress = [];
@@ -303,7 +352,9 @@ exports.getDirectionAndDistance = async (req, res) => {
                     route: data
                 });
    
-                res.status(200).json({ studentData: destinationAddress[0],
+                res.status(200).json({ originLat,
+                                        originLng,
+                                        studentData: destinationAddress[0],
                                         distance, 
                                         duration, 
                                         direction: data});
@@ -352,7 +403,9 @@ exports.getDirectionAndDistance = async (req, res) => {
                     route: data
                 });
    
-                res.status(200).json({ studentData: destinationAddress[0],
+                res.status(200).json({ originLat,
+                                        originLng,
+                                        studentData: destinationAddress[0],
                                         distance, 
                                         duration, 
                                         direction: data});
@@ -371,6 +424,7 @@ exports.getDirectionAndDistance = async (req, res) => {
 
 // ✅
 exports.endOfTrip = async (req, res) => {
+    // เป็นปุ่มใช้เมื่อสิ้นสุดการเดินทาง อยากคนขับรถตู้เป็นคนกด
     const { schoolName, carNumber } = req.body;
 
     try {
@@ -388,6 +442,7 @@ exports.endOfTrip = async (req, res) => {
 
 // ✅
 exports.getCarLocation = async (req, res) => {
+    // parent ทำการ เช็คว่าปัจจุบันรถตู้อยู่ในตำแหน่งไหน
     const { schoolName, carNumber } = req.body;
 
     try {
@@ -398,10 +453,12 @@ exports.getCarLocation = async (req, res) => {
         }
 
         const goOrBack = snapshot.val().goOrBack;
+        const originLat = snapshot.val().originLat;
+        const originLng = snapshot.val().originLng;
         const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
         const route = snapshot.val().route;
 
-        return res.status(200).json({ goOrBack, studentData, route });
+        return res.status(200).json({ goOrBack, originLat, originLng, studentData, route });
 
     } catch (error) {
         return res.status(500).json({ error: "Error getting car location." });
@@ -420,6 +477,8 @@ exports.checkQueue = async (req, res) => {
         }
         
         const goOrBack = snapshot.val().goOrBack;
+        const originLat = snapshot.val().originLat;
+        const originLng = snapshot.val().originLng;
         const studentData = snapshot.val().studentData;
 
         studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
@@ -449,6 +508,8 @@ exports.checkQueue = async (req, res) => {
         });
 
         return res.status(200).json({ goOrBack: goOrBack,
+                                        originLat: originLat,
+                                        originLng: originLng,
                                         studentData: checkResult,
                                         studentStatus: checkStatus });
 

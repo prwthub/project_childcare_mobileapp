@@ -5,6 +5,7 @@ const { getAuth,
         signInWithEmailAndPassword, 
         createUserWithEmailAndPassword } = require('firebase/auth');
 
+const axios = require('axios');
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const crypto = require('crypto');
@@ -98,5 +99,25 @@ function getGoogleApiKey() {
 }
 
 
+// Function to get geocode data
+async function getGeocode(address) {
+    const apiKey = getGoogleApiKey();
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
 
-module.exports = { formatDate, checkToken, checkEmail, calculateDistance, getGoogleApiKey};
+    try {
+        const response = await axios.get(url);
+        const { results } = response.data;
+        if (results && results.length > 0) {
+            const { lat, lng } = results[0].geometry.location;
+            return { lat, lng };
+        } else {
+            throw new Error('No results found for the address');
+        }
+    } catch (error) {
+        throw new Error('Error fetching geocode data');
+    }
+}
+
+
+
+module.exports = { formatDate, checkToken, checkEmail, calculateDistance, getGoogleApiKey, getGeocode };
