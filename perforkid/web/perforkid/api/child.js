@@ -122,6 +122,13 @@ exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
 
         let newGoStatus = goStatus;
         let newBackStatus = backStatus;
+        if (goStatus === "ไปกับผู้ปกครอง" || goStatus === "ไปกับรถรับส่ง") {
+            newGoStatus = "มาเรียน";
+        }
+
+        if (backStatus === "กลับกับผู้ปกครอง" || backStatus === "กลับกับรถรับส่ง") {
+            newBackStatus = "มาเรียน";
+        }
 
         // Get reference to the school document
         const schoolsRef = db.collection('school');
