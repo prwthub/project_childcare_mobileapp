@@ -267,3 +267,82 @@ exports.getImageBySchoolNameAndTypeAndId = async (req, res) => {
         return res.status(500).json({ error: "Error retrieving image." });
     }
 };
+
+
+
+// ✅ initialize student data by ( schoolName, studentRoom )
+exports.initialStudentData = async (req, res) => {
+    const { schoolName, studentRoom } = req.body;
+
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the students subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const studentsRef = schoolDocRef.collection('student');
+
+        // Query students by room == studentRoom
+        const studentsQuerySnapshot = await studentsRef.where('room', '==', studentRoom).get();
+
+        if (studentsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "Room not found" });
+        }
+
+        const roomData = studentsQuerySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        studentId = [];
+        if (roomData[0].update) {
+            await studentsQuerySnapshot.docs[0].ref.update({ 
+                update: false 
+            });
+
+            const studentListRef = studentsQuerySnapshot.docs[0].ref.collection('student-list');
+            const studentListQuerySnapshot = await studentListRef.get();
+
+            for (const doc of studentListQuerySnapshot.docs) {
+                let data = doc.data();
+                
+                studentId.push(data["student-ID"]);
+
+                data["go-status"] = "มาเรียน";
+                data["back-status"] = "มาเรียน";
+
+                await doc.ref.update(data);
+            }
+
+            const studentsQuerySnapshot2 = await studentsRef.where('room', '==', "all").get();
+            const studentListRef2 = studentsQuerySnapshot2.docs[0].ref.collection('student-list');
+            const studentListQuerySnapshot2 = await studentListRef2.get();
+
+            for (const doc of studentListQuerySnapshot2.docs) {
+                let data = doc.data();
+                
+                if (studentId.includes(data["student-ID"])) {
+                    studentId.push(data["student-ID"]);
+
+                    data["go-status"] = "มาเรียน";
+                    data["back-status"] = "มาเรียน";
+
+                    await doc.ref.update(data);
+                }
+            }
+
+            return res.status(200).json({ message: "Student data initialized" });
+        } else {
+            return res.status(200).json({ message: "Student data is up to date" });
+        }
+
+    } catch (error) {
+        console.error("Error retrieving students:", error);
+        return res.status(500).json({ error: "Error getting initial students data." });
+    }
+}

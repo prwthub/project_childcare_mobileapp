@@ -39,8 +39,7 @@ const { getDriverBySchoolName,
 const { getStudentBySchoolName,
         getStudentBySchoolNameAndRoom,
         getRoomBySchoolName,
-        getRoomBySchoolNameAndRoom,
-        initialStudentData } = require('./student.js');
+        getRoomBySchoolNameAndRoom } = require('./student.js');
 
 const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndCarNumber,
@@ -66,10 +65,14 @@ const { getAndCheckStudentAddress,
         getCarLocation,
         checkQueue } = require('./location.js');
 
+const { getChildBySchoolNameAndToken,
+        updateChildStatusBySchoolNameAndId } = require('./child.js');
+
 const { webGetTeacherBySchoolName,
         webGetDriverBySchoolName,
         webGetStudentBySchoolNameAndStudentRoom,
         webGetStudentCarBySchoolNameAndCarNumber,
+        initialStudentData,
         getImageBySchoolNameAndTypeAndId } = require('./web.js');
 
 
@@ -183,9 +186,6 @@ app.post('/room/getRoomBySchoolName', getRoomBySchoolName);                     
 app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                                       // ✅🔒 get room data by ( schoolName, studentRoom )
 // * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของห้องเรียนในโรงเรียน โดยระบุห้อง
 
-app.post('/room/initialStudentData', initialStudentData);                                                    // ✅ initial student data by ( schoolName, studentRoom )
-// * นำไปใช้เมื่อต้องการเพิ่มข้อมูลนักเรียนในห้องใหม่
-
 
 
 // ? ===========================================================================================================================================================================
@@ -273,6 +273,17 @@ app.post('/location/checkQueue', checkQueue);
 
 
 // ? ===========================================================================================================================================================================
+// child
+
+app.post('/child/getChildBySchoolNameAndToken', getChildBySchoolNameAndToken);                                // ✅🔒 get child data by ( schoolName )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของนักเรียนทั้งหมดที่เป็นลูกของผู้ปกครอง
+
+app.post('/child/updateChildStatusBySchoolNameAndId', updateChildStatusBySchoolNameAndId);                    // ✅🔒 update child status by ( schoolName, studentId, goStatus, backStatus )
+// * ต้องมี token และนำไปใช้เมื่อต้องการจะอัพเดท status ของนักเรียน โดยระบุ id และ status ที่ต้องการอัพเดท
+
+
+
+// ? ===========================================================================================================================================================================
 // web
 
 app.post('/web/teacher/getTeacherBySchoolName', webGetTeacherBySchoolName);
@@ -282,6 +293,8 @@ app.post('/web/driver/getDriverBySchoolName', webGetDriverBySchoolName);
 app.post('/web/student/getStudentBySchoolNameAndStudentRoom', webGetStudentBySchoolNameAndStudentRoom);
 
 app.post('/web/studentCar/getStudentCarBySchoolNameAndCarNumber', webGetStudentCarBySchoolNameAndCarNumber);
+
+app.post('/web/room/initialStudentData', initialStudentData); 
 
 app.post('/image/getImageBySchoolNameAndTypeAndId', getImageBySchoolNameAndTypeAndId);
 
