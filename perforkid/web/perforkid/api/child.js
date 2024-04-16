@@ -122,12 +122,6 @@ exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
 
         let newGoStatus = goStatus;
         let newBackStatus = backStatus;
-        if (newGoStatus !== "ขาดเรียน") 
-            newGoStatus = "มาเรียน";
-
-        if (newBackStatus !== "ขาดเรียน") 
-            newBackStatus = "มาเรียน";
-
 
         // Get reference to the school document
         const schoolsRef = db.collection('school');
@@ -148,7 +142,7 @@ exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
 
         let room = '';
         studentListSnapshot.forEach(doc => {
-            if (doc.data()["student-ID"] == studentId) {
+            if (doc.data()["student-ID"] === studentId) {
                 room = doc.data()["class-room"];
                 allUpdate = true;
             }
@@ -166,7 +160,7 @@ exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
             const studentListSnapshot2 = await studentListRef2.collection('student-list').get();
 
             studentListSnapshot2.forEach(doc => {
-                if (doc.data()["student-ID"] == studentId) {
+                if (doc.data()["student-ID"] === studentId) {
                     update = true;
                     doc.ref.update({
                         "go-status": newGoStatus,
@@ -178,7 +172,7 @@ exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
 
         if (allUpdate && update) {
             studentListSnapshot.forEach(doc => {
-                if (doc.data()["student-ID"] == studentId) {
+                if (doc.data()["student-ID"] === studentId) {
                     doc.ref.update({
                         "go-status": newGoStatus,
                         "back-status": newBackStatus
