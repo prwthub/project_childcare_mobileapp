@@ -16,6 +16,7 @@ const db = getFirestore(app);
 
 // Import currentUser
 import currentUser from '../user/currentUser.js';
+// import { update } from "firebase/database";
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
 const storedUser = sessionStorage.getItem('currentUser');
@@ -77,6 +78,7 @@ function createNewRoom() {
                     const studentRef = collection(doc.ref, 'student');
                     addDoc(studentRef, {
                         room: roomName,
+                        update: false,
                         schedule: ""
                     })
                     .then((docRef) => {

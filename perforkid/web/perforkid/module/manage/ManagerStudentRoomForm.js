@@ -204,6 +204,7 @@ function upload(file) {
 
                         studentDoc.ref.update({
                           "latest-student-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
+                          "update": true
                         });                        
 
                         console.log("Data uploaded to Firestore successfully!");
@@ -275,7 +276,7 @@ function upload(file) {
                           studentListSnapshot.forEach((listDoc) => {
                             let data = listDoc.data();
 
-                            if (refsToDelete.some(item => objectsAreEqual(item, data))) {
+                            if (refsToDelete.some(item => item["student-ID"] == data["student-ID"])) {
                               listDoc.ref.delete()
                                 .then(() => {
                                   console.log('Deleted:', data);

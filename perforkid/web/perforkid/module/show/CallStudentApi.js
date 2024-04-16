@@ -16,6 +16,58 @@ const storage = getStorage(app);
 
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
+async function checkRoom() {
+    let [f, b] = room.split("-");
+    const newRoomName = `${f}/${b}`;
+    let response = await fetch(
+        "https://perforkid.azurewebsites.net/room/getRoomBySchoolNameAndRoom",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": currentUser.school_name
+            },
+            body: JSON.stringify({ 
+                schoolName: currentUser.school_name,
+                studentRoom: newRoomName
+            }),
+        }
+    );
+
+    let data = await response.json();
+    console.log("update: ", data.roomData[0].update);
+
+    if (data.roomData[0].update){
+
+        console.log("Room updated");
+
+        let initResponse = await fetch(
+            "https://perforkid.azurewebsites.net/web/room/initialStudentData",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": currentUser.school_name
+                },
+                body: JSON.stringify({ 
+                    schoolName: currentUser.school_name,
+                    studentRoom: newRoomName
+                }),
+            }
+        );
+
+        // let initData = await initResponse.json();
+        if (initResponse.status === 200) {
+            console.log("Room initialized");
+        } else {
+            console.log("Room not initialized");
+        }
+    } else {
+        console.log("Room not updated");
+    }
+}
+
+
 async function fetchStudent() {
     let [f, b] = room.split("-");
     const newRoomName = `${f}/${b}`;
@@ -44,6 +96,7 @@ async function fetchStudent() {
 }
 
 async function generateStudentTable() {
+    checkRoom();
     let schoolData = await fetchStudent();
     if (schoolData.length === 0) {
         return;
