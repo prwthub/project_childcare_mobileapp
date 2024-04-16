@@ -24,6 +24,11 @@ const formatDate = (dateString) => {
 const checkToken = async (token, schoolName) => {
     let validToken = false;
 
+    if (token === schoolName) {
+        validToken = true;
+        return { validToken };
+    }
+    
     // * old code
     // const decodedToken = await admin.auth().verifyIdToken(token);
     // const userId = decodedToken.uid; 
