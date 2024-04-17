@@ -5,6 +5,7 @@ const { getDatabase, ref, set, get, update, remove } = require('firebase/databas
 
 const axios = require('axios');
 const functions = require("./function.js");
+const { or } = require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const rdb = getDatabase(app, "https://perforkid-application-default-rtdb.asia-southeast1.firebasedatabase.app");
@@ -56,23 +57,6 @@ exports.getAndCheckStudentAddress = async (req, res) => {
 
             const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
             const studentCarQuerySnapshot = await studentCarRef.get();
-
-            // studentCarQuerySnapshot.forEach(async (doc) => {
-            //     let data = doc.data();
-            //     data.goQueue = 0;
-            //     data.goArrive = false;
-            //     data.backQueue = 0;
-            //     data.backArrive = false;
-
-            //     const address = data.address;
-            //     const { lat, lng } = await functions.getGeocode(address);
-            //     data.destinationLat = lat;
-            //     data.destinationLng = lng;
-
-            //     doc.ref.update(data);
-
-            //     addressStudents.push(data);
-            // });
 
             for (const doc of studentCarQuerySnapshot.docs) {
                 let data = doc.data();
@@ -129,10 +113,12 @@ exports.getAndCheckStudentAddress = async (req, res) => {
             studentData: addressStudents,
         });
 
-        return res.status(200).json({ originLat: originLat, 
+        return res.status(200).json({ goOrBack: goOrBack,
+                                        originLat: originLat, 
                                         originLng: originLng, 
                                         studentData: addressStudents });
     } catch (error) {
+        console.error('Error:', error);
         return res.status(500).json({ error: "Error checking update status." });
     }
 }
@@ -145,6 +131,7 @@ exports.setStudentQueue = async (req, res) => {
     // โดยไม่จำเป็นต้องระบุเลขคิว
     // มี 2 วิธี   1. ถ้า set ให้นักเรียนที่ไม่มีคิว จะได้คิวล่าสุด 
     //          2. ถ้า set ให้นักเรียนที่มีคิวอยู่แล้ว คิวจะกลายเป็น 0 แล้วนักเรียนที่เดิมคิวอยู่หลัง จะล่นคิวลงมา 1 คิว
+
     const { schoolName, carNumber, goOrBack, studentId } = req.body;
 
     try {
@@ -308,8 +295,8 @@ exports.getDirectionAndDistance = async (req, res) => {
 
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
         const studentData = snapshot.val().studentData;
-        const originLat = snapshot.val().originLat;
-        const originLng = snapshot.val().originLng;
+        // const originLat = snapshot.val().originLat;
+        // const originLng = snapshot.val().originLng;
 
         if (goOrBack === "go") {
             let destinationAddress = [];
@@ -348,6 +335,8 @@ exports.getDirectionAndDistance = async (req, res) => {
                 }
    
                 update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+                    originLat: originLat,
+                    originLng: originLng,
                     studentData: studentData,
                     route: data
                 });
@@ -399,6 +388,8 @@ exports.getDirectionAndDistance = async (req, res) => {
                 }
    
                 update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+                    originLat: originLat,
+                    originLng: originLng,
                     studentData: studentData,
                     route: data
                 });
@@ -466,7 +457,7 @@ exports.getCarLocation = async (req, res) => {
 }
 
 
-
+// ทำมาเพื่อเช็คว่านักเรียนอยู่ในคิวไหน ไม่ได้ใช้จริง
 exports.checkQueue = async (req, res) => {
     const { schoolName, carNumber } = req.body;
     

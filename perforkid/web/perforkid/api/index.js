@@ -249,7 +249,7 @@ app.post('/card/deleteExpireCard', deleteExpireCard);                           
 // ? ===========================================================================================================================================================================
 // location
 
-app.post('/location/getAndCheckStudentAddress', getAndCheckStudentAddress);                                     // ✅🔒 get and check student address by ( schoolName, carNumber )
+app.post('/location/getAndCheckStudentAddress', getAndCheckStudentAddress);                                     // ✅🔒 get and check student address by ( schoolName, carNumber, originLat, originLng )
 // * ต้องมี token และนำไปใช้เมื่อต้องการดูและตรวจสอบที่อยู่ของนักเรียน โดยระบุเบอร์รถ และ ขาไปหรือกลับ
 
 app.post('/location/setStudentQueue', setStudentQueue);                                                         // ✅   set student queue by ( schoolName, carNumber, goOrBack, studentId )   
@@ -265,6 +265,7 @@ app.post('/location/getCarLocation', getCarLocation);                           
 // * นำไปดึงตำแหน่งของรถ โดยระบุเบอร์รถ
 
 app.post('/location/checkQueue', checkQueue);
+// * ทำมาเพื่อเช็คว่านักเรียนอยู่ในคิวไหน ไม่ได้ใช้จริง
 
 
 // ! driver ใช้ getAndCheckStudentAddress -> (setStudentQueue) -> getDirectionAndDistance -> (endOfTrip)
