@@ -122,11 +122,11 @@ exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
 
         let newGoStatus = goStatus;
         let newBackStatus = backStatus;
-        if (goStatus === "ไปกับผู้ปกครอง" || goStatus === "ไปกับรถรับส่ง") {
+        if (goStatus === "มากับผู้ปกครอง" || goStatus === "มากับรถตู้โรงเรียน") {
             newGoStatus = "มาเรียน";
         }
 
-        if (backStatus === "กลับกับผู้ปกครอง" || backStatus === "กลับกับรถรับส่ง") {
+        if (backStatus === "กลับกับผู้ปกครอง" || backStatus === "กลับกับรถตู้โรงเรียน") {
             newBackStatus = "มาเรียน";
         }
 
