@@ -70,10 +70,10 @@ document.getElementById('loginBtn').addEventListener('click', async function() {
     console.log('role : ', currentUser.role);
     console.log('logged in : ', currentUser.loggedin);
     
-    alert('Login successful!');
+    alert('ลงชื่อเข้าใช้สำเร็จแล้ว');
     window.location.href = '../Panel1Announcement.html'; // Redirects
   } catch (error) { // Handle login error
     console.error('Error logging in:', error);
-    alert('Invalid email or password. Please try again.');
+    alert('ลงชื่อเข้าใช้ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
   }
 });

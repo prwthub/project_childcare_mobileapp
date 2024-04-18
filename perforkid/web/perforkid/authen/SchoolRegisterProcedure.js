@@ -71,10 +71,10 @@ schoolRegisterForm.addEventListener("submit", async (e) => {
         await FirebaseAPI.addDoc(schoolsRef, schoolData);
         console.log("School Added (firestore)");
 
-        alert("ลงทะเบียนสำเร็จ ระบบทำการส่งรหัสโรงเรียนและรหัสผู้ดูแลโรงเรียนไปที่อีเมลของคุณแล้ว");
+        alert("ลงทะเบียนสำเร็จ ระบบกำลังทำการส่งรหัสโรงเรียนและรหัสผู้ดูแลโรงเรียนไปที่อีเมลของคุณ กรุณารอสักครู่");
         
         // Call SendEmail with information from the form
-        const response = await fetch('/school/sendEmail', { 
+        const response = await fetch('https://perforkid.azurewebsites.net/school/sendEmail', { 
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -82,7 +82,13 @@ schoolRegisterForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ schoolName, email, schoolCode, schoolAdminCode })
           });
 
-        window.location.href = "../AdminLanding.html";
+        if (response.status === 200) {
+            console.log("Email sent");
+            window.location.href = "../AdminLanding.html";
+        } else {    
+            console.log("Email not sent");
+        }
+
     } catch (error) {
         console.error(error.message);
         alert("Registration Failed. Please try again.");

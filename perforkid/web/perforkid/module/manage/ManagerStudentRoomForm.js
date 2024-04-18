@@ -58,6 +58,11 @@ uploadButton.addEventListener('submit', function (e) {
   const fileInput = document.getElementById('SubmitStudentFormBtn');
   const fileTable = document.getElementById('SubmitStudentTableBtn');
 
+  if (fileInput.files.length > 0 && fileTable.files.length > 0) {
+    alert("ไม่สามารถอัปโหลดไฟล์ทั้งสองได้ในคราวเดียว กรุณาอัปโหลดไฟล์แยกกัน");
+    return;
+  }
+
   if (fileInput.files.length > 0) {
     const xlsxfile = fileInput.files[0];
     if ((xlsxfile && xlsxfile.name.endsWith(".xlsx")) && xlsxfile.name.startsWith(`form_student_${front}-${back}`)) {

@@ -20,7 +20,7 @@ registerForm.addEventListener('submit', async (e) => {
 
     // Register login check.
     if (password !== confirmPassword) {
-        alert("Passwords don't match. Please check and try again");
+        alert("รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง");
         return;
     }
 
@@ -35,12 +35,12 @@ registerForm.addEventListener('submit', async (e) => {
     console.log(emailqSnapshot);
 
     if (querySnapshot.empty) {
-        alert('Invalid school name or code. Please check and try again.');
+        alert('โรงเรียนหรือรหัสผ่านผู้ดูแลไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
         return;
     } 
     
     if (emailqSnapshot.empty) {
-        alert('Invalid Email. Please check and try again.');
+        alert('อีเมลนี้ไม่ได้รับอนุญาตให้ลงทะเบียน กรุณาติดต่อผู้ดูแลระบบหลัก');
         return;
     }
 
@@ -51,11 +51,11 @@ registerForm.addEventListener('submit', async (e) => {
         const user = userCredential.user;
 
         console.log("Account Added");
-        alert('Registration Successful!');
+        alert('ลงทะเบียนสำเร็จแล้ว');
         window.location.href = '../AdminLanding.html'; // Redirects
 
     } catch (error) { 
         console.error(error.message);
-        alert('Registration Failed. Please try again.');
+        alert('ลงทะเบียนไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
     }
 });

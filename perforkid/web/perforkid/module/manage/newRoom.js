@@ -41,13 +41,13 @@ function createNewRoom() {
     console.log("back = ",back);
     // 1. ถ้าไม่มี /
     if (back === undefined) {
-        alert("ชื่อห้องต้องอยู่ในรูปของ ชั้นปี/ห้อง");
+        alert("ชื่อห้องต้องอยู่ในรูปของ เลขชั้นปี/เลขห้อง");
         return;
     }
 
     // 2. ถ้ามี / แต่ตัวหน้าไม่ใช่ตัวเลข
-    if (back !== undefined && isNaN(front)) {
-        alert("ชื่อห้องต้องอยู่ในรูปของ ชั้นปี/ห้อง");
+    if (isNaN(front) || isNaN(back)) {
+        alert("ชื่อห้องต้องอยู่ในรูปของ เลขชั้นปี/เลขห้อง");
         return;
     }
     var parsedfront = parseInt(front, 10); // แปลงค่าให้เป็นตัวเลข
