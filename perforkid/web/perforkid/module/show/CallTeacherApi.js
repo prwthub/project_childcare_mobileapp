@@ -52,6 +52,7 @@ async function generateTeacherTable() {
     <table>
         <tr>
             <th>teacher-ID</th>
+            <th>image</th>
             <th>name-surname</th>
             <th>class-room</th>
             <th>teaching-room</th>
@@ -59,8 +60,7 @@ async function generateTeacherTable() {
             <th>phone</th>
             <th>email</th>
             <th>address</th>
-            <th>image</th>
-            <th>upload image</th>
+            <!-- <th>upload image</th> -->
         </tr>
     `;
     
@@ -75,6 +75,15 @@ async function generateTeacherTable() {
                 tableHtml += `
                 <tr>
                     <td>${school["teacher-ID"]}</td>
+                    <td style="text-align: center;">
+                        <label for="fileInput-${school['teacher-ID']}">
+                            <img id="previewImg-${school['teacher-ID']}" src="${imageUrl}" style="height: 100px; cursor: pointer;">
+                        </label>
+                        <input id="fileInput-${school['teacher-ID']}" type="file" accept="image/*" style="display: none;">
+                        <div>
+                            <button id="delFile-${school['teacher-ID']}">Delete</button>
+                        </div>
+                    </td>
                     <td>${school["name-surname"]}</td>
                     <td>${school["class-room"]}</td>
                     <td>${school["teaching-room"]}</td>
@@ -82,13 +91,7 @@ async function generateTeacherTable() {
                     <td>${school["phone"]}</td>
                     <td>${school["email"]}</td>
                     <td>${school["address"]}</td>
-                    <td style="text-align: center;">
-                        <img id="previewImg-${school["teacher-ID"]}" src="${imageUrl}" style="height:100px">
-                        <div>
-                            <button id="delFile-${school["teacher-ID"]}"> Delete </button>
-                        </div>
-                    </td>
-                    <td><input id="fileInput-${school["teacher-ID"]}" type="file" accept="image/*"></td>
+                    <!-- <td><input id="fileInput-${school["teacher-ID"]}" type="file" accept="image/*"></td> -->
                 </tr>`;
             } catch (error) {
                 console.error('Error getting download URL:', error);
@@ -97,6 +100,15 @@ async function generateTeacherTable() {
             tableHtml += `
             <tr>
                 <td>${school["teacher-ID"]}</td>
+                <td style="text-align: center;">
+                    <label for="fileInput-${school['teacher-ID']}">
+                        <img id="previewImg-${school["teacher-ID"]}" src="../../picture/user.jpg" style="height:100px">
+                    </label>
+                    <input id="fileInput-${school['teacher-ID']}" type="file" accept="image/*" style="display: none;">
+                    <div>
+                        <button id="delFile-${school["teacher-ID"]}" style="display:none;"> Delete </button>
+                    </div>
+                </td>
                 <td>${school["name-surname"]}</td>
                 <td>${school["class-room"]}</td>
                 <td>${school["teaching-room"]}</td>
@@ -104,13 +116,7 @@ async function generateTeacherTable() {
                 <td>${school["phone"]}</td>
                 <td>${school["email"]}</td>
                 <td>${school["address"]}</td>
-                <td style="text-align: center;">
-                    <img id="previewImg-${school["teacher-ID"]}" src="../../picture/user.jpg" style="height:100px">
-                    <div>
-                        <button id="delFile-${school["teacher-ID"]}" style="display:none;"> Delete </button>
-                    </div>
-                </td>
-                <td><input id="fileInput-${school["teacher-ID"]}" type="file" accept="image/*"></td>
+                <!-- <td><input id="fileInput-${school["teacher-ID"]}" type="file" accept="image/*"></td> -->
             </tr>`;
         }    
     }

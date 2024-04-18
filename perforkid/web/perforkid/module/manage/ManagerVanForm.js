@@ -318,6 +318,6 @@ function upload(file) {
 
   setTimeout(() => {
     window.location.reload();
-  }, 20000);
+  }, 15000);
 
 }

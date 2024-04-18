@@ -23,6 +23,17 @@
         let [front, back] = roomNum.split('/');
         const room = `${front}-${back}`;
     </script>
+    <style>
+        .dropdown-menu {
+          display: none;
+          position: absolute;
+          right: 0;
+        }
+      
+        .show {
+          display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -45,16 +56,54 @@
                     </div>
                     
                     <div class="col-5">
-                        <div style="font-size: 48px;">
-                            ห้องเรียน <span id="roomDetail"></span>
-                            <span id="ellipsis" style="cursor: pointer;" onclick="toggleDeleteButton()">
+                        <div style="font-size: 48px;" class="d-flex justify-content-end">
+                            ห้องเรียน <span id="roomDetail"></span> &nbsp;
+                            <!-- <span id="ellipsis" style="cursor: pointer;" onclick="toggleDeleteButton()">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
                                 </svg>
+                            </span> -->
+                            <span class="dropdown justify-content-end">
+                                <span id="ellipsis" style="cursor: pointer;" onclick="showBtn()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                </span> &nbsp;
+                                
+                                <ul id="addPostMenu" class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <center>
+                                            <button id="deleteRoom" class="btn btn-danger btn-lg btn-block " style="font-size: 18px;">
+                                                ลบห้องเรียน
+                                            </button>
+                                        </center>
+                                    </li>
+                                </ul>
                             </span>
+                            <script>
+                                var isDropdownOpen = false;
+                
+                                // Update the showBtn function to close the dropdown when an item is clicked
+                                function showBtn() {
+                                  var addPostMenu = document.getElementById("addPostMenu");
+                                  addPostMenu.classList.toggle("show");
+                                  isDropdownOpen = !isDropdownOpen;
+                                }
+                
+                                // Add a click event listener to each dropdown item
+                                const dropdownItems = document.querySelectorAll("#addPostMenu .dropdown-item");
+                                dropdownItems.forEach(item => {
+                                  item.addEventListener("click", () => {
+                                    // Close the dropdown when an item is clicked
+                                    var addPostMenu = document.getElementById("addPostMenu");
+                                     addPostMenu.classList.remove("show");
+                                    isDropdownOpen = false;
+                                  });
+                                });
+                            </script>
                         </div>
-                        <button id="deleteRoom" class="btn btn-danger btn-lg btn-block m-3" style="display: none;">ลบห้องเรียนนี้</button>
-                        <script>
+                        <!-- <button id="deleteRoom" class="btn btn-danger btn-lg btn-block m-3" style="display: none;">ลบห้องเรียนนี้</button> -->
+                        <!-- <script>
                             // ฟังก์ชันเพื่อแสดงหรือซ่อนปุ่มลบห้องเรียน
                             function toggleDeleteButton() {
                                 var deleteButton = document.getElementById("deleteRoom");
@@ -64,7 +113,7 @@
                                     deleteButton.style.display = "none";
                                 }
                             }
-                        </script>
+                        </script> -->
                         <script src="./module/show/CallStudentApi.js" type="module" room="${room}"></script>
                         <script src="./module/manage/deleteRoom.js" type="module" room="${room}">
                             console.log(room)
@@ -179,6 +228,7 @@
                         border: 1px solid black;
                         padding: 8px;
                         text-align: left;
+                        white-space: nowrap;
                       }
                       th {
                         background-color: #f2f2f2;
@@ -187,6 +237,9 @@
                         overflow-x: auto;
                         overflow-y: auto;
                       }
+                      tr:nth-child(even) {
+                        background-color: #d3d3d3;
+                    }
                     </style>
                   
                     <div class="scrollable-table" id="schoolTable"></div>

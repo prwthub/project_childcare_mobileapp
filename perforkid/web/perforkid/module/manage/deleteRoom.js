@@ -55,6 +55,15 @@ async function deleteRoom() {
     `school/${currentUser.school_name}/form_student/year${front}/form_student_${front}-${back}.xlsx`
   );
 
+  if (confirm("คุณต้องการลบห้อง " + roomName + " ใช่หรือไม่?")) {
+    // ถ้ากด OK (Yes) จะเข้าทำงานที่นี่
+    console.log("ผู้ใช้กด OK (Yes)");
+  } else {
+    // ถ้ากด Cancel (No) จะเข้าทำงานที่นี่
+    console.log("ผู้ใช้กด Cancel (No)");
+    return;
+  }
+
   // delete doc from firestore database
   const schoolRef = collection(db, "school");
   const schoolQuery = query(

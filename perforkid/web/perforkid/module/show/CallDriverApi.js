@@ -52,13 +52,13 @@ async function generateDriverTable() {
     <table>
         <tr>
             <th>driver-ID</th>
+            <th>image</th>
             <th>name-surname</th>
             <th>car-number</th>
             <th>phone</th>
             <th>email</th>
             <th>address</th>
-            <th>image</th>
-            <th>upload image</th>
+            <!-- <th>upload image</th> -->
         </tr>
     `;
     
@@ -73,18 +73,21 @@ async function generateDriverTable() {
                 tableHtml += `
                 <tr>
                     <td>${school["driver-ID"]}</td>
+                    <td style="text-align: center;">
+                        <label for="fileInput-${school['driver-ID']}">
+                            <img id="previewImg-${school['driver-ID']}" src="${imageUrl}" style="height: 100px; cursor: pointer;">
+                        </label>
+                        <input id="fileInput-${school['driver-ID']}" type="file" accept="image/*" style="display: none;">
+                        <div>
+                            <button id="delFile-${school['driver-ID']}">Delete</button>
+                        </div>
+                    </td>
                     <td>${school["name-surname"]}</td>
                     <td>${school["car-number"]}</td>
                     <td>${school["phone"]}</td>
                     <td>${school["email"]}</td>
                     <td>${school["address"]}</td>
-                    <td style="text-align: center;">
-                        <img id="previewImg-${school["driver-ID"]}" src="${imageUrl}" style="height:100px">
-                        <div>
-                            <button id="delFile-${school["driver-ID"]}"> Delete </button>
-                        </div>
-                    </td>
-                    <td><input id="fileInput-${school["driver-ID"]}" type="file" accept="image/*"></td>
+                    <!-- <td><input id="fileInput-${school["driver-ID"]}" type="file" accept="image/*"></td> -->
                 </tr>`;
             } catch (error) {
                 console.error('Error getting download URL:', error);
@@ -93,18 +96,21 @@ async function generateDriverTable() {
             tableHtml += `
             <tr>
                 <td>${school["driver-ID"]}</td>
+                <td style="text-align: center;">
+                    <label for="fileInput-${school['driver-ID']}">
+                        <img id="previewImg-${school["driver-ID"]}" src="../../picture/user.jpg" style="height:100px">
+                    </label>
+                    <input id="fileInput-${school['driver-ID']}" type="file" accept="image/*" style="display: none;">
+                    <div>
+                        <button id="delFile-${school["driver-ID"]}" style="display:none;"> Delete </button>
+                    </div>
+                </td>
                 <td>${school["name-surname"]}</td>
                 <td>${school["car-number"]}</td>
                 <td>${school["phone"]}</td>
                 <td>${school["email"]}</td>
                 <td>${school["address"]}</td>
-                <td style="text-align: center;">
-                    <img id="previewImg-${school["driver-ID"]}" src="../../picture/user.jpg" style="height:100px">
-                    <div>
-                        <button id="delFile-${school["driver-ID"]}" style="display:none;"> Delete </button>
-                    </div>
-                </td>
-                <td><input id="fileInput-${school["driver-ID"]}" type="file" accept="image/*"></td>
+                <!-- <td><input id="fileInput-${school["driver-ID"]}" type="file" accept="image/*"></td> -->
             </tr>`;
         }    
     }

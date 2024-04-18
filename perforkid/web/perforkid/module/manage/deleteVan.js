@@ -49,7 +49,14 @@ async function deleteVan() {
     var vanNum = document.getElementById("vanDetail").textContent;
     console.log("delete vanNum = ",vanNum);
 
-    
+    if (confirm("คุณต้องการลบรถตู้หมายเลข " + vanNum + " ใช่หรือไม่?")) {
+      // ถ้ากด OK (Yes) จะเข้าทำงานที่นี่
+      console.log("ผู้ใช้กด OK (Yes)");
+    } else {
+      // ถ้ากด Cancel (No) จะเข้าทำงานที่นี่
+      console.log("ผู้ใช้กด Cancel (No)");
+      return;
+    }
 
 
 
@@ -212,6 +219,3 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const addButton = document.getElementById("deleteVan");
   addButton.addEventListener("click", deleteVan);
 });
-// var vanName = document.getElementById("vanDetail").textContent;
-
-// console.log("delete vanNum = ",vanNum);

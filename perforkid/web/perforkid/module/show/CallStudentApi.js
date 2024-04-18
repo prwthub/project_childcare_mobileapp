@@ -118,6 +118,7 @@ async function generateStudentTable() {
     <table>
         <tr>
             <th>student-ID</th>
+            <th>image</th>
             <th>name-surname</th>
             <th>class-room</th>
             <th>father-name</th>
@@ -127,8 +128,7 @@ async function generateStudentTable() {
             <th>mother-phone</th>
             <th>mother-email</th>
             <th>address</th>
-            <th>image</th>
-            <th>upload image</th>
+            <!-- <th>upload image</th> -->
         </tr>
     `;
     
@@ -143,6 +143,15 @@ async function generateStudentTable() {
                 tableHtml += `
                 <tr>
                     <td>${school["student-ID"]}</td>
+                    <td style="text-align: center;">
+                        <label for="fileInput-${school['student-ID']}">
+                            <img id="previewImg-${school['student-ID']}" src="${imageUrl}" style="height: 100px; cursor: pointer;">
+                        </label>
+                        <input id="fileInput-${school['student-ID']}" type="file" accept="image/*" style="display: none;">
+                        <div>
+                            <button id="delFile-${school['student-ID']}">Delete</button>
+                        </div>
+                    </td>
                     <td>${school["name-surname"]}</td>
                     <td>${school["class-room"]}</td>
                     <td>${school["father-name"]}</td>
@@ -152,13 +161,7 @@ async function generateStudentTable() {
                     <td>${school["mother-phone"]}</td>
                     <td>${school["mother-email"]}</td>
                     <td>${school["address"]}</td>
-                    <td style="text-align: center;">
-                        <img id="previewImg-${school["student-ID"]}" src="${imageUrl}" style="height:100px">
-                        <div>
-                            <button id="delFile-${school["student-ID"]}"> Delete </button>
-                        </div>
-                    </td>
-                    <td><input id="fileInput-${school["student-ID"]}" type="file" accept="image/*"></td>
+                    <!-- <td><input id="fileInput-${school["student-ID"]}" type="file" accept="image/*"></td> -->
                 </tr>`;
             } catch (error) {
                 console.error('Error getting download URL:', error);
@@ -167,6 +170,15 @@ async function generateStudentTable() {
             tableHtml += `
             <tr>
                 <td>${school["student-ID"]}</td>
+                <td style="text-align: center;">
+                    <label for="fileInput-${school['student-ID']}">
+                        <img id="previewImg-${school["student-ID"]}" src="../../picture/user.jpg" style="height:100px">
+                    </label>
+                    <input id="fileInput-${school['student-ID']}" type="file" accept="image/*" style="display: none;">
+                    <div>
+                        <button id="delFile-${school["student-ID"]}" style="display:none;"> Delete </button>
+                    </div>
+                </td>
                 <td>${school["name-surname"]}</td>
                 <td>${school["class-room"]}</td>
                 <td>${school["father-name"]}</td>
@@ -176,13 +188,7 @@ async function generateStudentTable() {
                 <td>${school["mother-phone"]}</td>
                 <td>${school["mother-email"]}</td>
                 <td>${school["address"]}</td>
-                <td style="text-align: center;">
-                    <img id="previewImg-${school["student-ID"]}" src="../../picture/user.jpg" style="height:100px">
-                    <div>
-                        <button id="delFile-${school["student-ID"]}" style="display:none;"> Delete </button>
-                    </div>
-                </td>
-                <td><input id="fileInput-${school["student-ID"]}" type="file" accept="image/*"></td>
+                <!-- <td><input id="fileInput-${school["student-ID"]}" type="file" accept="image/*"></td> -->
             </tr>`;
         }    
     }
