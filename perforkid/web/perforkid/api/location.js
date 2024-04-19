@@ -132,7 +132,7 @@ exports.setStudentQueue = async (req, res) => {
     // มี 2 วิธี   1. ถ้า set ให้นักเรียนที่ไม่มีคิว จะได้คิวล่าสุด 
     //          2. ถ้า set ให้นักเรียนที่มีคิวอยู่แล้ว คิวจะกลายเป็น 0 แล้วนักเรียนที่เดิมคิวอยู่หลัง จะล่นคิวลงมา 1 คิว
 
-    const { schoolName, carNumber, goOrBack, studentId } = req.body;
+    const { schoolName, carNumber, studentId } = req.body;
 
     try {
         // Get reference to the school document
@@ -155,6 +155,16 @@ exports.setStudentQueue = async (req, res) => {
 
         const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
         const studentCarQuerySnapshot = await studentCarRef.get();
+
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+
+        let goOrBack;
+        if (currentHour >= 0 && currentHour < 12) {
+            goOrBack = "go";
+        } else {
+            goOrBack = "back";
+        }
 
         let studentData = [];
         let check = false;
@@ -261,13 +271,28 @@ exports.setStudentQueue = async (req, res) => {
         }
 
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
-            goOrBack: goOrBack,
             studentData: studentData,
         });
 
+        // set(ref(rdb, `school/${schoolName}/${carNumber}`), {
+        //     goOrBack: goOrBack,
+        //     studentData: studentData,
+        // });
+
+        studentData.sort((a, b) => {
+            const queueA = a[goOrBack + "Queue"];
+            const queueB = b[goOrBack + "Queue"];
+        
+            if (queueA === 0) return 1;  // Move 0 to the end
+            if (queueB === 0) return -1; // Keep non-zero values in their order
+            return queueA - queueB;      // Sort non-zero values numerically
+        });
+        
+        
         return res.status(200).json({ studentData: studentData });
 
     } catch (error) {
+        console.error('Error:', error);
         return res.status(500).json({ error: "Error setting student queue." });
     }
 }
