@@ -97,7 +97,10 @@ exports.getAndCheckStudentAddress = async (req, res) => {
         }
 
         const currentTime = new Date();
-        const currentHour = currentTime.getHours();
+        const currentHour = currentTime.getHours() + 7;
+        if (currentHour >= 24) {
+            currentHour -= 24;
+        }
 
         let goOrBack;
         if (currentHour >= 0 && currentHour < 12) {
@@ -321,7 +324,10 @@ exports.getDirectionAndDistance = async (req, res) => {
     try {
 
         const currentTime = new Date();
-        const currentHour = currentTime.getHours();
+        const currentHour = currentTime.getHours() + 7;
+        if (currentHour >= 24) {
+            currentHour -= 24;
+        }
 
         let goOrBack;
         if (currentHour >= 0 && currentHour < 12) {
