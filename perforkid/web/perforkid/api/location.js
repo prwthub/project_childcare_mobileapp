@@ -113,6 +113,15 @@ exports.getAndCheckStudentAddress = async (req, res) => {
             studentData: addressStudents,
         });
 
+        addressStudents.sort((a, b) => {
+            const queueA = a[goOrBack + "Queue"];
+            const queueB = b[goOrBack + "Queue"];
+        
+            if (queueA === 0) return 1;  // Move 0 to the end
+            if (queueB === 0) return -1; // Keep non-zero values in their order
+            return queueA - queueB;      // Sort non-zero values numerically
+        });
+
         return res.status(200).json({ goOrBack: goOrBack,
                                         originLat: originLat, 
                                         originLng: originLng, 
