@@ -166,7 +166,10 @@ exports.setStudentQueue = async (req, res) => {
         const studentCarQuerySnapshot = await studentCarRef.get();
 
         const currentTime = new Date();
-        const currentHour = currentTime.getHours();
+        const currentHour = currentTime.getHours() + 7;
+        if (currentHour >= 24) {
+            currentHour -= 24;
+        }
 
         let goOrBack;
         if (currentHour >= 0 && currentHour < 12) {
@@ -175,133 +178,130 @@ exports.setStudentQueue = async (req, res) => {
             goOrBack = "back";
         }
 
-        return res.status(200).json({ currentHour: currentHour,
-                                        goOrBack: goOrBack });
+        let studentData = [];
+        let check = false;
+        if (goOrBack === "go") {
+            // find the highest queue number
+            let highestQueue = 0;
+            let currentQueue = 0;
+            studentCarQuerySnapshot.forEach((doc) => {
+                let data = doc.data();
 
-        // let studentData = [];
-        // let check = false;
-        // if (goOrBack === "go") {
-        //     // find the highest queue number
-        //     let highestQueue = 0;
-        //     let currentQueue = 0;
-        //     studentCarQuerySnapshot.forEach((doc) => {
-        //         let data = doc.data();
+                if (data.goQueue > highestQueue) {
+                    highestQueue = data.goQueue;
+                }
 
-        //         if (data.goQueue > highestQueue) {
-        //             highestQueue = data.goQueue;
-        //         }
+                if (data["student-ID"] === studentId) {
+                    currentQueue = data.goQueue;
+                }
+            });
 
-        //         if (data["student-ID"] === studentId) {
-        //             currentQueue = data.goQueue;
-        //         }
-        //     });
+            // set student 
+            // if queue is 0, set queue to highestQueue + 1
+            // else reset queue to 0
+            if (currentQueue == 0) {
+                highestQueue += 1;
+                studentCarQuerySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    if (data["student-ID"] === studentId) {
+                        data.goQueue = highestQueue;
+                        doc.ref.update({ goQueue: data.goQueue });
+                        check = true;
+                    }
+                    studentData.push(data);
+                });
+            } else {
+                studentCarQuerySnapshot.forEach((doc) => {
+                    let data = doc.data();
 
-        //     // set student 
-        //     // if queue is 0, set queue to highestQueue + 1
-        //     // else reset queue to 0
-        //     if (currentQueue == 0) {
-        //         highestQueue += 1;
-        //         studentCarQuerySnapshot.forEach((doc) => {
-        //             let data = doc.data();
-        //             if (data["student-ID"] === studentId) {
-        //                 data.goQueue = highestQueue;
-        //                 doc.ref.update({ goQueue: data.goQueue });
-        //                 check = true;
-        //             }
-        //             studentData.push(data);
-        //         });
-        //     } else {
-        //         studentCarQuerySnapshot.forEach((doc) => {
-        //             let data = doc.data();
-
-        //             if (data.goQueue > currentQueue) {
-        //                 data.goQueue -= 1;
-        //                 doc.ref.update({ goQueue: data.goQueue });
-        //             } 
+                    if (data.goQueue > currentQueue) {
+                        data.goQueue -= 1;
+                        doc.ref.update({ goQueue: data.goQueue });
+                    } 
                     
-        //             if (data["student-ID"] === studentId) {
-        //                 data.goQueue = 0;
-        //                 doc.ref.update({ goQueue: data.goQueue });
-        //                 check = true;
-        //             }
+                    if (data["student-ID"] === studentId) {
+                        data.goQueue = 0;
+                        doc.ref.update({ goQueue: data.goQueue });
+                        check = true;
+                    }
 
-        //             studentData.push(data);
-        //         });
-        //     }
-        // } else {
-        //     // find the highest queue number
-        //     let highestQueue = 0;
-        //     let currentQueue = 0;
-        //     studentCarQuerySnapshot.forEach((doc) => {
-        //         let data = doc.data();
+                    studentData.push(data);
+                });
+            }
+        } else {
+            // find the highest queue number
+            let highestQueue = 0;
+            let currentQueue = 0;
+            studentCarQuerySnapshot.forEach((doc) => {
+                let data = doc.data();
 
-        //         if (data.backQueue > highestQueue) {
-        //             highestQueue = data.backQueue;
-        //         }
+                if (data.backQueue > highestQueue) {
+                    highestQueue = data.backQueue;
+                }
 
-        //         if (data["student-ID"] === studentId) {
-        //             currentQueue = data.backQueue;
-        //         }
-        //     });
+                if (data["student-ID"] === studentId) {
+                    currentQueue = data.backQueue;
+                }
+            });
 
-        //     // set student 
-        //     // if queue is 0, set queue to highestQueue + 1
-        //     // else reset queue to 0
-        //     if (currentQueue == 0) {
-        //         highestQueue += 1;
-        //         studentCarQuerySnapshot.forEach((doc) => {
-        //             let data = doc.data();
-        //             if (data["student-ID"] === studentId) {
-        //                 data.backQueue = highestQueue;
-        //                 doc.ref.update({ backQueue: data.backQueue });
-        //                 check = true;
-        //             }
-        //             studentData.push(data);
-        //         });
-        //     } else {
-        //         studentCarQuerySnapshot.forEach((doc) => {
-        //             let data = doc.data();
+            // set student 
+            // if queue is 0, set queue to highestQueue + 1
+            // else reset queue to 0
+            if (currentQueue == 0) {
+                highestQueue += 1;
+                studentCarQuerySnapshot.forEach((doc) => {
+                    let data = doc.data();
+                    if (data["student-ID"] === studentId) {
+                        data.backQueue = highestQueue;
+                        doc.ref.update({ backQueue: data.backQueue });
+                        check = true;
+                    }
+                    studentData.push(data);
+                });
+            } else {
+                studentCarQuerySnapshot.forEach((doc) => {
+                    let data = doc.data();
 
-        //             if (data.backQueue > currentQueue) {
-        //                 data.backQueue -= 1;
-        //                 doc.ref.update({ backQueue: data.backQueue });
-        //             } 
+                    if (data.backQueue > currentQueue) {
+                        data.backQueue -= 1;
+                        doc.ref.update({ backQueue: data.backQueue });
+                    } 
                     
-        //             if (data["student-ID"] === studentId) {
-        //                 data.backQueue = 0;
-        //                 doc.ref.update({ backQueue: data.backQueue });
-        //                 check = true;
-        //             }
+                    if (data["student-ID"] === studentId) {
+                        data.backQueue = 0;
+                        doc.ref.update({ backQueue: data.backQueue });
+                        check = true;
+                    }
 
-        //             studentData.push(data);
-        //         });
-        //     }
-        // }
+                    studentData.push(data);
+                });
+            }
+        }
 
-        // if (!check) {
-        //     return res.status(404).json({ error: "Student not found" });
-        // }
+        if (!check) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+
+        set(ref(rdb, `school/${schoolName}/${carNumber}`), {
+            studentData: studentData,
+        });
 
         // set(ref(rdb, `school/${schoolName}/${carNumber}`), {
+        //     goOrBack: goOrBack,
         //     studentData: studentData,
         // });
 
-        // // set(ref(rdb, `school/${schoolName}/${carNumber}`), {
-        // //     goOrBack: goOrBack,
-        // //     studentData: studentData,
-        // // });
-
-        // studentData.sort((a, b) => {
-        //     const queueA = a[goOrBack + "Queue"];
-        //     const queueB = b[goOrBack + "Queue"];
+        studentData.sort((a, b) => {
+            const queueA = a[goOrBack + "Queue"];
+            const queueB = b[goOrBack + "Queue"];
         
-        //     if (queueA === 0) return 1;  // Move 0 to the end
-        //     if (queueB === 0) return -1; // Keep non-zero values in their order
-        //     return queueA - queueB;      // Sort non-zero values numerically
-        // });
+            if (queueA === 0) return 1;  // Move 0 to the end
+            if (queueB === 0) return -1; // Keep non-zero values in their order
+            return queueA - queueB;      // Sort non-zero values numerically
+        });
         
         
-        // return res.status(200).json({ studentData: studentData });
+        return res.status(200).json({ studentData: studentData });
 
     } catch (error) {
         console.error('Error:', error);
