@@ -1,6 +1,17 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-import {getStorage,ref,uploadBytes,} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -20,27 +31,30 @@ const db = getFirestore(app);
 firebase.initializeApp(firebaseConfig);
 
 // Import currentUser
-import currentUser from '../user/currentUser.js';
+import currentUser from "../user/currentUser.js";
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
-const storedUser = sessionStorage.getItem('currentUser');
+const storedUser = sessionStorage.getItem("currentUser");
 
 if (storedUser) {
-    // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
-    const storedCurrentUser = JSON.parse(storedUser);
+  // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
+  const storedCurrentUser = JSON.parse(storedUser);
 
-    // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
-    currentUser.email = storedCurrentUser.email;
-    currentUser.school_name = storedCurrentUser.school_name;
-    currentUser.loggedin = storedCurrentUser.loggedin;
+  // ตั้งค่าค่า email และ school_name จาก storedCurrentUser
+  currentUser.email = storedCurrentUser.email;
+  currentUser.school_name = storedCurrentUser.school_name;
+  currentUser.loggedin = storedCurrentUser.loggedin;
 }
 
 // ================================================================================================================
-// upload teacher form 
+// upload teacher form
 // Function to upload an .xlsx file to Firebase Storage and then Firestore
 function upload(file) {
   var school = currentUser.school_name;
-  const storageRef = ref(storage, "school/" + school + "/form_teacher/" + file.name);
+  const storageRef = ref(
+    storage,
+    "school/" + school + "/form_teacher/" + file.name
+  );
   const firestore = firebase.firestore();
   const reader = new FileReader();
 
@@ -61,55 +75,62 @@ function upload(file) {
         validateForm(jsonData).then((result) => {
           if (result === true) {
             console.log("Data is valid");
+            // Step 3: Upload JSON data to Firestore
+            const collectionRef = firestore.collection("school");
+
+            // Query Firestore to find the school document with name "KMUTNB"
+            collectionRef
+              .where("school-name", "==", school)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((schoolDoc) => {
+                  // เข้าไปยัง sub collection 'teacher' ในเอกสารของโรงเรียน
+                  const teacherRef = schoolDoc.ref.collection("teacher");
+
+                  // ลบข้อมูลที่อยู่ใน sub collection 'teacher'
+                  teacherRef.get().then((teacherSnapshot) => {
+                    teacherSnapshot.forEach((teacherDoc) => {
+                      // ใช้ doc(id).delete() เพื่อลบเอกสาร
+                      teacherRef.doc(teacherDoc.id).delete();
+                    });
+
+                    // อัปโหลดข้อมูลจาก JSON ไปยัง sub collection 'teacher'
+                    jsonData.forEach((item) => {
+                      teacherRef.add(item);
+                    });
+
+                    // เพิ่มฟิลด์ "latest-teacher-update" ในเอกสารโรงเรียน
+                    schoolDoc.ref.update({
+                      "latest-teacher-update": moment().format(
+                        "MMMM Do YYYY, h:mm:ss a"
+                      ),
+                    });
+
+                    console.log("Data uploaded to Firestore successfully!");
+                    // alert("Upload to Firestore successful! (4)");
+                    alert(
+                      "เพิ่มข้อมูลสำเร็จแล้ว! กรุณารอสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ"
+                    );
+                  });
+                });
+              })
+              .catch((error) => {
+                console.error("Error getting school documents:", error);
+                // alert("Error getting school documents");
+                alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+              });
+
+            setTimeout(() => {
+              window.location.href = "../../Panel2Teacher.html";
+            }, 10000);
           } else {
             console.error("Data is invalid");
-            console.error(result.invalidData);
-            alert("ข้อมูลลำดับที่ : ", result.invalidData, " ไม่ถูกต้อง กรุณาตรวจสอบข้อมูลอีกครั้ง");
-            return;
+            const invalidDataMsg = result.invalidData.join(", ");
+            alert(
+              `ข้อมูลลำดับที่ ${invalidDataMsg} ไม่ถูกต้อง กรุณาตรวจสอบข้อมูลอีกครั้ง`
+            );
           }
         });
-
-        // Step 3: Upload JSON data to Firestore
-        const collectionRef = firestore.collection("school");
-
-        // Query Firestore to find the school document with name "KMUTNB"
-        collectionRef
-          .where("school-name", "==", school)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((schoolDoc) => {
-              // เข้าไปยัง sub collection 'teacher' ในเอกสารของโรงเรียน
-              const teacherRef = schoolDoc.ref.collection("teacher");
-
-              // ลบข้อมูลที่อยู่ใน sub collection 'teacher'
-              teacherRef.get().then((teacherSnapshot) => {
-                teacherSnapshot.forEach((teacherDoc) => {
-                  // ใช้ doc(id).delete() เพื่อลบเอกสาร
-                  teacherRef.doc(teacherDoc.id).delete(); 
-                });
-
-                // อัปโหลดข้อมูลจาก JSON ไปยัง sub collection 'teacher'
-                jsonData.forEach((item) => {
-                  teacherRef.add(item);
-                });
-
-                // เพิ่มฟิลด์ "latest-teacher-update" ในเอกสารโรงเรียน
-                schoolDoc.ref.update({
-                  "latest-teacher-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
-                });
-
-
-                console.log("Data uploaded to Firestore successfully!");
-                // alert("Upload to Firestore successful! (4)");
-                alert("เพิ่มข้อมูลสำเร็จแล้ว! กรุณารอสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
-              });
-            });
-          })
-          .catch((error) => {
-            console.error("Error getting school documents:", error);
-            // alert("Error getting school documents");
-            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-          });
       })
       .catch((err) => {
         console.error("Upload to storage failed:", err);
@@ -118,20 +139,14 @@ function upload(file) {
       });
   };
   reader.readAsArrayBuffer(file);
-
-
-  setTimeout(() => {
-    window.location.href = '../../Panel2Teacher.html';
-  }, 10000);
 }
-  
 
 // // Event listener for the file input
 // const uploadForm = document.getElementById("uploadTeacherForm");
 // uploadForm.addEventListener("change", (e) => {
 //   const xlsxfile = e.target.files[0];
 //   // Check if the uploaded file is an .xlsx file and has the correct name
-//   if (xlsxfile && xlsxfile.name.endsWith(".xlsx") 
+//   if (xlsxfile && xlsxfile.name.endsWith(".xlsx")
 //   && xlsxfile.name.startsWith("form_teacher")) {
 //     upload(xlsxfile);
 //   } else {
@@ -139,11 +154,12 @@ function upload(file) {
 //   }
 // });
 
-
 async function fetchLatestTeacherUpdate() {
   const db = getFirestore();
-  const schoolRef = collection(db, 'school');
-  const querySnapshot = await getDocs(query(schoolRef, where('school-name', '==', currentUser.school_name)));
+  const schoolRef = collection(db, "school");
+  const querySnapshot = await getDocs(
+    query(schoolRef, where("school-name", "==", currentUser.school_name))
+  );
 
   let date = null;
 
@@ -161,17 +177,18 @@ async function fetchLatestTeacherUpdate() {
   return date;
 }
 
-
-
 // Event listener for the file input
 const uploadForm = document.getElementById("uploadForm");
-uploadForm.addEventListener('submit', function (e) {
+uploadForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  const fileInput = document.getElementById('uploadTeacherForm');
+  const fileInput = document.getElementById("uploadTeacherForm");
   const xlsxfile = fileInput.files[0];
   // Check if the uploaded file is an .xlsx file and has the correct name
-  if (xlsxfile && xlsxfile.name.endsWith(".xlsx") 
-  && xlsxfile.name.startsWith("form_teacher")) {
+  if (
+    xlsxfile &&
+    xlsxfile.name.endsWith(".xlsx") &&
+    xlsxfile.name.startsWith("form_teacher")
+  ) {
     upload(xlsxfile);
   } else {
     // alert("Please upload a valid file named 'form_teacher.xlsx'.");
@@ -179,43 +196,43 @@ uploadForm.addEventListener('submit', function (e) {
   }
 });
 
-
-
-
 // for latest teacher update
 const latestTeacherUpdate = await fetchLatestTeacherUpdate();
-const latestTeacherUpdateElement = document.getElementById("latestTeacherUpdate");
+const latestTeacherUpdateElement = document.getElementById(
+  "latestTeacherUpdate"
+);
 if (latestTeacherUpdateElement) {
-  latestTeacherUpdateElement.innerText = "( Latest Teacher Update: " + latestTeacherUpdate + " )"
+  latestTeacherUpdateElement.innerText =
+    "( Latest Teacher Update: " + latestTeacherUpdate + " )";
 } else {
-  latestTeacherUpdateElement.innerText = "( Latest Teacher Update: No upload history found. )"
+  latestTeacherUpdateElement.innerText =
+    "( Latest Teacher Update: No upload history found. )";
 }
 
-
-
-
-
 async function validateForm(jsonData) {
-  let response = await fetch('https://perforkid.azurewebsites.net/web/validateForm', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      "fields": [
-                  "index",	
-                  "teacher-ID",	
-                  "name-surname",	
-                  "class-room",	
-                  "teaching-room",	
-                  "subject",	
-                  "phone",	
-                  "email",	
-                  "address"
-                ],
-      "data": jsonData
-    })
-  });
+  let response = await fetch(
+    "https://perforkid.azurewebsites.net/web/validateForm",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fields: [
+          "index",
+          "teacher-ID",
+          "name-surname",
+          "class-room",
+          "teaching-room",
+          "subject",
+          "phone",
+          "email",
+          "address",
+        ],
+        data: jsonData,
+      }),
+    }
+  );
 
   let data = await response.json();
 

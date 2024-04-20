@@ -1,6 +1,17 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-import { getStorage, ref, uploadBytes, } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-import {getFirestore,collection,addDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLDWrgqaUUwwCP7PieTQwreZUrr6v_34k",
@@ -20,10 +31,10 @@ const db = getFirestore(app);
 firebase.initializeApp(firebaseConfig);
 
 // Import currentUser
-import currentUser from '../user/currentUser.js';
+import currentUser from "../user/currentUser.js";
 
 // ในส่วนนี้คือการดึง currentUser จาก sessionStorage
-const storedUser = sessionStorage.getItem('currentUser');
+const storedUser = sessionStorage.getItem("currentUser");
 
 if (storedUser) {
   // แปลง JSON ที่ถูกเก็บไว้ใน sessionStorage กลับเป็น Object
@@ -39,26 +50,25 @@ if (storedUser) {
 
 // Define vanNum in a scope both functions can access
 
-console.log('DOMContentLoaded event triggered');
+console.log("DOMContentLoaded event triggered");
 const params = new URLSearchParams(window.location.search);
-const vanNum = params.get('vanNum');
+const vanNum = params.get("vanNum");
 
 // Now you have the selected vanNum, you can use it as needed in this page.
 console.log(`Selected Van: ` + vanNum);
 document.title = "Student van No." + vanNum;
 
-
-
-
-
-const uploadButton = document.getElementById('vanCarForm');
-uploadButton.addEventListener('submit', function (e) {
+const uploadButton = document.getElementById("vanCarForm");
+uploadButton.addEventListener("submit", function (e) {
   e.preventDefault();
   console.log("Student Car/Van Submit Button clicked");
-  const fileInput = document.getElementById('SubmitVanFormBtn');
+  const fileInput = document.getElementById("SubmitVanFormBtn");
   const xlsxfile = fileInput.files[0];
-  if (xlsxfile && xlsxfile.name.endsWith(".xlsx")
-    && xlsxfile.name.startsWith(`form_car_${vanNum}`)) {
+  if (
+    xlsxfile &&
+    xlsxfile.name.endsWith(".xlsx") &&
+    xlsxfile.name.startsWith(`form_car_${vanNum}`)
+  ) {
     upload(xlsxfile, vanNum);
   } else {
     // alert(`Please select form_car_${vanNum}.xlsx file.`);
@@ -66,22 +76,24 @@ uploadButton.addEventListener('submit', function (e) {
   }
 });
 
-
-
 async function fetchLatestStudentVanUpdate(vanNum, currentUser) {
   const db = getFirestore();
-  const schoolRef = collection(db, 'school');
-  const querySnapshots = await getDocs(query(schoolRef, where('school-name', '==', currentUser.school_name)));
+  const schoolRef = collection(db, "school");
+  const querySnapshots = await getDocs(
+    query(schoolRef, where("school-name", "==", currentUser.school_name))
+  );
 
   let result = null;
 
   if (!querySnapshots.empty) {
     const schoolDoc = querySnapshots.docs[0]; // Get the document object
     const schoolDocRef = schoolDoc.ref; // Extract document reference
-    
+
     // Now schoolDocRef should be a DocumentReference
-    const studentVanRef = collection(schoolDocRef, 'car');
-    const studentQuerySnapshot = await getDocs(query(studentVanRef, where('car-number', '==', vanNum)));
+    const studentVanRef = collection(schoolDocRef, "car");
+    const studentQuerySnapshot = await getDocs(
+      query(studentVanRef, where("car-number", "==", vanNum))
+    );
 
     studentQuerySnapshot.forEach((studentDoc) => {
       const data = studentDoc.data();
@@ -94,34 +106,28 @@ async function fetchLatestStudentVanUpdate(vanNum, currentUser) {
     });
   }
 
-  return result; 
+  return result;
 }
-
-
-
-
-
 
 // for latest student update
-const latestStudentVanUpdate = await fetchLatestStudentVanUpdate(vanNum, currentUser);
-const latestStudentVanUpdateElement = document.getElementById("latestVanUpdate");
+const latestStudentVanUpdate = await fetchLatestStudentVanUpdate(
+  vanNum,
+  currentUser
+);
+const latestStudentVanUpdateElement =
+  document.getElementById("latestVanUpdate");
 if (latestStudentVanUpdateElement) {
-  latestStudentVanUpdateElement.innerText = "( Latest van Update: " + latestStudentVanUpdate + " )"
+  latestStudentVanUpdateElement.innerText =
+    "( Latest van Update: " + latestStudentVanUpdate + " )";
 } else {
-  latestStudentVanUpdateElement.innerText = "( Latest van Update: No upload history found. )"
+  latestStudentVanUpdateElement.innerText =
+    "( Latest van Update: No upload history found. )";
 }
-
-
-
-
-
-
-
 
 // upload Form 1
 // Function to upload an .xlsx file to Firebase Storage and then Firestore
 function upload(file) {
-  console.log("Upload function entered.")
+  console.log("Upload function entered.");
   var school = currentUser.school_name;
   // สร้างชื่อไฟล์ใหม่
   let newfilename = `form_car_${vanNum}.xlsx`;
@@ -147,176 +153,195 @@ function upload(file) {
         validateForm(jsonData).then((result) => {
           if (result === true) {
             console.log("Data is valid");
+            // Step 3: Upload JSON data to Firestore
+            const collectionRef = firestore.collection("school");
+
+            // Query Firestore to find the school document with name "KMUTNB"
+            collectionRef
+              .where("school-name", "==", school)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((schoolDoc) => {
+                  // เข้าไปยัง sub collection 'car' ในเอกสารของโรงเรียน
+                  const carRef = schoolDoc.ref.collection("car");
+
+                  // สร้าง array ไว้อ้างอิงลบใน all
+                  let refsToDelete = [];
+
+                  // Query เอกสารที่มี field 'car-number' เป็น ...
+                  carRef
+                    .where("car-number", "==", vanNum)
+                    .get()
+                    .then((studentSnapshot) => {
+                      studentSnapshot.forEach((studentDoc) => {
+                        // สร้าง sub collection 'student-car' และลบข้อมูลที่อยู่ใน 'student-list'
+                        const studentListRef =
+                          studentDoc.ref.collection("student-car");
+
+                        studentListRef
+                          .get()
+                          .then((studentListSnapshot) => {
+                            studentListSnapshot.forEach((listDoc) => {
+                              // เอาใส่ใน array
+                              let data = listDoc.data();
+                              refsToDelete.push(data);
+                              //console.log(listDoc.data());
+
+                              // ลบข้อมูลที่อยู่ใน sub collection 'student-list'
+                              listDoc.ref.delete();
+                            });
+
+                            console.log("refsToDelete = ");
+                            console.log(refsToDelete);
+
+                            // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-car'
+                            jsonData.forEach((item) => {
+                              studentListRef.add(item);
+                            });
+
+                            studentDoc.ref.update({
+                              "latest-van-update": moment().format(
+                                "MMMM Do YYYY, h:mm:ss a"
+                              ),
+                              update: true,
+                            });
+
+                            console.log(
+                              "Data uploaded to Firestore successfully!"
+                            );
+                            // alert("Upload to Firestore successful! (4)");
+                            //alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                          })
+                          .catch((error) => {
+                            console.error(
+                              "Error deleting documents in subcollection:",
+                              error
+                            );
+                            // alert("Error deleting documents in subcollection");
+                            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                          });
+                      });
+                    })
+                    .catch((error) => {
+                      console.error("Error getting student documents:", error);
+                      // alert("Error getting student documents");
+                      alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                    });
+
+                  // Query เอกสารที่มี field 'car-number' เป็น 'all'
+                  carRef
+                    .where("car-number", "==", "all")
+                    .get()
+                    .then((studentSnapshot) => {
+                      if (studentSnapshot.empty) {
+                        // ถ้าไม่มีเอกสารที่มี field 'car-number' เป็น 'all', ให้สร้างเอกสารใหม่
+                        carRef
+                          .add({ "car-number": "all" })
+                          .then((newStudentDoc) => {
+                            const studentListRef =
+                              newStudentDoc.collection("student-car");
+                            // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-list'
+                            jsonData.forEach((item) => {
+                              //item.name = "student";
+                              studentListRef.add(item);
+                            });
+                            console.log(
+                              "New document created and data uploaded to Firestore successfully!"
+                            );
+                            //alert("เพิ่มข้อมูลสำเร็จแล้ว!");
+                          })
+                          .catch((error) => {
+                            console.error(
+                              "Error creating new document:",
+                              error
+                            );
+                            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                          });
+                      } else {
+                        // ถ้ามีเอกสารที่มี field 'car-number' เป็น 'all'
+                        studentSnapshot.forEach((studentDoc) => {
+                          const studentListRef =
+                            studentDoc.ref.collection("student-car");
+                          studentListRef
+                            .get()
+                            .then((studentListSnapshot) => {
+                              studentListSnapshot.forEach((listDoc) => {
+                                let data = listDoc.data();
+
+                                if (
+                                  refsToDelete.some(
+                                    (item) =>
+                                      item["student-ID"] == data["student-ID"]
+                                  )
+                                ) {
+                                  listDoc.ref
+                                    .delete()
+                                    .then(() => {
+                                      console.log("Deleted:", data);
+                                    })
+                                    .catch((error) => {
+                                      console.error(
+                                        "Error deleting document:",
+                                        error
+                                      );
+                                    });
+                                }
+                              });
+
+                              // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-car'
+                              jsonData.forEach((item) => {
+                                studentListRef.add(item);
+                              });
+
+                              studentDoc.ref.update({
+                                "latest-van-update": moment().format(
+                                  "MMMM Do YYYY, h:mm:ss a"
+                                ),
+                              });
+
+                              console.log(
+                                "Data uploaded to Firestore successfully!"
+                              );
+                              alert(
+                                "เพิ่มข้อมูลสำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ"
+                              );
+                            })
+                            .then(() => {
+                              //location.reload(); // remark
+                            })
+                            .catch((error) => {
+                              console.error(
+                                "Error deleting documents in subcollection:",
+                                error
+                              );
+                              alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                            });
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      console.error("Error getting student documents:", error);
+                      alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+                    });
+                });
+              })
+              .catch((error) => {
+                console.error("Error getting school documents:", error);
+                // alert("Error getting school documents");
+                alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+              });
+
+            setTimeout(() => {
+              window.location.reload();
+            }, 15000);
           } else {
             console.error("Data is invalid");
-            console.error(result.invalidData);
-            alert("ข้อมูลลำดับที่ : ", result.invalidData, " ไม่ถูกต้อง กรุณาตรวจสอบข้อมูลอีกครั้ง");
-            return;
+            const invalidDataMsg = result.invalidData.join(", ");
+            alert(
+              `ข้อมูลลำดับที่ ${invalidDataMsg} ไม่ถูกต้อง กรุณาตรวจสอบข้อมูลอีกครั้ง`
+            );
           }
         });
-        
-        // Step 3: Upload JSON data to Firestore
-        const collectionRef = firestore.collection("school");
-
-        // Query Firestore to find the school document with name "KMUTNB"
-        collectionRef
-          .where("school-name", "==", school)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((schoolDoc) => {
-              // เข้าไปยัง sub collection 'car' ในเอกสารของโรงเรียน
-              const carRef = schoolDoc.ref.collection("car");
-
-              // สร้าง array ไว้อ้างอิงลบใน all
-              let refsToDelete = [];
-
-              // Query เอกสารที่มี field 'car-number' เป็น ...
-              carRef
-                .where("car-number", "==", vanNum)
-                .get()
-                .then((studentSnapshot) => {
-                  studentSnapshot.forEach((studentDoc) => {
-                    // สร้าง sub collection 'student-car' และลบข้อมูลที่อยู่ใน 'student-list'
-                    const studentListRef = studentDoc.ref.collection("student-car");
-
-                    studentListRef
-                      .get()
-                      .then((studentListSnapshot) => {
-                        studentListSnapshot.forEach((listDoc) => {
-                          // เอาใส่ใน array
-                          let data = listDoc.data();
-                          refsToDelete.push(data);
-                          //console.log(listDoc.data());
-
-                          // ลบข้อมูลที่อยู่ใน sub collection 'student-list'
-                          listDoc.ref.delete();
-                        });
-
-                        console.log("refsToDelete = ");
-                        console.log(refsToDelete);
-
-                        // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-car'
-                        jsonData.forEach((item) => {
-                          studentListRef.add(item);
-                        });
-
-                        studentDoc.ref.update({
-                          "latest-van-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
-                          "update": true,
-                        })
-
-                        console.log("Data uploaded to Firestore successfully!");
-                        // alert("Upload to Firestore successful! (4)");
-                        //alert("เพิ่มข้อมูลสำเร็จแล้ว!");
-                      })
-                      .catch((error) => {
-                        console.error("Error deleting documents in subcollection:", error);
-                        // alert("Error deleting documents in subcollection");
-                        alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-                      });
-                  });
-                })
-                .catch((error) => {
-                  console.error("Error getting student documents:", error);
-                  // alert("Error getting student documents");
-                  alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-                });
-
-
-              // Query เอกสารที่มี field 'car-number' เป็น 'all'
-              carRef
-                .where("car-number", "==", "all")
-                .get()
-                .then((studentSnapshot) => {
-                  if (studentSnapshot.empty) {
-                    // ถ้าไม่มีเอกสารที่มี field 'car-number' เป็น 'all', ให้สร้างเอกสารใหม่
-                    carRef.add({ "car-number": "all" })
-                      .then((newStudentDoc) => {
-                        const studentListRef = newStudentDoc.collection("student-car");
-                        // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-list'
-                        jsonData.forEach((item) => {
-                          //item.name = "student";
-                          studentListRef.add(item);
-                        });
-                        console.log("New document created and data uploaded to Firestore successfully!");
-                        //alert("เพิ่มข้อมูลสำเร็จแล้ว!");
-                      })
-                      .catch((error) => {
-                        console.error("Error creating new document:", error);
-                        alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-                      });
-                  } else {
-                    // ถ้ามีเอกสารที่มี field 'car-number' เป็น 'all'
-                    studentSnapshot.forEach((studentDoc) => {
-                      const studentListRef = studentDoc.ref.collection("student-car");
-                      studentListRef.get()
-                        .then((studentListSnapshot) => {
-
-
-                          function objectsAreEqual(objA, objB) {
-                            const keysA = Object.keys(objA);
-                            const keysB = Object.keys(objB);
-
-                            if (keysA.length !== keysB.length) {
-                              return false;
-                            }
-
-                            for (let key of keysA) {
-                              if (objA[key] !== objB[key]) {
-                                return false;
-                              }
-                            }
-
-                            return true;
-                          }
-
-                          // ใช้ objectsAreEqual ในโค้ดของคุณ
-                          studentListSnapshot.forEach((listDoc) => {
-                            let data = listDoc.data();
-                          
-                            if (refsToDelete.some(item => item["student-ID"] == data["student-ID"])) {
-                              listDoc.ref.delete()
-                                .then(() => {
-                                  console.log('Deleted:', data);
-                                })
-                                .catch((error) => {
-                                  console.error('Error deleting document:', error);
-                                });
-                            }
-                          });
-
-                          // อัปโหลดข้อมูลจาก JSON ไปยัง 'student-car'
-                          jsonData.forEach((item) => {
-                            studentListRef.add(item);
-                          });
-
-                          studentDoc.ref.update({
-                            "latest-van-update": moment().format("MMMM Do YYYY, h:mm:ss a"),
-                          })
-
-                          console.log("Data uploaded to Firestore successfully!");
-                          alert("เพิ่มข้อมูลสำเร็จแล้ว! อีกสักครู่ระบบจะทำการรีเฟรชหน้าจออัตโนมัติ");
-                        }).then(()=>{
-                          //location.reload(); // remark
-                        })
-                        .catch((error) => {
-                          console.error("Error deleting documents in subcollection:", error);
-                          alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-                        });
-                    });
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error getting student documents:", error);
-                  alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-                });
-            });
-          })
-          .catch((error) => {
-            console.error("Error getting school documents:", error);
-            // alert("Error getting school documents");
-            alert("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
-          });
       })
       .catch((err) => {
         console.error("Upload to storage failed:", err);
@@ -325,40 +350,33 @@ function upload(file) {
       });
   };
   reader.readAsArrayBuffer(file);
-
-
-  setTimeout(() => {
-    window.location.reload();
-  }, 15000);
-
 }
 
-
-
-
-
 async function validateForm(jsonData) {
-  let response = await fetch('https://perforkid.azurewebsites.net/web/validateForm', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      "fields": [
-                  "index",	
-                  "student-ID",
-                  "name-surname",
-                  "class-room",
-                  "car-number",
-                  "go-status",
-                  "back-status",
-                  "father-phone",
-                  "mother-phone",
-                  "address"
-                ],
-      "data": jsonData
-    })
-  });
+  let response = await fetch(
+    "https://perforkid.azurewebsites.net/web/validateForm",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fields: [
+          "index",
+          "student-ID",
+          "name-surname",
+          "class-room",
+          "car-number",
+          "go-status",
+          "back-status",
+          "father-phone",
+          "mother-phone",
+          "address",
+        ],
+        data: jsonData,
+      }),
+    }
+  );
 
   let data = await response.json();
 
