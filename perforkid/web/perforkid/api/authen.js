@@ -139,7 +139,7 @@ exports.signIn = async (req, res) => {
                     parentEmail: email,
                     parentName: userInfo.username,
                     studentId: studentIds,
-                    parentImage: null
+                    parentImage: ""
                 }, {
                     headers: {
                         authorization: token
