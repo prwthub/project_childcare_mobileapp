@@ -2,11 +2,14 @@ const { firebaseConfig } = require("./config.js");
 const { db, admin } = require("../util/admin.js");
 const { initializeApp } = require("firebase/app");
 const { getStorage, ref, listAll, getMetadata, getDownloadURL } = require("firebase/storage");
+const express = require('express');
 
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+const firebaseApp  = initializeApp(firebaseConfig);
+const storage = getStorage(firebaseApp );
 const functions = require("./function.js");
 
+const app = express();
+app.use(express.json());
 
 // ✅ get teachers by ( schoolName )
 exports.webGetTeacherBySchoolName = async (req, res) => {
@@ -346,3 +349,40 @@ exports.initialStudentData = async (req, res) => {
         return res.status(500).json({ error: "Error getting initial students data." });
     }
 }
+
+
+
+// ✅ validate form
+exports.validateForm = async (req, res) => {
+    const { fields, data } = req.body;
+
+    try {
+        if (!fields || !data) {
+            return res.status(400).json({ success: false, message: 'Missing fields or data.' });
+        }
+
+        let inValidData = [];
+
+        // Check if all data items have all required fields
+        let isValid = true;
+        data.forEach(item => {
+            const isValidItem = fields.every(field => item.hasOwnProperty(field));
+            if (!isValidItem) {
+                isValid = false;
+                inValidData.push(item.index);
+            }
+        });
+
+        if (isValid) {
+            res.status(200).json({ success: true, 
+                                    message: 'All data items have required fields.' });
+        } else {
+            res.status(400).json({ success: false, 
+                                    message: 'Some data items are missing required fields.', 
+                                    invalidData: inValidData });
+        }
+    } catch (error) {
+        console.error('Error validating form:', error);
+        res.status(500).json({ success: false, message: 'Internal server error.' });
+    }
+};

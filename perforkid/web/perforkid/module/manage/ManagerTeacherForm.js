@@ -58,6 +58,17 @@ function upload(file) {
           workbook.Sheets[workbook.SheetNames[0]]
         );
 
+        validateForm(jsonData).then((result) => {
+          if (result === true) {
+            console.log("Data is valid");
+          } else {
+            console.error("Data is invalid");
+            console.error(result.invalidData);
+            alert("ข้อมูลลำดับที่ : ", result.invalidData, " ไม่ถูกต้อง กรุณาตรวจสอบข้อมูลอีกครั้ง");
+            return;
+          }
+        });
+
         // Step 3: Upload JSON data to Firestore
         const collectionRef = firestore.collection("school");
 
@@ -178,4 +189,41 @@ if (latestTeacherUpdateElement) {
   latestTeacherUpdateElement.innerText = "( Latest Teacher Update: " + latestTeacherUpdate + " )"
 } else {
   latestTeacherUpdateElement.innerText = "( Latest Teacher Update: No upload history found. )"
+}
+
+
+
+
+
+async function validateForm(jsonData) {
+  let response = await fetch('https://perforkid.azurewebsites.net/web/validateForm', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "fields": [
+                  "index",	
+                  "teacher-ID",	
+                  "name-surname",	
+                  "class-room",	
+                  "teaching-room",	
+                  "subject",	
+                  "phone",	
+                  "email",	
+                  "address"
+                ],
+      "data": jsonData
+    })
+  });
+
+  let data = await response.json();
+
+  if (data.success) {
+    console.log("Validation successful");
+    return true;
+  } else {
+    console.error("Validation failed");
+    return { success: false, invalidData: data.invalidData };
+  }
 }

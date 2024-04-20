@@ -73,7 +73,8 @@ const { webGetTeacherBySchoolName,
         webGetStudentBySchoolNameAndStudentRoom,
         webGetStudentCarBySchoolNameAndCarNumber,
         initialStudentData,
-        getImageBySchoolNameAndTypeAndId } = require('./web.js');
+        getImageBySchoolNameAndTypeAndId,
+        validateForm } = require('./web.js');
 
 
 // ? ===========================================================================================================================================================================
@@ -299,6 +300,8 @@ app.post('/web/studentCar/getStudentCarBySchoolNameAndCarNumber', webGetStudentC
 app.post('/web/room/initialStudentData', initialStudentData); 
 
 app.post('/image/getImageBySchoolNameAndTypeAndId', getImageBySchoolNameAndTypeAndId);
+
+app.post('/web/validateForm', validateForm);
 
 
 
