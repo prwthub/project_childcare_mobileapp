@@ -379,8 +379,11 @@ exports.getDirectionAndDistance = async (req, res) => {
                 }
    
                 update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+                    currentQueue: destinationAddress[0].goQueue,
                     originLat: originLat,
                     originLng: originLng,
+                    destinationLat: destinationAddress[0].destinationLat,
+                    destinationLng: destinationAddress[0].destinationLng,
                     studentData: studentData,
                     route: data
                 });
@@ -432,8 +435,11 @@ exports.getDirectionAndDistance = async (req, res) => {
                 }
    
                 update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+                    currentQueue: destinationAddress[0].backQueue,
                     originLat: originLat,
                     originLng: originLng,
+                    destinationLat: destinationAddress[0].destinationLat,
+                    destinationLng: destinationAddress[0].destinationLng,
                     studentData: studentData,
                     route: data
                 });
@@ -487,10 +493,13 @@ exports.getCarLocation = async (req, res) => {
             return res.status(404).json({ error: "End of trip." });
         }
 
+        const currentQueue = snapshot.val().currentQueue;
         const goOrBack = snapshot.val().goOrBack;
         const originLat = snapshot.val().originLat;
         const originLng = snapshot.val().originLng;
-        const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
+
+        // const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
+        let studentData = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
         const route = snapshot.val().route;
 
         return res.status(200).json({ goOrBack, originLat, originLng, studentData, route });
