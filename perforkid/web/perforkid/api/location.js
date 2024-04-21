@@ -388,7 +388,9 @@ exports.getDirectionAndDistance = async (req, res) => {
                     route: data
                 });
    
-                res.status(200).json({ originLat,
+                res.status(200).json({ goOrBack,
+                                        currentQueue: destinationAddress[0].goQueue,
+                                        originLat,
                                         originLng,
                                         studentData: destinationAddress[0],
                                         distance, 
@@ -444,7 +446,9 @@ exports.getDirectionAndDistance = async (req, res) => {
                     route: data
                 });
    
-                res.status(200).json({ originLat,
+                res.status(200).json({ goOrBack,
+                                        currentQueue: destinationAddress[0].backQueue,
+                                        originLat,
                                         originLng,
                                         studentData: destinationAddress[0],
                                         distance, 
@@ -482,6 +486,43 @@ exports.endOfTrip = async (req, res) => {
 
 
 // ✅
+exports.getStudentLocation = async (req, res) => {
+    // parent ทำการ เช็คว่าปัจจุบันรถตู้อยู่ในตำแหน่งไหน
+    const { schoolName, carNumber, studentId } = req.body;
+
+    try {
+        const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
+
+        if (!snapshot.exists()) {
+            return res.status(404).json({ error: "End of trip." });
+        }
+
+        const currentQueue = snapshot.val().currentQueue;
+        const goOrBack = snapshot.val().goOrBack;
+        const originLat = snapshot.val().originLat;
+        const originLng = snapshot.val().originLng;
+
+        const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
+        const route = snapshot.val().route;
+
+        let isQueue = false;
+        let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+        if (currentStudent[0]["student-ID"] == studentId) {
+            isQueue = true;
+        }
+
+        console.log(currentStudent);
+
+        return res.status(200).json({ goOrBack, currentQueue, isQueue, originLat, originLng, studentData, route });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error getting car location." });
+    }
+}
+
+
+
+// ✅
 exports.getCarLocation = async (req, res) => {
     // parent ทำการ เช็คว่าปัจจุบันรถตู้อยู่ในตำแหน่งไหน
     const { schoolName, carNumber } = req.body;
@@ -502,7 +543,7 @@ exports.getCarLocation = async (req, res) => {
         let studentData = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
         const route = snapshot.val().route;
 
-        return res.status(200).json({ goOrBack, originLat, originLng, studentData, route });
+        return res.status(200).json({ goOrBack, currentQueue, originLat, originLng, studentData, route });
 
     } catch (error) {
         return res.status(500).json({ error: "Error getting car location." });

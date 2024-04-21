@@ -62,6 +62,7 @@ const { getAndCheckStudentAddress,
         setStudentQueue,
         getDirectionAndDistance,
         endOfTrip,
+        getStudentLocation,
         getCarLocation,
         checkQueue } = require('./location.js');
 
@@ -261,6 +262,9 @@ app.post('/location/getDirectionAndDistance', getDirectionAndDistance);         
 
 app.post('/location/endOfTrip', endOfTrip);                                                                     // ✅   end of trip by ( schoolName, carNumber )
 // * นำไปใช้เสื่อเสร็จสิ้นการเดินทาง โดยระบุเบอร์รถ และ ขาไปหรือกลับ
+
+app.post('/location/getStudentLocation', getStudentLocation);                                                   // ✅   get student location by ( schoolName, studentId )
+// * นำไปดึงตำแหน่งของนักเรียน โดยระบุ id ของนักเรียน
 
 app.post('/location/getCarLocation', getCarLocation);                                                           // ✅   get car location by ( schoolName, carNumber )
 // * นำไปดึงตำแหน่งของรถ โดยระบุเบอร์รถ
