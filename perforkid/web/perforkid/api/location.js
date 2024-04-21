@@ -286,6 +286,7 @@ exports.setStudentQueue = async (req, res) => {
         }
 
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
+            goOrBack: goOrBack,
             studentData: studentData,
         });
 

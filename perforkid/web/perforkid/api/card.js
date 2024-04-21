@@ -135,7 +135,9 @@ exports.createVisitorCard = async (req, res) => {
         const id = randomNumber.toString().substring(randomNumber.length - 6, randomNumber.length);
 
         const createTime = new Date();
+        createTime.setTime(createTime.getTime() + (7 * 60 * 60 * 1000));
         const formattedCreateDate = functions.formatDate(createTime);
+
 
         // const expireTime = new Date(createTime.getTime() + (24 * 60 * 60 * 1000)); // เพิ่ม 1 วัน
         // const formattedExpireDate = functions.formatDate(expireTime);
