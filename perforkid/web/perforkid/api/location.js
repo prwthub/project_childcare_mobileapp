@@ -350,7 +350,10 @@ exports.getDirectionAndDistance = async (req, res) => {
                 }
             });
 
+            let isFinish = false;
+
             if (destinationAddress.length === 0) {
+                isFinish = true;
                 return res.status(404).json({ error: "No student to pick up." });
             }
 
@@ -380,6 +383,7 @@ exports.getDirectionAndDistance = async (req, res) => {
    
                 update(ref(rdb, `school/${schoolName}/${carNumber}`), {
                     currentQueue: destinationAddress[0].goQueue,
+                    isFinish: isFinish,
                     originLat: originLat,
                     originLng: originLng,
                     destinationLat: destinationAddress[0].destinationLat,
@@ -438,6 +442,7 @@ exports.getDirectionAndDistance = async (req, res) => {
    
                 update(ref(rdb, `school/${schoolName}/${carNumber}`), {
                     currentQueue: destinationAddress[0].backQueue,
+                    isFinish: isFinish,
                     originLat: originLat,
                     originLng: originLng,
                     destinationLat: destinationAddress[0].destinationLat,
@@ -525,7 +530,7 @@ exports.getStudentLocation = async (req, res) => {
 // ✅
 exports.getCarLocation = async (req, res) => {
     // parent ทำการ เช็คว่าปัจจุบันรถตู้อยู่ในตำแหน่งไหน
-    const { schoolName, carNumber } = req.body;
+    const { schoolName, carNumber, studentId } = req.body;
 
     try {
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
@@ -544,7 +549,13 @@ exports.getCarLocation = async (req, res) => {
         const studentData = data[0];
         const route = snapshot.val().route;
 
-        return res.status(200).json({ goOrBack, currentQueue, originLat, originLng, studentData, route });
+        let isQueue = false;
+        let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+        if (currentStudent[0]["student-ID"] == studentId) {
+            isQueue = true;
+        }
+
+        return res.status(200).json({ goOrBack, currentQueue, isQueue, originLat, originLng, studentData, route });
 
     } catch (error) {
         return res.status(500).json({ error: "Error getting car location." });
