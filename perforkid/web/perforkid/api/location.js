@@ -342,6 +342,8 @@ exports.getDirectionAndDistance = async (req, res) => {
         // const originLat = snapshot.val().originLat;
         // const originLng = snapshot.val().originLng;
 
+        let isFinish = false;
+
         if (goOrBack === "go") {
             let destinationAddress = [];
             studentData.forEach((doc) => {
@@ -349,8 +351,6 @@ exports.getDirectionAndDistance = async (req, res) => {
                     destinationAddress.push(doc);
                 }
             });
-
-            let isFinish = false;
 
             if (destinationAddress.length === 0) {
                 isFinish = true;
@@ -414,6 +414,11 @@ exports.getDirectionAndDistance = async (req, res) => {
 
             if (destinationAddress.length === 0) {
                 return res.status(404).json({ error: "End of trip." });
+            }
+
+            if (destinationAddress.length === 0) {
+                isFinish = true;
+                return res.status(404).json({ error: "No student to pick up." });
             }
 
             destinationAddress.sort((a, b) => a.backQueue - b.backQueue);
