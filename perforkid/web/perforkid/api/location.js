@@ -540,7 +540,8 @@ exports.getCarLocation = async (req, res) => {
         const originLng = snapshot.val().originLng;
 
         // const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
-        let studentData = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+        let data = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+        const studentData = data[0];
         const route = snapshot.val().route;
 
         return res.status(200).json({ goOrBack, currentQueue, originLat, originLng, studentData, route });

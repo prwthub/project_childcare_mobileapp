@@ -38,6 +38,7 @@ const { getDriverBySchoolName,
 
 const { getStudentBySchoolName,
         getStudentBySchoolNameAndRoom,
+        getStudentBySchoolNameAndRoomAndId,
         getRoomBySchoolName,
         getRoomBySchoolNameAndRoom } = require('./student.js');
 
@@ -181,6 +182,9 @@ app.post('/student/getStudentBySchoolName', getStudentBySchoolName);            
 
 app.post('/student/getStudentBySchoolNameAndRoom', getStudentBySchoolNameAndRoom);                              // ✅🔒 get all student data by ( schoolName, studentRoom )
 // * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของนักเรียนทุกคนในโรงเรียน โดยระบุห้อง
+
+app.post('/student/getStudentBySchoolNameAndRoomAndId', getStudentBySchoolNameAndRoomAndId);                    // ✅🔒 get student data by ( schoolName, studentRoom, studentId )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของนักเรียน โดยระบุ ห้องและรหัสนักเรียน
 
 app.post('/room/getRoomBySchoolName', getRoomBySchoolName);                                                     // ✅🔒 get all room name by ( schoolName )
 // * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของห้องเรียนทั้งหมดในโรงเรียน
