@@ -455,8 +455,8 @@ exports.getDirectionAndDistance = async (req, res) => {
                 const duration = route.legs[0].duration.text;
 
                 let [value, unit] = distance.split(" ");
-                if (unit === "km") {
-                    if (parseFloat(value) <= 200) {
+                if (unit === "m") {
+                    if (parseFloat(value) <= 250) {
                         destinationAddress[0].backArrive = true;
                     }
                 }
