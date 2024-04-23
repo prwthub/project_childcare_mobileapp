@@ -539,11 +539,10 @@ exports.getStudentLocation = async (req, res) => {
             }
         }
 
-        console.log(currentStudent);
-
         return res.status(200).json({ goOrBack, currentQueue, isQueue, originLat, originLng, studentData, route });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: "Error getting car location." });
     }
 }
