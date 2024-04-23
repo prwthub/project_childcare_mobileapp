@@ -110,6 +110,7 @@ exports.getAndCheckStudentAddress = async (req, res) => {
         }
 
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
+            isPending: false,
             goOrBack: goOrBack,
             originLat: originLat,
             originLng: originLng,
@@ -147,6 +148,23 @@ exports.setStudentQueue = async (req, res) => {
     const { schoolName, carNumber, studentId } = req.body;
 
     try {
+
+        const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
+
+        if (!snapshot.exists()) {
+            return res.status(404).json({ error: "End of trip." });
+        }
+
+        const isPending = snapshot.val().isPending;
+        if (isPending) {
+            return res.status(400).json({ error: "Please wait for the previous student to arrive." });
+        }
+
+        update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+            isPending: true
+        });
+
+
         // Get reference to the school document
         const schoolsRef = db.collection('school');
         const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
@@ -285,15 +303,11 @@ exports.setStudentQueue = async (req, res) => {
             return res.status(404).json({ error: "Student not found" });
         }
 
-        set(ref(rdb, `school/${schoolName}/${carNumber}`), {
+        update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+            isPending: false,
             goOrBack: goOrBack,
             studentData: studentData,
         });
-
-        // set(ref(rdb, `school/${schoolName}/${carNumber}`), {
-        //     goOrBack: goOrBack,
-        //     studentData: studentData,
-        // });
 
         studentData.sort((a, b) => {
             const queueA = a[goOrBack + "Queue"];
