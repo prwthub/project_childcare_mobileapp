@@ -387,9 +387,9 @@ exports.getCardBySchoolNameAndCardTypeAndStudentName = async (req, res) => {
 
 
 
-// ✅🔒 get card by ( schoolName, cardId )
+// ✅🔒 get card by ( schoolName, cardType, cardId )
 exports.getCardBySchoolNameAndCardId = async (req, res) => {
-    const { schoolName, cardId } = req.body;
+    const { schoolName, cardType, cardId } = req.body;
 
     // Check for token in headers
     const token = req.headers.authorization;
@@ -409,8 +409,17 @@ exports.getCardBySchoolNameAndCardId = async (req, res) => {
 
         const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
         const cardRef = schoolDocRef.collection('card');
-        const cardQuerySnapshot = await cardRef.where('card-ID', '==', cardId).get();
+        let cardQuerySnapshot; 
 
+        if (cardType === "parent") {
+            cardQuerySnapshot = await cardRef.where('card-type', '==', 'parent').where('card-ID', '==', cardId).get();
+        } else if (cardType === "visitor") {
+            cardQuerySnapshot = await cardRef.where('card-type', '==', 'visitor').where('card-ID', '==', cardId).get();
+        } else if (cardType === "") {
+            cardQuerySnapshot = await cardRef.where('card-ID', '==', cardId).get();
+        } else {
+            return res.status(400).json({ error: "Invalid card type" });
+        }
 
         if (cardQuerySnapshot.empty) {
             return res.status(404).json({ error: "Card not found" });

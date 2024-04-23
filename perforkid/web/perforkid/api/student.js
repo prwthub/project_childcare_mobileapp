@@ -131,6 +131,8 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
             });
         });
 
+        studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
+
         if (studentData.length === 0) {
             return res.status(404).json({ error: "No students found" });
         } else {
@@ -144,7 +146,7 @@ exports.getStudentBySchoolNameAndRoom = async (req, res) => {
 
 
 
-// ✅🔒 get Student by ( schoolName, studentId )
+// ✅🔒 get Student by ( schoolName, studentRoom, studentId )
 exports.getStudentBySchoolNameAndRoomAndId = async (req, res) => {
     const { schoolName, studentRoom, studentId } = req.body;
     
