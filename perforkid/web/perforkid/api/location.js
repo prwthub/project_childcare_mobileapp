@@ -515,7 +515,7 @@ exports.endOfTrip = async (req, res) => {
 // ✅
 exports.getStudentLocation = async (req, res) => {
     // parent ทำการ เช็คว่าปัจจุบันรถตู้อยู่ในตำแหน่งไหน
-    const { schoolName, carNumber, studentId, originLat, originLng } = req.body;
+    const { schoolName, carNumber, studentId, type, originLat, originLng } = req.body;
 
     try {
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
@@ -525,7 +525,7 @@ exports.getStudentLocation = async (req, res) => {
         }
 
         // for driver to update location
-        if (originLat != null && originLng != null) {
+        if (type == 'driver') {
             await update(ref(rdb, `school/${schoolName}/${carNumber}`), {
                 originLat: originLat,
                 originLng: originLng
@@ -555,7 +555,7 @@ exports.getStudentLocation = async (req, res) => {
                                             route });
 
         // for parent to get location
-        } else {
+        } else if (type == 'parent') {
 
             const currentQueue = snapshot.val().currentQueue;
             const goOrBack = snapshot.val().goOrBack;
@@ -580,6 +580,8 @@ exports.getStudentLocation = async (req, res) => {
                                             originLng: originLngNew,
                                             studentData, 
                                             route });
+        } else {
+            return res.status(400).json({ error: "Invalid type." });
         }
 
     } catch (error) {
