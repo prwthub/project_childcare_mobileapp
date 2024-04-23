@@ -392,8 +392,8 @@ exports.getDirectionAndDistance = async (req, res) => {
                 const duration = route.legs[0].duration.text;
 
                 let [value, unit] = distance.split(" ");
-                if (unit === "km") {
-                    if (parseFloat(value) <= 200) {
+                if (unit === "m") {
+                    if (parseFloat(value) <= 250) {
                         destinationAddress[0].goArrive = true;
                     }
                 }
@@ -456,8 +456,8 @@ exports.getDirectionAndDistance = async (req, res) => {
                 const duration = route.legs[0].duration.text;
 
                 let [value, unit] = distance.split(" ");
-                if (unit === "km") {
-                    if (parseFloat(value) <= 200) {
+                if (unit === "m") {
+                    if (parseFloat(value) <= 250) {
                         destinationAddress[0].backArrive = true;
                     }
                 }
@@ -515,7 +515,7 @@ exports.endOfTrip = async (req, res) => {
 // ✅
 exports.getStudentLocation = async (req, res) => {
     // parent ทำการ เช็คว่าปัจจุบันรถตู้อยู่ในตำแหน่งไหน
-    const { schoolName, carNumber, studentId } = req.body;
+    const { schoolName, carNumber, studentId, originLat, originLng } = req.body;
 
     try {
         const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
@@ -524,25 +524,63 @@ exports.getStudentLocation = async (req, res) => {
             return res.status(404).json({ error: "End of trip." });
         }
 
-        const currentQueue = snapshot.val().currentQueue;
+        // for driver to update location
+        if (originLat != null && originLng != null) {
+            await update(ref(rdb, `school/${schoolName}/${carNumber}`), {
+                originLat: originLat,
+                originLng: originLng
+            });
 
-        console.log(currentQueue)
-        // const goOrBack = snapshot.val().goOrBack;
-        // const originLat = snapshot.val().originLat;
-        // const originLng = snapshot.val().originLng;
+            const currentQueue = snapshot.val().currentQueue;
+            const goOrBack = snapshot.val().goOrBack;
+            // const originLatNew = snapshot.val().originLat;
+            // const originLngNew = snapshot.val().originLng;
 
-        // const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
-        // const route = snapshot.val().route;
+            const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
+            const route = snapshot.val().route;
 
-        // let isQueue = false;
-        // let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
-        // if (currentStudent[0]["student-ID"] == studentId) {
-        //     isQueue = true;
-        // }
+            let isQueue = false;
+            if (currentQueue != 0) {
+                let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+                if (currentStudent[0]["student-ID"] == studentId) {
+                    isQueue = true;
+                }
+            }
+            return res.status(200).json({ goOrBack, 
+                                            currentQueue, 
+                                            isQueue, 
+                                            originLat: originLat,
+                                            originLng: originLng,
+                                            studentData, 
+                                            route });
 
-        // console.log(currentStudent);
+        // for parent to get location
+        } else {
 
-        // return res.status(200).json({ goOrBack, currentQueue, isQueue, originLat, originLng, studentData, route });
+            const currentQueue = snapshot.val().currentQueue;
+            const goOrBack = snapshot.val().goOrBack;
+            const originLatNew = snapshot.val().originLat;
+            const originLngNew = snapshot.val().originLng;
+
+            const studentData = snapshot.val().studentData.sort((a, b) => a["student-ID"] - b["student-ID"]);
+            const route = snapshot.val().route;
+
+            let isQueue = false;
+            if (currentQueue != 0) {
+                let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+                if (currentStudent[0]["student-ID"] == studentId) {
+                    isQueue = true;
+                }
+            }
+
+            return res.status(200).json({ goOrBack, 
+                                            currentQueue, 
+                                            isQueue, 
+                                            originLat: originLatNew,
+                                            originLng: originLngNew,
+                                            studentData, 
+                                            route });
+        }
 
     } catch (error) {
         console.log(error);
