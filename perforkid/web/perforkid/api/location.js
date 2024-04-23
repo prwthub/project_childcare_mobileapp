@@ -111,6 +111,8 @@ exports.getAndCheckStudentAddress = async (req, res) => {
 
         set(ref(rdb, `school/${schoolName}/${carNumber}`), {
             isPending: false,
+            isFinish: false,
+            currentQueue: 0,
             goOrBack: goOrBack,
             originLat: originLat,
             originLng: originLng,
@@ -530,9 +532,11 @@ exports.getStudentLocation = async (req, res) => {
         const route = snapshot.val().route;
 
         let isQueue = false;
-        let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
-        if (currentStudent[0]["student-ID"] == studentId) {
-            isQueue = true;
+        if (currentQueue != 0) {
+            let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+            if (currentStudent[0]["student-ID"] == studentId) {
+                isQueue = true;
+            }
         }
 
         console.log(currentStudent);
@@ -569,9 +573,11 @@ exports.getCarLocation = async (req, res) => {
         const route = snapshot.val().route;
 
         let isQueue = false;
-        let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
-        if (currentStudent[0]["student-ID"] == studentId) {
-            isQueue = true;
+        if (currentQueue != 0) {
+            let currentStudent = snapshot.val().studentData.filter(student => student[goOrBack + "Queue"] == currentQueue);
+            if (currentStudent[0]["student-ID"] == studentId) {
+                isQueue = true;
+            }
         }
 
         return res.status(200).json({ goOrBack, currentQueue, isQueue, originLat, originLng, studentData, route });
