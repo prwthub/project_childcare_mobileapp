@@ -40,7 +40,8 @@ const { getStudentBySchoolName,
         getStudentBySchoolNameAndRoom,
         getStudentBySchoolNameAndRoomAndId,
         getRoomBySchoolName,
-        getRoomBySchoolNameAndRoom } = require('./student.js');
+        getRoomBySchoolNameAndRoom,
+        getRoomInfo } = require('./student.js');
 
 const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndCarNumber,
@@ -191,6 +192,9 @@ app.post('/room/getRoomBySchoolName', getRoomBySchoolName);                     
 
 app.post('/room/getRoomBySchoolNameAndRoom', getRoomBySchoolNameAndRoom);                                       // ✅🔒 get room data by ( schoolName, studentRoom )
 // * ต้องมี token และนำไปใช้เมื่อต้องการแสดงข้อมูลของห้องเรียนในโรงเรียน โดยระบุห้อง
+
+app.post('/room/getRoomInfo', getRoomInfo);                                                                     // ✅🔒 get room info by ( schoolName, studentRoom )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของห้องเรียนในโรงเรียน โดยระบุห้อง
 
 
 
