@@ -443,3 +443,51 @@ exports.updateStudentCarStatusBySchoolNameAndId = async (req, res) => {
         return res.status(500).json({ error: "Error retrieving students data." });
     }   
 };
+
+
+
+exports.getCarBySchoolNameAndCarNumber = async (req, res) => {
+    const { schoolName, carNumber } = req.body;
+    
+    // Check for token in headers
+    const token = req.headers.authorization;
+    try {
+        // check token
+        const valid = await functions.checkToken(token, schoolName);
+        if (!valid.validToken) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == carNumber
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', carNumber).get();
+
+        if (carsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "CarNumber not found" });
+        }
+
+        let carData = [];
+        carsQuerySnapshot.forEach(doc => {
+            carData.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        return res.status(200).json({ carData: carData });
+    } catch (error) {
+        console.error("Error retrieving cars:", error);
+        return res.status(500).json({ error: "Error retrieving cars data." });
+    }   
+}

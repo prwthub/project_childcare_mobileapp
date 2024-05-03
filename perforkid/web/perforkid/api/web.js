@@ -352,6 +352,86 @@ exports.initialStudentData = async (req, res) => {
 
 
 
+// ✅ initialize student car data by ( schoolName, carNumber )
+exports.initialStudentCarData = async (req, res) => {
+    const { schoolName, carNumber } = req.body;
+
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == carNumber
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', carNumber).get();
+
+        if (carsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "CarNumber not found" });
+        }
+
+        const carData = carsQuerySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        studentId = [];
+        if (carData[0].update) {
+            await carsQuerySnapshot.docs[0].ref.update({ 
+                update: false 
+            });
+
+            const studentListRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
+            const studentListQuerySnapshot = await studentListRef.get();
+
+            for (const doc of studentListQuerySnapshot.docs) {
+                let data = doc.data();
+
+                let index = isNaN(data.index) ? data.index : parseInt(data.index);
+
+                if (!isNaN(index)) {
+                    data.goQueue = index;
+                    data.goArrive = false;
+                    data.backQueue = index;
+                    data.backArrive = false;
+                } else {
+                    console.error("Invalid index:", data.index);
+                    data.goQueue = 0;
+                    data.goArrive = false;
+                    data.backQueue = 0;
+                    data.backArrive = false;   
+                }
+            
+                const address = data.address;
+                const { lat, lng } = await functions.getGeocode(address);
+                data.destinationLat = lat;
+                data.destinationLng = lng;
+            
+                await doc.ref.update(data);
+            
+                addressStudents.push(data);
+            }
+
+            return res.status(200).json({ message: "Student car data initialized" });
+        } else {
+            return res.status(200).json({ message: "Student car data is up to date" });
+        }
+    
+
+    } catch (error) {
+        console.error("Error retrieving students:", error);
+        return res.status(500).json({ error: "Error getting initial students car data." });
+    }
+}
+
+
+
 // ✅ validate form
 exports.validateForm = async (req, res) => {
     const { fields, data } = req.body;

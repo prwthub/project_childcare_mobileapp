@@ -48,7 +48,8 @@ const { getStudentCarBySchoolName,
         getStudentCarBySchoolNameAndRoom,
         getStudentCarBySchoolNameAndId,
         getStudentCarBySchoolNameAndToken,
-        updateStudentCarStatusBySchoolNameAndId } = require('./studentCar.js');
+        updateStudentCarStatusBySchoolNameAndId,
+        getCarBySchoolNameAndCarNumber } = require('./studentCar.js');
 
 const { createParentCard,
         createVisitorCard,
@@ -76,6 +77,7 @@ const { webGetTeacherBySchoolName,
         webGetStudentBySchoolNameAndStudentRoom,
         webGetStudentCarBySchoolNameAndCarNumber,
         initialStudentData,
+        initialStudentCarData,
         getImageBySchoolNameAndTypeAndId,
         validateForm } = require('./web.js');
 
@@ -221,6 +223,9 @@ app.post('/studentCar/updateStudentCarStatusBySchoolNameAndId', updateStudentCar
 // ! goStatus มี มากับรถตู้โรงเรียน, มากับผู้ปกครอง, ไม่มาเรียน
 // ! backStatus มี กลับกับรถตู้โรงเรียน, กลับกับผู้ปกครอง, ไม่มาเรียน
 
+app.post('/car/getCarBySchoolNameAndCarNumber', getCarBySchoolNameAndCarNumber);                         // ✅🔒 get car data by ( schoolName, carNumber )
+// * ต้องมี token และนำไปใช้เมื่อต้องการดูข้อมูลของรถ โดยระบุเบอร์รถ
+
 
 
 // ? ===========================================================================================================================================================================
@@ -310,6 +315,8 @@ app.post('/web/student/getStudentBySchoolNameAndStudentRoom', webGetStudentBySch
 app.post('/web/studentCar/getStudentCarBySchoolNameAndCarNumber', webGetStudentCarBySchoolNameAndCarNumber);
 
 app.post('/web/room/initialStudentData', initialStudentData); 
+
+app.post('/web/car/initialStudentCarData', initialStudentCarData);
 
 app.post('/image/getImageBySchoolNameAndTypeAndId', getImageBySchoolNameAndTypeAndId);
 

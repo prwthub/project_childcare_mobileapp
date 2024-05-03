@@ -16,6 +16,56 @@ const storage = getStorage(app);
 
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
+async function checkVan() {
+    let response = await fetch(
+        "https://perforkid.azurewebsites.net/car/getCarBySchoolNameAndCarNumber",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": currentUser.school_name
+            },
+            body: JSON.stringify({ 
+                schoolName: currentUser.school_name,
+                carNumber: vanNum
+            }),
+        }
+    );
+
+    let data = await response.json();
+    console.log("update: ", data.carData[0].update);
+
+    if (data.carData[0].update){
+
+        console.log("car updated");
+
+        let initResponse = await fetch(
+            "https://perforkid.azurewebsites.net/web/car/initialStudentCarData",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": currentUser.school_name
+                },
+                body: JSON.stringify({ 
+                    schoolName: currentUser.school_name,
+                    carNumber: vanNum
+                }),
+            }
+        );
+
+        // let initData = await initResponse.json();
+        if (initResponse.status === 200) {
+            console.log("car initialized");
+        } else {
+            console.log("car not initialized");
+        }
+    } else {
+        console.log("car not updated");
+    }
+}
+
+
 async function fetchStudent() {
     let response = await fetch(
         "https://perforkid.azurewebsites.net/web/studentCar/getStudentCarBySchoolNameAndCarNumber",
@@ -42,6 +92,7 @@ async function fetchStudent() {
 }
 
 async function generateStudentTable() {
+    checkVan();
     let schoolData = await fetchStudent();
     if (schoolData.length === 0) {
         return;
