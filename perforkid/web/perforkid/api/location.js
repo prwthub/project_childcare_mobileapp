@@ -50,41 +50,43 @@ exports.getAndCheckStudentAddress = async (req, res) => {
 
         if (carData.update) {
 
-            // update status to false
-            await carsQuerySnapshot.docs[0].ref.update({
-                update: false
-            });
+            return res.status(500).json({ error: "Car data has been updated." });
 
-            const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
-            const studentCarQuerySnapshot = await studentCarRef.get();
+            // // update status to false
+            // await carsQuerySnapshot.docs[0].ref.update({
+            //     update: false
+            // });
 
-            for (const doc of studentCarQuerySnapshot.docs) {
-                let data = doc.data();
+            // const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
+            // const studentCarQuerySnapshot = await studentCarRef.get();
 
-                let index = isNaN(data.index) ? data.index : parseInt(data.index);
+            // for (const doc of studentCarQuerySnapshot.docs) {
+            //     let data = doc.data();
 
-                if (!isNaN(index)) {
-                    data.goQueue = index;
-                    data.goArrive = false;
-                    data.backQueue = index;
-                    data.backArrive = false;
-                } else {
-                    console.error("Invalid index:", data.index);
-                    data.goQueue = 0;
-                    data.goArrive = false;
-                    data.backQueue = 0;
-                    data.backArrive = false;   
-                }
+            //     let index = isNaN(data.index) ? data.index : parseInt(data.index);
+
+            //     if (!isNaN(index)) {
+            //         data.goQueue = index;
+            //         data.goArrive = false;
+            //         data.backQueue = index;
+            //         data.backArrive = false;
+            //     } else {
+            //         console.error("Invalid index:", data.index);
+            //         data.goQueue = 0;
+            //         data.goArrive = false;
+            //         data.backQueue = 0;
+            //         data.backArrive = false;   
+            //     }
             
-                const address = data.address;
-                const { lat, lng } = await functions.getGeocode(address);
-                data.destinationLat = lat;
-                data.destinationLng = lng;
+            //     const address = data.address;
+            //     const { lat, lng } = await functions.getGeocode(address);
+            //     data.destinationLat = lat;
+            //     data.destinationLng = lng;
             
-                await doc.ref.update(data);
+            //     await doc.ref.update(data);
             
-                addressStudents.push(data);
-            }
+            //     addressStudents.push(data);
+            // }
 
         } else {
             const studentCarRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
@@ -97,11 +99,6 @@ exports.getAndCheckStudentAddress = async (req, res) => {
         }
 
         let currentHour = (new Date().getHours() + 7) % 24;
-        // const currentTime = new Date();
-        // const currentHour = currentTime.getHours() + 7;
-        // if (currentHour >= 24) {
-        //     currentHour -= 24;
-        // }
 
         let goOrBack;
         if (currentHour >= 0 && currentHour < 12) {
