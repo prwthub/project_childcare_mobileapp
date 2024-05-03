@@ -65,7 +65,7 @@ function createNewVan() {
                     const carRef = collection(doc.ref, 'car');
                     const carData = {
                         "car-number": vanNum,
-                        "update": true
+                        "update": false
                     };
                     // เพราะกำหนด car-number ตรงๆไม่ได้ (ใช้ - ไม่ได้) เลยต้องมาใช้ const
                     addDoc(carRef, carData)

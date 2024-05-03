@@ -414,8 +414,6 @@ exports.initialStudentCarData = async (req, res) => {
                 data.destinationLng = lng;
             
                 await doc.ref.update(data);
-            
-                addressStudents.push(data);
             }
 
             return res.status(200).json({ message: "Student car data initialized" });
