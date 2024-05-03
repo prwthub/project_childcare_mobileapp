@@ -628,6 +628,109 @@ exports.getCarLocation = async (req, res) => {
 }
 
 
+
+// ✅
+exports.getStudentLatLng = async (req, res) => {
+    const { schoolName, carNumber, studentId } = req.body;
+
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+    
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+    
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const carsRef = schoolDocRef.collection('car');
+    
+        // Query cars-number == carNumber
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', carNumber).get();
+
+        if (carsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "CarNumber not found" });
+        }
+
+        const studentListRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
+        const studentListQuerySnapshot = await studentListRef.get();
+
+        let studentData = [];
+        studentListQuerySnapshot.forEach((doc) => {
+            let data = doc.data();
+            if (data["student-ID"] == studentId) {
+                studentData.push(data);
+            }
+        });
+
+        if (studentData.length === 0) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+
+        return res.status(200).json({ studentData: studentData });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error getting student location." });
+    }
+}
+
+
+
+// ✅
+exports.updateStudentLatLng = async (req, res) => {
+    const { schoolName, carNumber, studentId, destinationLat, destinationLng } = req.body;
+
+    try {
+        // Get reference to the school document
+        const schoolsRef = db.collection('school');
+        const schoolQuerySnapshot = await schoolsRef.where('school-name', '==', schoolName).get();
+
+        if (schoolQuerySnapshot.empty) {
+            return res.status(404).json({ error: "School not found" });
+        }
+
+        // Get reference to the cars subcollection
+        const schoolDocRef = schoolQuerySnapshot.docs[0].ref;
+        const carsRef = schoolDocRef.collection('car');
+
+        // Query cars-number == carNumber
+        const carsQuerySnapshot = await carsRef.where('car-number', '==', carNumber).get();
+
+        if (carsQuerySnapshot.empty) {
+            return res.status(404).json({ error: "CarNumber not found" });
+        }
+
+        const studentListRef = carsQuerySnapshot.docs[0].ref.collection('student-car');
+        const studentListQuerySnapshot = await studentListRef.get();
+
+        let check = false;
+        for (const doc of studentListQuerySnapshot.docs) {
+            let data = doc.data();
+            if (data["student-ID"] == studentId) {
+                await doc.ref.update(
+                    { 
+                        destinationLat: destinationLat, 
+                        destinationLng: destinationLng 
+                    }
+                );
+                check = true;
+            }
+        };
+
+        if (!check) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+
+        return res.status(200).json({ message: "Update student location successfully." });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error updating student location." });
+    }
+}
+
+
+
 // ทำมาเพื่อเช็คว่านักเรียนอยู่ในคิวไหน ไม่ได้ใช้จริง
 exports.checkQueue = async (req, res) => {
     const { schoolName, carNumber } = req.body;
