@@ -627,6 +627,34 @@ exports.getCarLocation = async (req, res) => {
 
 
 // ✅
+exports.getStudentStatus = async (req, res) => {
+    const { schoolName, carNumber, studentId } = req.body;
+
+    try {
+        const snapshot = await get(ref(rdb, `school/${schoolName}/${carNumber}`));
+
+        if (!snapshot.exists()) {
+            return res.status(404).json({ error: "End of trip." });
+        }
+
+        const currentQueue = snapshot.val().currentQueue;
+        const goOrBack = snapshot.val().goOrBack;
+        const originLat = snapshot.val().originLat;
+        const originLng = snapshot.val().originLng;
+
+        const studentData = snapshot.val().studentData.filter(student => studentId.includes(student["student-ID"]));
+        const route = snapshot.val().route;
+
+        return res.status(200).json({ goOrBack, currentQueue, originLat, originLng, studentData, route });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error getting car location." });
+    }
+}
+
+
+
+// ✅
 exports.getStudentLatLng = async (req, res) => {
     const { schoolName, carNumber, studentId } = req.body;
 

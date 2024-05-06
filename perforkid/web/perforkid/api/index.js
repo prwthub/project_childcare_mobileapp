@@ -67,6 +67,7 @@ const { getAndCheckStudentAddress,
         endOfTrip,
         getStudentLocation,
         getCarLocation,
+        getStudentStatus,
         getStudentLatLng,
         updateStudentLatLng,
         checkQueue } = require('./location.js');
@@ -283,6 +284,9 @@ app.post('/location/getStudentLocation', getStudentLocation);                   
 
 app.post('/location/getCarLocation', getCarLocation);                                                           // ✅   get car location by ( schoolName, carNumber )
 // * นำไปดึงตำแหน่งของรถ โดยระบุเบอร์รถ
+
+app.post('/location/getStudentStatus', getStudentStatus);                                                       // ✅   get student status by ( schoolName, carNumber, studentId )
+// * นำไปดึงสถานะของนักเรียน โดยระบุ id ของนักเรียน
 
 app.post('/location/getStudentLatLng', getStudentLatLng);                                                       // ✅   get student lat lng by schoolName, carNumber, studentId
 // * นำไปดึงตำแหน่งของนักเรียน โดยระบุ id ของนักเรียน
