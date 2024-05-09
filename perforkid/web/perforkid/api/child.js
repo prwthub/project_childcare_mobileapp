@@ -107,7 +107,7 @@ exports.getChildBySchoolNameAndToken = async (req, res) => {
 
 // ✅🔒 update Student status by ( schoolName, studentId, goStatus, backStatus )
 exports.updateChildStatusBySchoolNameAndId = async (req, res) => {
-    const { schoolName, studentId, goStatus, backStatus } = req.body;
+    const { schoolName, studentId, goStatus, backStatus } = req.body; 
     let allUpdate = false;
     let update = false;
     
