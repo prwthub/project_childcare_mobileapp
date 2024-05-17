@@ -704,7 +704,7 @@ exports.getStudentLatLng = async (req, res) => {
 
 // ✅
 exports.updateStudentLatLng = async (req, res) => {
-    const { schoolName, carNumber, studentId, destinationLat, destinationLng } = req.body;
+    const { schoolName, carNumber, studentId, destinationLat, destinationLng, address } = req.body;
 
     try {
         // Get reference to the school document
@@ -736,7 +736,8 @@ exports.updateStudentLatLng = async (req, res) => {
                 await doc.ref.update(
                     { 
                         destinationLat: destinationLat, 
-                        destinationLng: destinationLng 
+                        destinationLng: destinationLng ,
+                        address: address
                     }
                 );
                 check = true;
